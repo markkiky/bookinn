@@ -1,0 +1,2 @@
+class HotelWing < ApplicationRecord
+end

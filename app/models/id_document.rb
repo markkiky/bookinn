@@ -1,0 +1,2 @@
+class IdDocument < ApplicationRecord
+end

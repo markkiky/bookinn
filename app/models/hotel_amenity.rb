@@ -1,0 +1,2 @@
+class HotelAmenity < ApplicationRecord
+end

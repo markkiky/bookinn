@@ -1,0 +1,2 @@
+class StatusCluster < ApplicationRecord
+end

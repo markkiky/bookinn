@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  booking_order_id: MyString
+  booking_order_date: MyString
+  customer_id: MyString
+  room_type_id: MyString
+  stay_start_date: MyString
+  stay_end_date: MyString
+  booking_order_status: MyString
+  booking_order_type: MyString
+  created_by: MyString
+  updated_by: MyString
+
+two:
+  booking_order_id: MyString
+  booking_order_date: MyString
+  customer_id: MyString
+  room_type_id: MyString
+  stay_start_date: MyString
+  stay_end_date: MyString
+  booking_order_status: MyString
+  booking_order_type: MyString
+  created_by: MyString
+  updated_by: MyString

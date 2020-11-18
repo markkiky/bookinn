@@ -1,0 +1,2 @@
+class RoomAssignment < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class BookingOrderType < ApplicationRecord
+end

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  hotel_wing_id: MyString
+  wing_description: MyString
+  hotel_wing_status: MyString
+  created_by: MyString
+  updated_by: MyString
+
+two:
+  hotel_wing_id: MyString
+  wing_description: MyString
+  hotel_wing_status: MyString
+  created_by: MyString
+  updated_by: MyString

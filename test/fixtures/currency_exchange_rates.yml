@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  currency_exchange_rate_id: MyString
+  base_currency_id: MyString
+  secondary_currency_id: MyString
+  exchange_rate: MyString
+  start_date: MyString
+  end_date: MyString
+  exchange_rate_status: MyString
+
+two:
+  currency_exchange_rate_id: MyString
+  base_currency_id: MyString
+  secondary_currency_id: MyString
+  exchange_rate: MyString
+  start_date: MyString
+  end_date: MyString
+  exchange_rate_status: MyString

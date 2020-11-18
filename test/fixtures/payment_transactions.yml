@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  payment_transaction_id: MyString
+  booking_order_no: MyString
+  bill_no: MyString
+  payment_transaction_date: 2020-11-18 10:44:45
+  payment_transaction_type: MyString
+  payment_transaction_amount: MyString
+  payment_mode_id: MyString
+
+two:
+  payment_transaction_id: MyString
+  booking_order_no: MyString
+  bill_no: MyString
+  payment_transaction_date: 2020-11-18 10:44:45
+  payment_transaction_type: MyString
+  payment_transaction_amount: MyString
+  payment_mode_id: MyString

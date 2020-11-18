@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  booking_order_type_id: MyString
+  booking_order_type_description: MyString
+  booking_order_type_status: MyString
+
+two:
+  booking_order_type_id: MyString
+  booking_order_type_description: MyString
+  booking_order_type_status: MyString

@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  bill_no: MyString
+  bill_date: 2020-11-18 10:29:58
+  customer_id: MyString
+  bill_total: MyString
+
+two:
+  bill_no: MyString
+  bill_date: 2020-11-18 10:29:58
+  customer_id: MyString
+  bill_total: MyString

@@ -1,0 +1,2 @@
+class NeedType < ApplicationRecord
+end
