@@ -13,7 +13,7 @@ class CreateUsers < ActiveRecord::Migration[6.0]
       t.string :password_digest
       t.string :role_id
      
-
+      t.string :is_active, :default => "1"
       t.string :created_by
       t.string :updated_by
       t.timestamps

@@ -10,6 +10,7 @@ class CreateBookingOrders < ActiveRecord::Migration[6.0]
       t.string :booking_order_status
       t.string :booking_order_type
 
+      t.string :is_active, :default => "1"
       t.string :created_by
       t.string :updated_by
       t.timestamps

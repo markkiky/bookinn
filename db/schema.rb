@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_18_082520) do
+ActiveRecord::Schema.define(version: 2020_11_18_093841) do
 
   create_table "bill_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "bill_no"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "bill_item_rate"
     t.string "bill_item_amount"
     t.string "bill_item_discount"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -30,6 +31,9 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.datetime "bill_date"
     t.string "customer_id"
     t.string "bill_total"
+    t.string "is_active", default: "1"
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -41,6 +45,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "bill_item_unit_of_measure_id"
     t.string "bill_item_unit_of_measure_description"
     t.string "bill_item_status"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -51,6 +56,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "booking_order_type_id"
     t.string "booking_order_type_description"
     t.string "booking_order_type_status"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -66,6 +72,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "stay_end_date"
     t.string "booking_order_status"
     t.string "booking_order_type"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -77,6 +84,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.datetime "channel_transaction_date"
     t.string "channel_transaction_type"
     t.string "channel_transaction_amount"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -87,6 +95,9 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "channel_id"
     t.string "channel_description"
     t.string "channel_status"
+    t.string "is_active", default: "1"
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -95,6 +106,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "country_id"
     t.string "country_name"
     t.string "country_status"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -106,6 +118,9 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "currency_symbol"
     t.string "currency_name"
     t.string "country_id"
+    t.string "is_active", default: "1"
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -118,6 +133,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "start_date"
     t.string "end_date"
     t.string "exchange_rate_status"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -127,6 +143,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
   create_table "customer_needs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "customer_id"
     t.string "need_type_id"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -137,6 +154,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "customer_type_id"
     t.string "customer_type_description"
     t.string "customer_type_status"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -158,6 +176,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.datetime "last_visit"
     t.datetime "last_invoice"
     t.datetime "last_receipt"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -168,6 +187,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "hotel_amenity_id"
     t.string "hotel_amenity_name"
     t.string "hotel_amenity_description"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -178,6 +198,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "hotel_wing_id"
     t.string "wing_description"
     t.string "hotel_wing_status"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -193,6 +214,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "hotel_type_id"
     t.string "parent_hotel_id"
     t.string "hotel_status"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -203,6 +225,18 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "id_document_no"
     t.string "id_document_type"
     t.string "id_document_status"
+    t.string "is_active", default: "1"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "company_code"
+    t.string "token"
+    t.string "username"
+    t.string "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -211,6 +245,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "need_type_id"
     t.string "need_description"
     t.string "need_type_status"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -221,6 +256,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "payment_mode_id"
     t.string "payment_mode_description"
     t.string "payment_mode_status"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -231,6 +267,9 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "payment_transaction_type_id"
     t.string "payment_transaction_type_description"
     t.string "payment_transaction_type_status"
+    t.string "is_active", default: "1"
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -243,6 +282,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "payment_transaction_type"
     t.string "payment_transaction_amount"
     t.string "payment_mode_id"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -253,6 +293,9 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "role_id"
     t.string "role_description"
     t.string "role_status"
+    t.string "is_active", default: "1"
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -261,6 +304,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "room_amenity_id"
     t.string "room_amenity_name"
     t.string "room_amenity_description"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -275,6 +319,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "start_date"
     t.string "end_date"
     t.string "room_status"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -285,6 +330,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "room_type_id"
     t.string "room_type_description"
     t.string "room_type_status"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -296,6 +342,9 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "room_no"
     t.string "room_name"
     t.string "room_type_id"
+    t.string "is_active", default: "1"
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -303,6 +352,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
   create_table "status_clusters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "status_cluster_id"
     t.string "cluster_description"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -313,6 +363,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "status_id"
     t.string "status_cluster_id"
     t.string "status_description"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -323,6 +374,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "unit_id"
     t.string "unit_description"
     t.string "unit_status"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
@@ -341,6 +393,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_082520) do
     t.string "email"
     t.string "password_digest"
     t.string "role_id"
+    t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
