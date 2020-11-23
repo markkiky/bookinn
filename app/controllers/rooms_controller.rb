@@ -38,6 +38,30 @@ class RoomsController < ApplicationController
     @room.destroy
   end
 
+  # GET /room/available
+  def available
+    puts params
+    
+    if params[:start_date].blank? && params[:end_date].blank? && params[:room_type_id].blank?
+      @rooms = Room.all
+      response = {
+        status: 200,
+        message: "All Available rooms",
+        data: @rooms
+      }
+    elsif params[:start_date].blank?
+      @rooms = Room.all
+      response = {
+        status: 200,
+        message: "All Available rooms",
+        data: @rooms
+      }
+    end
+    # byebug
+    
+    render json: response
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_room
