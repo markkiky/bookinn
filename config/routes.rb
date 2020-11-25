@@ -34,4 +34,5 @@ Rails.application.routes.draw do
 
   # Front Office 
   get "room/available", to: 'rooms#available', as: :available_rooms
+  post "room/status", to: 'front_office#room_status'
 end

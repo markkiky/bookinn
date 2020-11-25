@@ -46,6 +46,7 @@ class RoomAssignmentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def room_assignment_params
-      params.fetch(:room_assignment, {})
+      # params.fetch(:room_assignment, {})
+      params.require(:room_assignment).permit(:room_assignment_id, :customer_id, :customer_names, :room_id, :start_date, :end_date, :room_status, :is_active, :created_by, :updated_by)
     end
 end

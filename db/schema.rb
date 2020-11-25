@@ -312,10 +312,10 @@ ActiveRecord::Schema.define(version: 2020_11_18_093841) do
   end
 
   create_table "room_assignments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "room_assignment_no"
+    t.string "room_assignment_id"
     t.string "customer_id"
     t.string "customer_names"
-    t.string "room_no"
+    t.string "room_id"
     t.string "start_date"
     t.string "end_date"
     t.string "room_status"
@@ -343,6 +343,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_093841) do
     t.string "room_no"
     t.string "room_name"
     t.string "room_type_id"
+    t.string "status"
     t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"

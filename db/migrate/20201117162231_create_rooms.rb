@@ -5,6 +5,7 @@ class CreateRooms < ActiveRecord::Migration[6.0]
       t.string :room_no
       t.string :room_name
       t.string :room_type_id
+      t.string :status
 
       t.string :is_active, :default => "1"
       t.string :created_by
