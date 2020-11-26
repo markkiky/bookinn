@@ -33,6 +33,14 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
   # Front Office 
-  get "room/available", to: 'rooms#available', as: :available_rooms
-  post "room/status", to: 'front_office#room_status'
+  # get "room/available", to: 'rooms#available', as: :available_rooms
+  post "room/status", to: 'front_office#room_availability'
+  post "arrivals", to: "front_office#expected_arrivals"
+  post "departures", to: "front_office#expected_departures"
+
+  # Generate Token
+  post 'auth/login', to: 'authentication#login'
+  # reset password routes
+  post 'password/forgot', to: 'authentication#forgot'
+  post 'password/reset', to: 'authentication#reset'
 end

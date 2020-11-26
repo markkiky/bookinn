@@ -1,7 +1,7 @@
 class FrontOfficeController < ApplicationController
 
-  # POST /room/status
-  def room_status
+  # POST room/status
+  def room_availability
     # puts params[:status]
     puts room_status_params
     if room_status_params["status"].blank?
@@ -15,12 +15,13 @@ class FrontOfficeController < ApplicationController
         if room_status_params["start_date"] && room_status_params["end_date"]
           begin
             Date.parse(room_status_params["start_date"]) && Date.parse(room_status_params["end_date"])
-            p = ActiveRecord::Base.connection.execute("SELECT r.*, rs.start_date, rs.end_date FROM rooms r JOIN room_assignments rs ON rs.room_id = r.id;")
-            byebug
+            sql = "SELECT r.id, r.room_name , rs.start_date, rs.end_date FROM rooms r JOIN room_assignments rs ON rs.room_id = r.id"
+            @rooms = Room.find_by_sql(sql)
+
             response = {
                 status: 200,
                 error: "Valid date",
-                data: []
+                data: @rooms
             }
           rescue ArgumentError
             # handle invalid date
@@ -50,6 +51,23 @@ class FrontOfficeController < ApplicationController
       end
     end
 
+    render json: response
+  end
+
+  # POST /arrivals
+  def expected_arrivals
+    
+    response = {
+      status: 200
+    }
+    render json: response
+  end
+
+  # POST /departures
+  def expected_departures
+    response = {
+      status: 200
+    }
     render json: response
   end
 

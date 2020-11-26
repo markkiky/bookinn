@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
+  before_action :authorize_request, except: :create
 
   # GET /users
   def index
@@ -16,11 +17,21 @@ class UsersController < ApplicationController
   # POST /users
   def create
     @user = User.new(user_params)
+    @user.password = params["password"]
 
     if @user.save
-      render json: @user, status: :created, location: @user
+      render json: {
+               status: 200,
+               message: "Saved user successfully",
+               data: @user,
+             }, status: :created, location: @user
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: {
+               status: 400,
+               error: "Failed to save User",
+               data: @user.errors,
+             },
+             status: :unprocessable_entity
     end
   end
 
@@ -39,13 +50,14 @@ class UsersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def user_params
-      params.require(:user).permit(:email, :password_digest, :role_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def user_params
+    params.require(:user).permit(:email, :password, :role_id)
+  end
 end

@@ -28,3 +28,6 @@ StatusCluster.create(status_cluster_id: "1", cluster_description: "Room Occupati
 StatusCluster.create(status_cluster_id: "2", cluster_description: "Room Type status")
 StatusCluster.create(status_cluster_id: "3", cluster_description: "Bookinn Order status")
 StatusCluster.create(status_cluster_id: "4", cluster_description: "Bill status")
+
+
+BookingOrder.create()

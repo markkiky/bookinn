@@ -50,8 +50,8 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   
-  config.middleware.use ActionDispatch::Cookies
-  config.middleware.use ActionDispatch::Flash
-  config.middleware.use Rack::MethodOverride
-  config.middleware.use ActionDispatch::Session::CookieStore, { :key => "_bookinn_session" }
+  # config.middleware.use ActionDispatch::Cookies
+  # config.middleware.use ActionDispatch::Flash
+  # config.middleware.use Rack::MethodOverride
+  # config.middleware.use ActionDispatch::Session::CookieStore, { :key => "_bookinn_session" }
 end
