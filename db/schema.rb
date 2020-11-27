@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_18_093841) do
+ActiveRecord::Schema.define(version: 2020_11_27_133508) do
 
   create_table "bill_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "bill_no"
@@ -68,8 +68,8 @@ ActiveRecord::Schema.define(version: 2020_11_18_093841) do
     t.string "booking_order_date"
     t.string "customer_id"
     t.string "room_type_id"
-    t.string "stay_start_date"
-    t.string "stay_end_date"
+    t.datetime "stay_start_date"
+    t.datetime "stay_end_date"
     t.string "booking_order_status"
     t.string "booking_order_type"
     t.string "is_active", default: "1"
@@ -372,6 +372,19 @@ ActiveRecord::Schema.define(version: 2020_11_18_093841) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "tickets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "ticket_id"
+    t.string "ticket_no"
+    t.string "customer_id"
+    t.string "ticket_description"
+    t.string "ticket_date"
+    t.string "ticket_status"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "unit_of_measures", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "unit_id"
     t.string "unit_description"
@@ -385,7 +398,7 @@ ActiveRecord::Schema.define(version: 2020_11_18_093841) do
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "user_id"
-    t.string "user_name"
+    t.string "username"
     t.string "id_document_no"
     t.string "id_document_type"
     t.string "identification_no"

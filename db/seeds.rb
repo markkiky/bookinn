@@ -12,10 +12,10 @@ RoomType.create(room_type_id: "2", room_type_description: "Standard Room", room_
 
 # Deluxe Rooms
 Room.create(room_id: "1", room_no: "B22", room_name: "Kiboko House", room_type_id: "1", status: '1' )
-Room.create(room_id: "1", room_no: "A21", room_name: "Mwiko House", room_type_id: "1", status: '1' )
+Room.create(room_id: "2", room_no: "A21", room_name: "Mwiko House", room_type_id: "1", status: '1' )
 # Standard Rooms
-Room.create(room_id: "1", room_no: "G01", room_name: "Simba Hut", room_type_id: "2", status: '1' )
-Room.create(room_id: "1", room_no: "G02", room_name: "Membly  Court", room_type_id: "2", status: '1' )
+Room.create(room_id: "3", room_no: "G01", room_name: "Simba Hut", room_type_id: "2", status: '1' )
+Room.create(room_id: "4", room_no: "G02", room_name: "Membly  Court", room_type_id: "2", status: '1' )
 
 
 Status.create(status_id: "1", status_cluster_id: "1", status_description: "available")
@@ -24,10 +24,32 @@ Status.create(status_id: "3", status_cluster_id: "1", status_description: "booke
 Status.create(status_id: "4", status_cluster_id: "1", status_description: "maintainance")
 Status.create(status_id: "5", status_cluster_id: "1", status_description: "unavailable")
 
+
+Status.create(status_id: "6", status_cluster_id: "2", status_description: "booked" )
+Status.create(status_id: "7", status_cluster_id: "2", status_description: "cancelled" )
+Status.create(status_id: "8", status_cluster_id: "2", status_description: "transfered" )
+Status.create(status_id: "9", status_cluster_id: "2", status_description: "checked_in" )
+Status.create(status_id: "10", status_cluster_id: "2", status_description: "checked_out" )
+
+Status.create(status_id: '11', status_cluster_id: "3", status_description: "need")
+Status.create(status_id: '12', status_cluster_id: "3", status_description: "preference")
+
+Status.create(status_id: "13", status_cluster_id: "4", status_description: "pending")
+Status.create(status_id: "14", status_cluster_id: "4", status_description: "resolved")
+
 StatusCluster.create(status_cluster_id: "1", cluster_description: "Room Occupation status")
-StatusCluster.create(status_cluster_id: "2", cluster_description: "Room Type status")
-StatusCluster.create(status_cluster_id: "3", cluster_description: "Bookinn Order status")
-StatusCluster.create(status_cluster_id: "4", cluster_description: "Bill status")
+# StatusCluster.create(status_cluster_id: "2", cluster_description: "Room Type status")
+StatusCluster.create(status_cluster_id: "2", cluster_description: "Booking Order status")
+StatusCluster.create(status_cluster_id: "3", cluster_description: "Need Type status")
+StatusCluster.create(status_cluster_id: "4", cluster_description: "Ticket status")
 
+BookingOrder.create(booking_order_id: "1", booking_order_date: "21-01-2020", customer_id: "1", room_type_id: "1", stay_start_date: "01-11-2020", stay_end_date: "31-01-2021", booking_order_status: "2", booking_order_type: "2", created_by: "1", updated_by: "1")
+BookingOrder.create(booking_order_id: "2", booking_order_date: "26-11-2020", customer_id: "1", room_type_id: "1", stay_start_date: "01-12-2020", stay_end_date: "05-01-2021", booking_order_status: "2", booking_order_type: "2", created_by: "1", updated_by: "1")
 
-BookingOrder.create()
+BookingOrderType.create(booking_order_type_id: "1", booking_order_type_description: "Self", booking_order_type_status: "2" )
+BookingOrderType.create(booking_order_type_id: "2", booking_order_type_description: "Others", booking_order_type_status: "2" )
+BookingOrderType.create(booking_order_type_id: "3", booking_order_type_description: "Company", booking_order_type_status: "2" )
+
+NeedType.create(need_type_id: '1', need_description: "Rocking Chair", need_type_status: "11")
+NeedType.create(need_type_id: '2', need_description: "Wheel Chair Accessible Parking", need_type_status: "11")
+NeedType.create(need_type_id: '3', need_description: "Large Windows", need_type_status: "12")

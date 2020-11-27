@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :tickets
   resources :logs
   resources :status_clusters
   resources :statuses
@@ -37,6 +38,9 @@ Rails.application.routes.draw do
   post "room/status", to: 'front_office#room_availability'
   post "arrivals", to: "front_office#expected_arrivals"
   post "departures", to: "front_office#expected_departures"
+  post "needs_preferences", to: 'front_office#needs_preferences'
+  get "needs_preferences", to: 'front_office#show_needs_preferences'
+  post 'bookinn/walkin', to: "front_office#walkin_bookinn"
 
   # Generate Token
   post 'auth/login', to: 'authentication#login'

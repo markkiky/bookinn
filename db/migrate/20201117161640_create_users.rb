@@ -2,7 +2,7 @@ class CreateUsers < ActiveRecord::Migration[6.0]
   def change
     create_table :users do |t|
       t.string :user_id
-      t.string :user_name
+      t.string :username
       t.string :id_document_no
       t.string :id_document_type
       t.string :identification_no

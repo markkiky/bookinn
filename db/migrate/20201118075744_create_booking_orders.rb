@@ -5,8 +5,8 @@ class CreateBookingOrders < ActiveRecord::Migration[6.0]
       t.string :booking_order_date
       t.string :customer_id
       t.string :room_type_id
-      t.string :stay_start_date
-      t.string :stay_end_date
+      t.datetime :stay_start_date
+      t.datetime :stay_end_date
       t.string :booking_order_status
       t.string :booking_order_type
 
