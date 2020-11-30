@@ -53,3 +53,8 @@ BookingOrderType.create(booking_order_type_id: "3", booking_order_type_descripti
 NeedType.create(need_type_id: '1', need_description: "Rocking Chair", need_type_status: "11")
 NeedType.create(need_type_id: '2', need_description: "Wheel Chair Accessible Parking", need_type_status: "11")
 NeedType.create(need_type_id: '3', need_description: "Large Windows", need_type_status: "12")
+
+Role.create(role_id: "1", role_description: "Admin", role_status: "1")
+Role.create(role_id: "2", role_description: "Finance", role_status: "1")
+Role.create(role_id: "3", role_description: "Front Office", role_status: "1")
+Role.create(role_id: "4", role_description: "Maintainance", role_status: "1")

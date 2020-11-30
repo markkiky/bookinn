@@ -41,6 +41,8 @@ Rails.application.routes.draw do
   post "needs_preferences", to: 'front_office#needs_preferences'
   get "needs_preferences", to: 'front_office#show_needs_preferences'
   post 'bookinn/walkin', to: "front_office#walkin_bookinn"
+  post "check_in", to: "front_office#check_in"
+
 
   # Generate Token
   post 'auth/login', to: 'authentication#login'

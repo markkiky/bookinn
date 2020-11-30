@@ -221,6 +221,15 @@ class FrontOfficeController < ApplicationController
     render json: response
   end
 
+  # POST check_in
+  def check_in
+    response = {
+      status: 200
+    }
+
+    render json: response
+  end
+
 
   private
 
