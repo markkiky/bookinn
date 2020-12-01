@@ -3,22 +3,38 @@ class StatusClustersController < ApplicationController
 
   # GET /status_clusters
   def index
-    @status_clusters = StatusCluster.all
+    @status_clusters = StatusCluster.all.where(:is_active => 1)
 
-    render json: @status_clusters
+    response = {
+      status: 200,
+      message: "All Status Clusters",
+      data: @status_clusters
+    }
+
+    render json: response
   end
 
   # GET /status_clusters/1
   def show
-    render json: @status_cluster
+    response = {
+      status: 200,
+      message: "Specific Status Cluster",
+      data: @status_cluster
+    }
+    render json: response
   end
 
   # POST /status_clusters
   def create
     @status_cluster = StatusCluster.new(status_cluster_params)
-
+    
     if @status_cluster.save
-      render json: @status_cluster, status: :created, location: @status_cluster
+      response = {
+        status: 200,
+        message: "Created status Cluster successfully",
+        data: @status_cluster
+      }
+      render json: response, status: :created, location: @status_cluster
     else
       render json: @status_cluster.errors, status: :unprocessable_entity
     end
@@ -27,7 +43,12 @@ class StatusClustersController < ApplicationController
   # PATCH/PUT /status_clusters/1
   def update
     if @status_cluster.update(status_cluster_params)
-      render json: @status_cluster
+      response = {
+        status: 200,
+        message: "Updated status Cluster successfully",
+        data: @status_cluster
+      }
+      render json: response
     else
       render json: @status_cluster.errors, status: :unprocessable_entity
     end
@@ -35,7 +56,15 @@ class StatusClustersController < ApplicationController
 
   # DELETE /status_clusters/1
   def destroy
-    @status_cluster.destroy
+    @status_cluster.update(:is_active => 0)
+    # @status_cluster.destroy
+    response = {
+      status: 200,
+      message: "Status Cluster deleted successfully",
+      data: @status_cluster
+    }
+
+    render json: response
   end
 
   private
