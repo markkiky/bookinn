@@ -1,16 +1,27 @@
 class ChannelsController < ApplicationController
   before_action :set_channel, only: [:show, :update, :destroy]
+  before_action :authorize_request
 
   # GET /channels
   def index
-    @channels = Channel.all
+    @channels = Channel.all.where(:is_active => 1)
+    response = {
+      status: 200,
+      message: "All Channels",
+      data: @channels
+    }
 
-    render json: @channels
+    render json: response
   end
 
   # GET /channels/1
   def show
-    render json: @channel
+    response = {
+      status: 200,
+      message: "Specific Channel",
+      data: @channel
+    }
+    render json: response
   end
 
   # POST /channels
@@ -18,7 +29,12 @@ class ChannelsController < ApplicationController
     @channel = Channel.new(channel_params)
 
     if @channel.save
-      render json: @channel, status: :created, location: @channel
+      response = {
+        status: 200,
+        message: "Channel created Successfully",
+        data: @channel
+      }
+      render json: response, status: :created, location: @channel
     else
       render json: @channel.errors, status: :unprocessable_entity
     end
@@ -27,7 +43,12 @@ class ChannelsController < ApplicationController
   # PATCH/PUT /channels/1
   def update
     if @channel.update(channel_params)
-      render json: @channel
+      response = {
+        status: 200,
+        message: "Channel updated Successfully",
+        data: @channel
+      }
+      render json: response
     else
       render json: @channel.errors, status: :unprocessable_entity
     end
@@ -35,7 +56,14 @@ class ChannelsController < ApplicationController
 
   # DELETE /channels/1
   def destroy
-    @channel.destroy
+    @channel.update(:is_active => 0)
+
+    response = {
+      status: 200,
+      message: "Channel deleted Successfully",
+      data: @channel
+    }
+    # @channel.destroy
   end
 
   private
