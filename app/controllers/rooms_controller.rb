@@ -3,7 +3,7 @@ class RoomsController < ApplicationController
 
   # GET /rooms
   def index
-    @rooms = Room.all
+    @rooms = Room.all.where(:is_active => 1)
     @rumus = []
     @rooms.each do |room|
       @room_type = Room.room_type(room.id)
@@ -13,6 +13,7 @@ class RoomsController < ApplicationController
         room_no: room.room_no,
         room_name: room.room_name,
         room_price: room.room_price,
+        room_status: room.status,
         room_type_id: @room_type.id,
         room_type_description: @room_type.room_type_description,
         room_type_status: @room_type.room_type_status,
@@ -31,13 +32,23 @@ class RoomsController < ApplicationController
 
   # GET /rooms/1
   def show
+    @room_type = Room.room_type(@room.id)
+    @rumu = {
+      id: @room.id,
+      room_no: @room.room_no,
+      room_name: @room.room_name,
+      room_price: @room.room_price,
+      room_status: @room.status,
+      room_is_active: @room.is_active,
+      room_type_id: @room_type.id,
+      room_type_description: @room_type.room_type_description,
+      room_type_status: @room_type.room_type_status,
+      room_type_total: @room_type.room_type_total,
+    }
     response = {
       status: 200,
       message: "A specific room",
-      data: {
-        room: @room,
-        room_type: Room.room_type(@room.id),
-      },
+      data: @rumu,
     }
     render json: response
   end
@@ -59,12 +70,24 @@ class RoomsController < ApplicationController
 
   # PATCH/PUT /rooms/1
   def update
-    response = {
-      status: 200,
-      message: "Room updated successfully",
-      data: @room,
-    }
     if @room.update(room_params)
+      @room_type = Room.room_type(@room.id)
+      @rumu = {
+        id: @room.id,
+        room_no: @room.room_no,
+        room_name: @room.room_name,
+        room_price: @room.room_price,
+        room_status: @room.status,
+        room_type_id: @room_type.id,
+        room_type_description: @room_type.room_type_description,
+        room_type_status: @room_type.room_type_status,
+        room_type_total: @room_type.room_type_total,
+      }
+      response = {
+        status: 200,
+        message: "Room updated successfully",
+        data: @rumu,
+      }
       render json: response
     else
       render json: @room.errors, status: :unprocessable_entity
@@ -73,12 +96,27 @@ class RoomsController < ApplicationController
 
   # DELETE /rooms/1
   def destroy
+    @room.update(:is_active => 0)
+    @room_type = Room.room_type(@room.id)
+    @rumu = {
+      id: @room.id,
+      room_no: @room.room_no,
+      room_name: @room.room_name,
+      room_price: @room.room_price,
+      room_status: @room.status,
+      room_type_id: @room_type.id,
+      room_type_description: @room_type.room_type_description,
+      room_type_status: @room_type.room_type_status,
+      room_type_total: @room_type.room_type_total,
+    }
     response = {
       status: 200,
       message: "Room deleted successfully",
-      data: @room,
+      data: @rumu
     }
-    @room.destroy
+    # @room.destroy
+
+    render json: response
   end
 
   private
@@ -90,6 +128,6 @@ class RoomsController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def room_params
-    params.require(:room).permit(:room_id, :room_no, :room_name, :room_type_id, :room_price)
+    params.require(:room).permit(:room_id, :room_no, :room_name, :room_type_id, :room_price, :status, :is_active)
   end
 end

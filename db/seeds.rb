@@ -11,11 +11,11 @@ RoomType.create(room_type_id: "1", room_type_description: "Deluxe Room", room_ty
 RoomType.create(room_type_id: "2", room_type_description: "Standard Room", room_type_total: "5", created_by: "1", updated_by: "1", room_type_status: "1")
 
 # Deluxe Rooms
-Room.create(room_id: "1", room_no: "B22", room_name: "Kiboko House", room_type_id: "1", status: '1' )
-Room.create(room_id: "2", room_no: "A21", room_name: "Mwiko House", room_type_id: "1", status: '1' )
+Room.create(room_id: "1", room_no: "B22", room_name: "Kiboko House", room_type_id: "1", room_price: "20000", status: '1' )
+Room.create(room_id: "2", room_no: "A21", room_name: "Mwiko House", room_type_id: "1", room_price: "10000", status: '1' )
 # Standard Rooms
-Room.create(room_id: "3", room_no: "G01", room_name: "Simba Hut", room_type_id: "2", status: '1' )
-Room.create(room_id: "4", room_no: "G02", room_name: "Membly  Court", room_type_id: "2", status: '1' )
+Room.create(room_id: "3", room_no: "G01", room_name: "Simba Hut", room_type_id: "2", room_price: "2000",  status: '1' )
+Room.create(room_id: "4", room_no: "G02", room_name: "Membly  Court", room_type_id: "2", room_price: "40000", status: '1' )
 
 
 Status.create(status_id: "1", status_cluster_id: "1", status_description: "available")
