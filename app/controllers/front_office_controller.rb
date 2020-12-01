@@ -237,6 +237,9 @@ class FrontOfficeController < ApplicationController
     # byebug
     @booking_response = []
     @customer_response = []
+    @walkin_bookinn_response = []
+
+    # loop through bookings
     walkin_bookinn_params['booking'].each do |bookinn|
       @bookinn = BookingOrder.new(
         booking_order_id: bookinn['booking_order_id'],
@@ -247,6 +250,8 @@ class FrontOfficeController < ApplicationController
       )
       @bookinn.save
       @booking_response << @bookinn
+      
+      # loop through customers in the bookinn
       bookinn['customers'].each do |customer|
         # check if customer exists
         if  @customer = Customer.where(:customer_email => customer['customer_email']).first 
@@ -268,11 +273,31 @@ class FrontOfficeController < ApplicationController
           )
         end
         @customer.save
+        @booked = {
+          booking_order_id: @bookinn.booking_order_id,
+          booking_order_date: @bookinn.booking_order_date,
+          stay_start_date: @bookinn.stay_start_date,
+          stay_end_date: @bookinn.stay_end_date,
+          total_applicants: @bookinn.total_applicants,
+          customers: @customer
+        }
+        
         @customer_response << @customer
+        
+        # Save as a booking belonging to particular customer
         CustomerBooking.create(customer_id: @customer.id, booking_order_id: @bookinn.id)
       end
-      # CustomerBooking.new(customer_id: )
-      # @bookinn.save
+      @booked = {
+        booking_order_id: @bookinn.booking_order_id,
+        booking_order_date: @bookinn.booking_order_date,
+        stay_start_date: @bookinn.stay_start_date,
+        stay_end_date: @bookinn.stay_end_date,
+        total_applicants: @bookinn.total_applicants,
+        customers: @customer_response
+      }
+      @walkin_bookinn_response << @booked
+      # byebug
+      @customer_response.clear()
     end
     # BookingOrder.new()
     puts walkin_bookinn_params
@@ -280,12 +305,9 @@ class FrontOfficeController < ApplicationController
     response = {
       status: 200,
       message: "Walkin Bookins",
-      data: {
-        bookings: @booking_response,
-        customers: @customer_response
-      }
-
+      data: @walkin_bookinn_response
     }
+    # byebug
     render json: response
   end
 
