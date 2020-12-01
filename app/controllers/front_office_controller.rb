@@ -142,6 +142,28 @@ class FrontOfficeController < ApplicationController
     render json: response
   end
 
+
+  def arrivals_departures
+    puts expected_arrival_params[]
+    if !params['status'].blank?
+      n = FrontOfficeController.new
+      if params['status'] == "1"
+        # redirect_to expected_arrivals_path
+        n.expected_arrivals(expected_arrival_params['status'])
+      elsif params['status'] == "2"
+        # redirect_to expected_departures_path
+        n.expected_departures(expected_arrival_params['status'])
+      end
+    else
+      # status is blank 
+      response = {
+        status: 400,
+        error: "Status is required"
+      }
+      render json: response
+    end
+  end
+
   # POST /needs_preferences
   def needs_preferences
     # params['customer_id'] params['need_type_id'] parma
@@ -211,11 +233,57 @@ class FrontOfficeController < ApplicationController
   def walkin_bookinn
     # Creates customer or updates existing customer with email
     # Creates a bookinn
+    # BookingOrder.new()
+    # byebug
+    @booking_response = []
+    @customer_response = []
+    walkin_bookinn_params['booking'].each do |bookinn|
+      @bookinn = BookingOrder.new(
+        booking_order_id: bookinn['booking_order_id'],
+        booking_order_date: bookinn["booking_order_date"],
+        stay_start_date: bookinn['stay_start_date'],
+        stay_end_date: bookinn['stay_end_date'],
+        total_applicants: bookinn['total_applicants']
+      )
+      @bookinn.save
+      @booking_response << @bookinn
+      bookinn['customers'].each do |customer|
+        # check if customer exists
+        if  @customer = Customer.where(:customer_email => customer['customer_email']).first 
+          # update customers details
+          @customer.update(
+            customer_names: "#{customer['first_name']} #{customer['surname']} #{customer['other_name']}",
+            customer_id_no: customer["customer_id_no"],
+            country_id: customer['country_id'],
+            customer_mobile: customer['customer_mobile']
+          )
+        else
+          @customer = Customer.new(
+            customer_id: customer['customer_id'],
+            customer_names: "#{customer['first_name']} #{customer['surname']} #{customer['other_name']}",
+            customer_id_no: customer["customer_id_no"],
+            country_id: customer['country_id'],
+            customer_mobile: customer['customer_mobile'],
+            customer_email: customer["customer_email"]
+          )
+        end
+        @customer.save
+        @customer_response << @customer
+        CustomerBooking.create(customer_id: @customer.id, booking_order_id: @bookinn.id)
+      end
+      # CustomerBooking.new(customer_id: )
+      # @bookinn.save
+    end
+    # BookingOrder.new()
     puts walkin_bookinn_params
+    # byebug
     response = {
       status: 200,
       message: "Walkin Bookins",
-      data: []
+      data: {
+        bookings: @booking_response,
+        customers: @customer_response
+      }
 
     }
     render json: response
@@ -223,17 +291,61 @@ class FrontOfficeController < ApplicationController
 
   # POST check_in
   def check_in
+    # allow matching each of our customers to a room  
+    # Utilize room_
     response = {
-      status: 200
+      status: 200,
+      message: "Check In successful",
+      data: []
     }
 
     render json: response
   end
 
+  # POST check_out
+  def check_out
+    response = {
+      status: 200,
+      message: "Check Out successful"
+    }
+
+    render json: response
+  end
+
+  def dashboard
+    response = {
+      status: 200,
+      message: "Dashboard values",
+      data: []
+    }
+    render json: response
+  end
+
 
   private
-
   def walkin_bookinn_params
+    params.permit(booking: [
+      :booking_order_id,
+      :booking_order_date,
+      :stay_start_date,
+      :stay_end_date,
+      :total_applicants,
+      customers: [
+        
+          :customer_id,
+          :first_name,
+          :surname, 
+          :other_name,
+          :customer_id_no,
+          :country_id,
+          :customer_mobile,
+          :customer_email
+    
+        
+      ] 
+    ] )
+  end
+  def walkin_bookinn_param
     params.permit(customer: [
       :customer_id
     ], booking: [
@@ -252,7 +364,7 @@ class FrontOfficeController < ApplicationController
   end
 
   def expected_arrival_params
-    params.permit(:start_date, :end_date)
+    params.permit(:status, :start_date, :end_date)
   end
 
   def room_status_params

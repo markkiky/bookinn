@@ -4,6 +4,7 @@ class CreateRoomAssignments < ActiveRecord::Migration[6.0]
       t.string :room_assignment_id
       t.string :customer_id
       t.string :customer_names
+      t.string :booking_order_id
       t.string :room_id
       t.string :start_date
       t.string :end_date

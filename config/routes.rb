@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :customer_bookings
   resources :tickets
   resources :logs
   resources :status_clusters
@@ -36,12 +37,17 @@ Rails.application.routes.draw do
   # Front Office 
   # get "room/available", to: 'rooms#available', as: :available_rooms
   post "room/status", to: 'front_office#room_availability'
-  post "arrivals", to: "front_office#expected_arrivals"
-  post "departures", to: "front_office#expected_departures"
+  post "arrivals", to: "front_office#expected_arrivals", as: :expected_arrivals
+  post "departures", to: "front_office#expected_departures", as: :expected_departures
+  post "arrivals_departures", to: "front_office#arrivals_departures"
   post "needs_preferences", to: 'front_office#needs_preferences'
   get "needs_preferences", to: 'front_office#show_needs_preferences'
   post 'bookinn/walkin', to: "front_office#walkin_bookinn"
   post "check_in", to: "front_office#check_in"
+  post 'check_out', to: "front_office#check_out"
+
+  # Dashboard
+  get 'dashboard', to: "front_office#dashboard"
 
 
   # Generate Token

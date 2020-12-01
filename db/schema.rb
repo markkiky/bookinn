@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_30_071310) do
+ActiveRecord::Schema.define(version: 2020_11_30_145845) do
 
-  create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
     t.bigint "record_id", null: false
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  create_table "active_storage_blobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "active_storage_blobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "key", null: false
     t.string "filename", null: false
     t.string "content_type"
@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "bill_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "bill_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "bill_no"
     t.string "bill_item_id"
     t.string "bill_item_quantity"
@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "bill_infos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "bill_infos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "bill_no"
     t.datetime "bill_date"
     t.string "customer_id"
@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "bill_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "bill_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "bill_item_id"
     t.string "bill_item_description"
     t.string "bill_item_rate"
@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "booking_order_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "booking_order_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "booking_order_type_id"
     t.string "booking_order_type_description"
     t.string "booking_order_type_status"
@@ -84,15 +84,16 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "booking_orders", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "booking_orders", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "booking_order_id"
     t.string "booking_order_date"
     t.string "customer_id"
+    t.string "total_applicants"
     t.string "room_type_id"
     t.datetime "stay_start_date"
     t.datetime "stay_end_date"
     t.string "booking_order_status"
-    t.string "booking_order_type"
+    t.string "booking_order_type_id"
     t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
@@ -100,7 +101,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "channel_transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "channel_transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "channel_transaction_id"
     t.datetime "channel_transaction_date"
     t.string "channel_transaction_type"
@@ -112,7 +113,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "channels", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "channels", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "channel_id"
     t.string "channel_description"
     t.string "channel_status"
@@ -123,7 +124,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "countries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "countries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "country_id"
     t.string "country_name"
     t.string "country_status"
@@ -134,7 +135,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "currencies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "currencies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "currency_id"
     t.string "currency_symbol"
     t.string "currency_name"
@@ -146,7 +147,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "currency_exchange_rates", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "currency_exchange_rates", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "currency_exchange_rate_id"
     t.string "base_currency_id"
     t.string "secondary_currency_id"
@@ -161,7 +162,17 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "customer_needs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "customer_bookings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "customer_id"
+    t.string "booking_order_id"
+    t.string "is_active", default: "1"
+    t.string "created_by"
+    t.string "updated_by"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "customer_needs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "customer_id"
     t.string "need_type_id"
     t.string "is_active", default: "1"
@@ -171,7 +182,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "customer_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "customer_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "customer_type_id"
     t.string "customer_type_description"
     t.string "customer_type_status"
@@ -182,7 +193,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "customers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "customers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "customer_no"
     t.string "customer_id"
     t.string "customer_type_id"
@@ -193,6 +204,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.string "customer_address"
     t.string "customer_postcode"
     t.string "customer_status"
+    t.string "customer_id_no"
     t.datetime "customer_status_date"
     t.datetime "last_visit"
     t.datetime "last_invoice"
@@ -204,7 +216,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "hotel_amenities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "hotel_amenities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "hotel_amenity_id"
     t.string "hotel_amenity_name"
     t.string "hotel_amenity_description"
@@ -215,7 +227,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "hotel_wings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "hotel_wings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "hotel_wing_id"
     t.string "wing_description"
     t.string "hotel_wing_status"
@@ -226,7 +238,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "hotels", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "hotels", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "hotel_id"
     t.string "hotel_name"
     t.string "hotel_email"
@@ -242,7 +254,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "id_documents", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "id_documents", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "id_document_no"
     t.string "id_document_type"
     t.string "id_document_status"
@@ -253,7 +265,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "company_code"
     t.string "token"
     t.string "username"
@@ -262,7 +274,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "need_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "need_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "need_type_id"
     t.string "need_description"
     t.string "need_type_status"
@@ -273,7 +285,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "payment_modes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "payment_modes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "payment_mode_id"
     t.string "payment_mode_description"
     t.string "payment_mode_status"
@@ -284,7 +296,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "payment_transaction_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "payment_transaction_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "payment_transaction_type_id"
     t.string "payment_transaction_type_description"
     t.string "payment_transaction_type_status"
@@ -295,7 +307,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "payment_transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "payment_transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "payment_transaction_id"
     t.string "booking_order_no"
     t.string "bill_no"
@@ -310,7 +322,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "role_id"
     t.string "role_description"
     t.string "role_status"
@@ -321,7 +333,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "room_amenities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "room_amenities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "room_amenity_id"
     t.string "room_amenity_name"
     t.string "room_amenity_description"
@@ -332,10 +344,11 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "room_assignments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "room_assignments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "room_assignment_id"
     t.string "customer_id"
     t.string "customer_names"
+    t.string "booking_order_id"
     t.string "room_id"
     t.string "start_date"
     t.string "end_date"
@@ -347,7 +360,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "room_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "room_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "room_type_id"
     t.string "room_type_description"
     t.string "room_type_status"
@@ -359,7 +372,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "rooms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "rooms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "room_id"
     t.string "room_no"
     t.string "room_name"
@@ -372,7 +385,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "status_clusters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "status_clusters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "status_cluster_id"
     t.string "cluster_description"
     t.string "is_active", default: "1"
@@ -382,7 +395,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "statuses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "statuses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "status_id"
     t.string "status_cluster_id"
     t.string "status_description"
@@ -393,7 +406,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "tickets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "tickets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "ticket_id"
     t.string "ticket_no"
     t.string "customer_id"
@@ -406,7 +419,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "unit_of_measures", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "unit_of_measures", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "unit_id"
     t.string "unit_description"
     t.string "unit_status"
@@ -417,7 +430,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_071310) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "user_id"
     t.string "username"
     t.string "id_document_no"
