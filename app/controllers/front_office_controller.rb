@@ -291,8 +291,11 @@ class FrontOfficeController < ApplicationController
 
   # POST check_in
   def check_in
-    # allow matching each of our customers to a room  
+    # allow matching each of our customers to a room
+    # Create a customer rooms relation that can match multiple customers to a room
+    # change the status of assigned rooms to booked in
     # Utilize room_
+    CustomerRoom.new
     response = {
       status: 200,
       message: "Check In successful",

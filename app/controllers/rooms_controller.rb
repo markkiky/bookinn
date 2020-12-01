@@ -6,9 +6,17 @@ class RoomsController < ApplicationController
     @rooms = Room.all
     @rumus = []
     @rooms.each do |room|
+      @room_type = Room.room_type(room.id)
+
       @room = {
-        room: room,
-        room_type: Room.room_type(room.id),
+        id: room.id,
+        room_no: room.room_no,
+        room_name: room.room_name,
+        room_price: room.room_price,
+        room_type_id: @room_type.id,
+        room_type_description: @room_type.room_type_description,
+        room_type_status: @room_type.room_type_status,
+        room_type_total: @room_type.room_type_total,
       }
       @rumus << @room
     end
@@ -28,8 +36,8 @@ class RoomsController < ApplicationController
       message: "A specific room",
       data: {
         room: @room,
-        room_type: Room.room_type(@room.id)
-      }
+        room_type: Room.room_type(@room.id),
+      },
     }
     render json: response
   end
@@ -40,7 +48,7 @@ class RoomsController < ApplicationController
     response = {
       status: 200,
       message: "Room created successfully",
-      data: @room
+      data: @room,
     }
     if @room.save
       render json: response, status: :created, location: @room
@@ -82,6 +90,6 @@ class RoomsController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def room_params
-    params.require(:room).permit(:room_id, :room_no, :room_name, :room_type_id)
+    params.require(:room).permit(:room_id, :room_no, :room_name, :room_type_id, :room_price)
   end
 end
