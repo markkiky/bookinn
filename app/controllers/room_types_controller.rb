@@ -5,20 +5,37 @@ class RoomTypesController < ApplicationController
   def index
     @room_types = RoomType.all
 
-    render json: @room_types
+    response = {
+      status: 200,
+      message: "All Room Types",
+      data: @room_types
+    }
+
+    render json: response
   end
 
   # GET /room_types/1
   def show
-    render json: @room_type
+    response = {
+      status: 200,
+      message: "A specific room type",
+      data: @room_type
+    }
+    render json: response
   end
 
   # POST /room_types
   def create
     @room_type = RoomType.new(room_type_params)
 
+    response = {
+      status: 200,
+      message: "Room Type created successfully",
+      data: @room_type
+    }
+
     if @room_type.save
-      render json: @room_type, status: :created, location: @room_type
+      render json: response, status: :created, location: @room_type
     else
       render json: @room_type.errors, status: :unprocessable_entity
     end
@@ -27,7 +44,13 @@ class RoomTypesController < ApplicationController
   # PATCH/PUT /room_types/1
   def update
     if @room_type.update(room_type_params)
-      render json: @room_type
+
+      response = {
+        status: 200,
+        message: "Room Type updated successfully",
+        data: @room_type
+      }
+      render json: response
     else
       render json: @room_type.errors, status: :unprocessable_entity
     end
@@ -36,6 +59,12 @@ class RoomTypesController < ApplicationController
   # DELETE /room_types/1
   def destroy
     @room_type.destroy
+    response = {
+      status: 200,
+      message: "Room Type deleted successfully",
+      data: @room_type
+    }
+    render json: response
   end
 
   private
