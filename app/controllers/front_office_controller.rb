@@ -270,15 +270,6 @@ class FrontOfficeController < ApplicationController
           )
         end
         @customer.save
-        @booked = {
-          booking_order_id: @bookinn.booking_order_id,
-          booking_order_date: @bookinn.booking_order_date,
-          stay_start_date: @bookinn.stay_start_date,
-          stay_end_date: @bookinn.stay_end_date,
-          total_applicants: @bookinn.total_applicants,
-          customers: @customer,
-        }
-
         @customer_response << @customer
 
         # Save as a booking belonging to particular customer
