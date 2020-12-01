@@ -1,5 +1,6 @@
 class RoomTypesController < ApplicationController
   before_action :set_room_type, only: [:show, :update, :destroy]
+  before_action :authorize_request
 
   # GET /room_types
   def index

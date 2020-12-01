@@ -1,5 +1,6 @@
 class StatusClustersController < ApplicationController
   before_action :set_status_cluster, only: [:show, :update, :destroy]
+  before_action :authorize_request
 
   # GET /status_clusters
   def index
