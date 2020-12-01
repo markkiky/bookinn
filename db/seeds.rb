@@ -58,3 +58,7 @@ Role.create(role_id: "1", role_description: "Admin", role_status: "1")
 Role.create(role_id: "2", role_description: "Finance", role_status: "1")
 Role.create(role_id: "3", role_description: "Front Office", role_status: "1")
 Role.create(role_id: "4", role_description: "Maintainance", role_status: "1")
+
+
+User.create(email: "too@nouveta.tech", password: "123456", username: "BT")
+User.create(email: "mark@nouveta.tech", password: "123456", username: "MK")

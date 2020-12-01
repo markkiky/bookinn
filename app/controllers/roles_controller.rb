@@ -1,16 +1,26 @@
 class RolesController < ApplicationController
   before_action :set_role, only: [:show, :update, :destroy]
-
+  before_action :authorize_request
+  
   # GET /roles
   def index
-    @roles = Role.all
-
-    render json: @roles
+    @roles = Role.all.where(:is_active => 1)
+    response = {
+      status: 200,
+      message: "All Roles",
+      data: @roles
+    }
+    render json: response
   end
 
   # GET /roles/1
   def show
-    render json: @role
+    response = {
+      status: 200,
+      message: "Specific Role",
+      data: @role
+    }
+    render json: response
   end
 
   # POST /roles
@@ -18,7 +28,12 @@ class RolesController < ApplicationController
     @role = Role.new(role_params)
 
     if @role.save
-      render json: @role, status: :created, location: @role
+      response = {
+        status: 200,
+        message: "Role created successfully",
+        data: @role
+      }
+      render json: response, status: :created, location: @role
     else
       render json: @role.errors, status: :unprocessable_entity
     end
@@ -27,7 +42,12 @@ class RolesController < ApplicationController
   # PATCH/PUT /roles/1
   def update
     if @role.update(role_params)
-      render json: @role
+      response = {
+        status: 200,
+        message: "Role updated successfully",
+        data: @role
+      }
+      render json: response
     else
       render json: @role.errors, status: :unprocessable_entity
     end
@@ -35,7 +55,15 @@ class RolesController < ApplicationController
 
   # DELETE /roles/1
   def destroy
-    @role.destroy
+    @role.update(:is_active => 0)
+    response = {
+      status: 200,
+      message: "Role deleted Successfully",
+      data: @role
+    }
+    # @role.destroy
+    render json: response
+
   end
 
   private

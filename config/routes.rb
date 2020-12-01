@@ -47,6 +47,9 @@ Rails.application.routes.draw do
   post "check_in", to: "front_office#check_in"
   post 'check_out', to: "front_office#check_out"
 
+  # status
+  get 'status/:id', to: "status_clusters#status"
+
   # Dashboard
   get 'dashboard', to: "front_office#dashboard"
 

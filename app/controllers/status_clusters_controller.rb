@@ -68,6 +68,18 @@ class StatusClustersController < ApplicationController
     render json: response
   end
 
+  # GET /status/1
+  def status
+    @statuses = Status.all.where(:status_cluster_id => params[:id])
+    response = {
+      status: 200,
+      message: "Statuses in Cluster",
+      data: @statuses
+    }
+
+    render json: @statuses
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_status_cluster
