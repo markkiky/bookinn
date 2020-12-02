@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   require "bcrypt"
   require "jwt"
+  require "csv"
 
   def authorize_request
     header = request.headers["Authorization"]

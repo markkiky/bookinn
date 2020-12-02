@@ -254,34 +254,25 @@ class FrontOfficeController < ApplicationController
       # loop through customers in the bookinn
       bookinn['customers'].each do |customer|
         # check if customer exists
-        if  @customer = Customer.where(:customer_email => customer['customer_email']).first 
+        if  @customer = Customer.where(:email => customer['email']).first 
           # update customers details
           @customer.update(
-            customer_names: "#{customer['first_name']} #{customer['surname']} #{customer['other_name']}",
-            customer_id_no: customer["customer_id_no"],
+            names: "#{customer['first_name']} #{customer['last_name']}",
+            id_no: customer["id_no"],
             country_id: customer['country_id'],
-            customer_mobile: customer['customer_mobile']
+            phone: customer['phone']
           )
         else
           @customer = Customer.new(
             customer_id: customer['customer_id'],
-            customer_names: "#{customer['first_name']} #{customer['surname']} #{customer['other_name']}",
-            customer_id_no: customer["customer_id_no"],
+            names: "#{customer['first_name']} #{customer['last_name']}",
+            id_no: customer["id_no"],
             country_id: customer['country_id'],
-            customer_mobile: customer['customer_mobile'],
-            customer_email: customer["customer_email"]
+            phone: customer['phone'],
+            email: customer["email"]
           )
         end
         @customer.save
-        @booked = {
-          booking_order_id: @bookinn.booking_order_id,
-          booking_order_date: @bookinn.booking_order_date,
-          stay_start_date: @bookinn.stay_start_date,
-          stay_end_date: @bookinn.stay_end_date,
-          total_applicants: @bookinn.total_applicants,
-          customers: @customer
-        }
-        
         @customer_response << @customer
         
         # Save as a booking belonging to particular customer
@@ -369,12 +360,12 @@ class FrontOfficeController < ApplicationController
         
           :customer_id,
           :first_name,
-          :surname, 
-          :other_name,
-          :customer_id_no,
+          :last_name, 
+          :gender,
+          :id_no,
           :country_id,
-          :customer_mobile,
-          :customer_email
+          :phone,
+          :email
     
         
       ] 

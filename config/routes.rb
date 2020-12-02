@@ -59,4 +59,7 @@ Rails.application.routes.draw do
   # reset password routes
   post 'password/forgot', to: 'authentication#forgot'
   post 'password/reset', to: 'authentication#reset'
+
+  # Upload Customers CSV
+  post 'upload/customer/csv', to: "front_office#upload_customers_csv"
 end

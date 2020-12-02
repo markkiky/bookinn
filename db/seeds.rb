@@ -5,7 +5,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-Customer.create(customer_no: "254", customer_id: "1", customer_type_id: '1', country_id: "1", customer_names: "Mark Kariuki", customer_email: "markkaris438@gmail.com", customer_mobile: "254714420943", customer_address: "626 Muranga", customer_postcode: "10200", customer_status: "25", customer_status_date: "30-01-2020", last_visit: "20-12-2020", last_invoice: "20-12-2020", last_receipt: "20-12-2020", created_by: "1", updated_by: "1")
+Customer.create(customer_no: "254", customer_id: "1", customer_type_id: '1', country_id: "1", names: "Mark Kariuki", email: "markkaris438@gmail.com", phone: "254714420943", address: "626 Muranga", postal_code: "10200", customer_status: "25", customer_status_date: "30-01-2020", last_visit: "20-12-2020", last_invoice: "20-12-2020", last_receipt: "20-12-2020", created_by: "1", updated_by: "1")
 
 RoomType.create(room_type_id: "1", room_type_description: "Deluxe Room", room_type_total: "2", created_by: "1", updated_by: "1", room_type_status: "1")
 RoomType.create(room_type_id: "2", room_type_description: "Standard Room", room_type_total: "5", created_by: "1", updated_by: "1", room_type_status: "1")
