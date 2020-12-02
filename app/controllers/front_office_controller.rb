@@ -297,7 +297,7 @@ class FrontOfficeController < ApplicationController
       }
       @walkin_bookinn_response << @booked
       # byebug
-      @customer_response.clear()
+      @customer_response = []
     end
     # BookingOrder.new()
     puts walkin_bookinn_params
