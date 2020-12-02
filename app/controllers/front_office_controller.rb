@@ -142,23 +142,22 @@ class FrontOfficeController < ApplicationController
     render json: response
   end
 
-
   def arrivals_departures
     puts expected_arrival_params[]
-    if !params['status'].blank?
+    if !params["status"].blank?
       n = FrontOfficeController.new
-      if params['status'] == "1"
+      if params["status"] == "1"
         # redirect_to expected_arrivals_path
-        n.expected_arrivals(expected_arrival_params['status'])
-      elsif params['status'] == "2"
+        n.expected_arrivals(expected_arrival_params["status"])
+      elsif params["status"] == "2"
         # redirect_to expected_departures_path
-        n.expected_departures(expected_arrival_params['status'])
+        n.expected_departures(expected_arrival_params["status"])
       end
     else
-      # status is blank 
+      # status is blank
       response = {
         status: 400,
-        error: "Status is required"
+        error: "Status is required",
       }
       render json: response
     end
@@ -222,7 +221,7 @@ class FrontOfficeController < ApplicationController
       response = {
         status: 400,
         message: "Please provide a customer id",
-        data: []
+        data: [],
       }
     end
 
@@ -240,36 +239,36 @@ class FrontOfficeController < ApplicationController
     @walkin_bookinn_response = []
 
     # loop through bookings
-    walkin_bookinn_params['booking'].each do |bookinn|
+    walkin_bookinn_params.each do |bookinn|
       @bookinn = BookingOrder.new(
-        booking_order_id: bookinn['booking_order_id'],
+        booking_order_id: bookinn["booking_order_id"],
         booking_order_date: bookinn["booking_order_date"],
-        stay_start_date: bookinn['stay_start_date'],
-        stay_end_date: bookinn['stay_end_date'],
-        total_applicants: bookinn['total_applicants']
+        stay_start_date: bookinn["stay_start_date"],
+        stay_end_date: bookinn["stay_end_date"],
+        total_applicants: bookinn["total_applicants"],
       )
       @bookinn.save
       @booking_response << @bookinn
-      
+
       # loop through customers in the bookinn
-      bookinn['customers'].each do |customer|
+      bookinn["customers"].each do |customer|
         # check if customer exists
-        if  @customer = Customer.where(:customer_email => customer['customer_email']).first 
+        if @customer = Customer.where(:customer_email => customer["customer_email"]).first
           # update customers details
           @customer.update(
-            customer_names: "#{customer['first_name']} #{customer['surname']} #{customer['other_name']}",
+            customer_names: "#{customer["first_name"]} #{customer["surname"]} #{customer["other_name"]}",
             customer_id_no: customer["customer_id_no"],
-            country_id: customer['country_id'],
-            customer_mobile: customer['customer_mobile']
+            country_id: customer["country_id"],
+            customer_mobile: customer["customer_mobile"],
           )
         else
           @customer = Customer.new(
-            customer_id: customer['customer_id'],
-            customer_names: "#{customer['first_name']} #{customer['surname']} #{customer['other_name']}",
+            customer_id: customer["customer_id"],
+            customer_names: "#{customer["first_name"]} #{customer["surname"]} #{customer["other_name"]}",
             customer_id_no: customer["customer_id_no"],
-            country_id: customer['country_id'],
-            customer_mobile: customer['customer_mobile'],
-            customer_email: customer["customer_email"]
+            country_id: customer["country_id"],
+            customer_mobile: customer["customer_mobile"],
+            customer_email: customer["customer_email"],
           )
         end
         @customer.save
@@ -279,11 +278,11 @@ class FrontOfficeController < ApplicationController
           stay_start_date: @bookinn.stay_start_date,
           stay_end_date: @bookinn.stay_end_date,
           total_applicants: @bookinn.total_applicants,
-          customers: @customer
+          customers: @customer,
         }
-        
+
         @customer_response << @customer
-        
+
         # Save as a booking belonging to particular customer
         CustomerBooking.create(customer_id: @customer.id, booking_order_id: @bookinn.id)
       end
@@ -293,7 +292,7 @@ class FrontOfficeController < ApplicationController
         stay_start_date: @bookinn.stay_start_date,
         stay_end_date: @bookinn.stay_end_date,
         total_applicants: @bookinn.total_applicants,
-        customers: @customer_response
+        customers: @customer_response,
       }
       @walkin_bookinn_response << @booked
       # byebug
@@ -305,7 +304,7 @@ class FrontOfficeController < ApplicationController
     response = {
       status: 200,
       message: "Walkin Bookins",
-      data: @walkin_bookinn_response
+      data: @walkin_bookinn_response,
     }
     # byebug
     render json: response
@@ -321,7 +320,7 @@ class FrontOfficeController < ApplicationController
     response = {
       status: 200,
       message: "Check In successful",
-      data: []
+      data: [],
     }
 
     render json: response
@@ -331,7 +330,7 @@ class FrontOfficeController < ApplicationController
   def check_out
     response = {
       status: 200,
-      message: "Check Out successful"
+      message: "Check Out successful",
     }
 
     render json: response
@@ -341,41 +340,52 @@ class FrontOfficeController < ApplicationController
     response = {
       status: 200,
       message: "Dashboard values",
-      data: []
+      data: [],
     }
     render json: response
   end
 
+  def upload_customers_csv
+    byebug
+    response = {
+      status: 200,
+    }
+
+    render json: response
+  end
 
   private
+
   def walkin_bookinn_params
-    params.permit(booking: [
-      :booking_order_id,
-      :booking_order_date,
-      :stay_start_date,
-      :stay_end_date,
-      :total_applicants,
-      customers: [
-        
+    params.permit(
+      [
+        :booking_order_id,
+        :booking_order_date,
+        :stay_start_date,
+        :stay_end_date,
+        :total_applicants,
+        customers: [
+
           :customer_id,
           :first_name,
-          :surname, 
+          :surname,
           :other_name,
           :customer_id_no,
           :country_id,
           :customer_mobile,
-          :customer_email
-    
-        
-      ] 
-    ] )
+          :customer_email,
+
+        ],
+      ]
+    )
   end
+
   def walkin_bookinn_param
     params.permit(customer: [
-      :customer_id
-    ], booking: [
-      :booking_order_id
-    ])
+                    :customer_id,
+                  ], booking: [
+                    :booking_order_id,
+                  ])
   end
 
   def show_needs_preferences_params
