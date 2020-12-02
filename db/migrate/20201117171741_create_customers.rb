@@ -5,13 +5,14 @@ class CreateCustomers < ActiveRecord::Migration[6.0]
       t.string :customer_id
       t.string :customer_type_id
       t.string :country_id
-      t.string :customer_names
-      t.string :customer_email
-      t.string :customer_mobile
-      t.string :customer_address
-      t.string :customer_postcode
+      t.string :names
+      t.string :gender
+      t.string :email
+      t.string :phone
+      t.string :address
+      t.string :postal_code
       t.string :customer_status
-      t.string :customer_id_no
+      t.string :id_no
       t.datetime :customer_status_date
       t.datetime :last_visit
       t.datetime :last_invoice
