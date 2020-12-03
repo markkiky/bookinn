@@ -48,8 +48,8 @@ class FrontOfficeController < ApplicationController
         @rumus << @room
       end
       response = {
-        status: 400,
-        error: "A status is required to search for rooms",
+        status: 200,
+        error: "All Rooms and their status",
         data: @rumus,
       }
     else
