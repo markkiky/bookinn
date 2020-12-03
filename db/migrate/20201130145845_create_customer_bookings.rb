@@ -3,6 +3,8 @@ class CreateCustomerBookings < ActiveRecord::Migration[6.0]
     create_table :customer_bookings do |t|
       t.string :customer_id
       t.string :booking_order_id
+      t.string :room_id
+      # t.string :bill_info_id
       t.string :is_active, :default => "1"
       t.string :created_by
       t.string :updated_by

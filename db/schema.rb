@@ -92,6 +92,8 @@ ActiveRecord::Schema.define(version: 2020_12_01_082231) do
     t.string "room_type_id"
     t.datetime "stay_start_date"
     t.datetime "stay_end_date"
+    t.string "discount"
+    t.string "amount"
     t.string "booking_order_status"
     t.string "booking_order_type_id"
     t.string "is_active", default: "1"
@@ -165,6 +167,7 @@ ActiveRecord::Schema.define(version: 2020_12_01_082231) do
   create_table "customer_bookings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "customer_id"
     t.string "booking_order_id"
+    t.string "room_id"
     t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
@@ -185,6 +188,7 @@ ActiveRecord::Schema.define(version: 2020_12_01_082231) do
   create_table "customer_rooms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "customer_id"
     t.string "room_id"
+    t.string "status"
     t.string "created_by"
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false

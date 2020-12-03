@@ -3,12 +3,54 @@ class FrontOfficeController < ApplicationController
   # POST room/status
   def room_availability
     # puts params[:status]
+    
     puts room_status_params
     if room_status_params["status"].blank?
+      # return all rooms and their status
+      @rooms = Room.all.where(:is_active => 1)
+      @rumus = []
+      @rooms.each do |room|
+        # @room_occupancy = Room.room_occupancy(room.id)
+        @room_status = Room.room_status(room.id)
+        # byebug
+        @room_type = Room.room_type(room.id)
+        if room.status == "1" ||  room.status == "4" ||  room.status == "5"
+          @room = {
+            id: room.id,
+            room_no: room.room_no,
+            room_name: room.room_name,
+            room_status: room.status,
+            room_status_description: @room_status[:status_description],
+            room_type_id: @room_type.id,
+            room_type_description: @room_type.room_type_description,
+            room_type_status: @room_type.room_type_status,
+            room_type_total: @room_type.room_type_total
+          }
+        else
+          @dates = Room.room_occupancy(room.id)
+          # byebug
+          @room = {
+            id: room.id,
+            room_no: room.room_no,
+            room_name: room.room_name,
+            room_status: room.status,
+            room_status_description: @room_status[:status_description],
+            room_type_id: @room_type.id,
+            room_type_description: @room_type.room_type_description,
+            room_type_status: @room_type.room_type_status,
+            room_type_total: @room_type.room_type_total,
+            stay_start_date: @dates[:stay_start_date],
+            stay_end_date: @dates[:stay_end_date]
+          }
+        end
+       
+        # byebug
+        @rumus << @room
+      end
       response = {
         status: 400,
         error: "A status is required to search for rooms",
-        data: [],
+        data: @rumus,
       }
     else
       if Status.where(:id => room_status_params["status"]).exists?
@@ -338,7 +380,14 @@ class FrontOfficeController < ApplicationController
   end
 
   def upload_customers_csv
-    byebug
+    # byebug
+    csv_path = params['customer_csv'].path
+    # records = 
+    # CSV.foreach(csv_path, headers: true, :encoding => "ISO-8859-1").map { |row|
+    #   byebug
+    # }
+
+    table = CSV.parse(File.read(csv_path), headers: true)
     response = {
       status: 200
     }
