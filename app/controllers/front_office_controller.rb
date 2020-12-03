@@ -39,8 +39,8 @@ class FrontOfficeController < ApplicationController
             room_type_description: @room_type.room_type_description,
             room_type_status: @room_type.room_type_status,
             room_type_total: @room_type.room_type_total,
-            stay_start_date: @dates[:stay_start_date],
-            stay_end_date: @dates[:stay_end_date]
+            stay_start_date: @dates[:stay_start_date].to_date.to_s,
+            stay_end_date: @dates[:stay_end_date].to_date.to_s
           }
         end
        
