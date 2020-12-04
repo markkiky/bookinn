@@ -16,7 +16,7 @@ class BillInfosController < ApplicationController
   # POST /bill_infos
   def create
     @bill_info = BillInfo.new(bill_info_params)
-
+    @bill_info.bill_no = BillInfo.bill_no
     if @bill_info.save
       render json: @bill_info, status: :created, location: @bill_info
     else
