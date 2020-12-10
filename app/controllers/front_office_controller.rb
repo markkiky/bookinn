@@ -400,9 +400,19 @@ class FrontOfficeController < ApplicationController
     # change the status of assigned rooms to booked in
     # Utilize room_
     # CustomerRoom.new
-    check_in_params["assignments"].each do |assignment|
-      @customer_booking = CustomerBooking.new(:customer_id => assignment["customer_id"], :booking_order_id => assignment["booking_order_id"], :room_id => assignment["room_id"])
-      byebug
+    CustomerBooking.transaction do
+      check_in_params["assignments"].each do |assignment|
+        @customer_booking = CustomerBooking.new(:customer_id => assignment["customer_id"], :booking_order_id => assignment["booking_order_id"], :room_id => assignment["room_id"])
+        @room = Room.find_by(:id => assignment['room_id'])
+        if @room
+          @room.status = "2"
+          @room.save
+          @customer_booking.save
+        else
+
+        end
+        
+      end
     end
 
     # CustomerBooking.new
