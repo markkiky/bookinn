@@ -118,6 +118,7 @@ class FrontOfficeController < ApplicationController
         message: "Expected Arrivals for today",
         data: @booking_response,
       }
+      # byebug
     else
       begin
         Date.parse(expected_arrival_params["start_date"])
@@ -135,17 +136,18 @@ class FrontOfficeController < ApplicationController
           # @booking_orders = BookingOrder.where("stay_start_date > ?", expected_arrival_params["start_date"])
         end
         @booking_response = []
-          @booking_orders.each do |order|
-            @booking = {
-              booking_order_id: order.booking_order_id,
-              booking_order_date: order.booking_order_date,
-              stay_start_date: order.stay_start_date,
-              stay_end_date: order.stay_end_date,
-              total_applicants: order.total_applicants,
-              customers: BookingOrder.booking_customer(order.id),
-            }
-            @booking_response << @booking
-          end
+        # byebug
+        @booking_orders.each do |order|
+          @booking = {
+            booking_order_id: order.id,
+            booking_order_date: order.booking_order_date,
+            stay_start_date: order.stay_start_date,
+            stay_end_date: order.stay_end_date,
+            total_applicants: order.total_applicants,
+            customers: BookingOrder.booking_customer(order.id),
+          }
+          @booking_response << @booking
+        end
         response = {
           status: 200,
           message: "Expected Arrivals",
