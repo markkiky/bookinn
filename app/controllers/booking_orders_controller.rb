@@ -3,11 +3,17 @@ class BookingOrdersController < ApplicationController
 
   # GET /booking_orders
   def index
-    @booking_orders = BookingOrder.all
+    @booking_orders = BookingOrder.all.where(:is_active => 1)
     @bookings = []
     @booking_orders.each do |booking_order|
       @booking = {
-        booking: booking_order,
+        # booking: booking_order,
+        booking_order_id: booking_order.id,
+        booking_order_date: booking_order.booking_order_date,
+        total_applicants: booking_order.total_applicants,
+        room_type_description: RoomType.find_by(:id => booking_order.room_type_id) ? RoomType.find_by(:id => booking_order.room_type_id).room_type_description : "Room Type not defined",
+        stay_start_date: booking_order.stay_start_date,
+        stay_end_date: booking_order.stay_end_date,
         customers: BookingOrder.booking_customer(booking_order.id)
       }
       @bookings << @booking

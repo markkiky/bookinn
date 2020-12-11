@@ -9,7 +9,7 @@ class StatusClustersController < ApplicationController
     response = {
       status: 200,
       message: "All Status Clusters",
-      data: @status_clusters
+      data: @status_clusters,
     }
 
     render json: response
@@ -20,7 +20,7 @@ class StatusClustersController < ApplicationController
     response = {
       status: 200,
       message: "Specific Status Cluster",
-      data: @status_cluster
+      data: @status_cluster,
     }
     render json: response
   end
@@ -28,12 +28,12 @@ class StatusClustersController < ApplicationController
   # POST /status_clusters
   def create
     @status_cluster = StatusCluster.new(status_cluster_params)
-    
+
     if @status_cluster.save
       response = {
         status: 200,
         message: "Created status Cluster successfully",
-        data: @status_cluster
+        data: @status_cluster,
       }
       render json: response, status: :created, location: @status_cluster
     else
@@ -47,7 +47,7 @@ class StatusClustersController < ApplicationController
       response = {
         status: 200,
         message: "Updated status Cluster successfully",
-        data: @status_cluster
+        data: @status_cluster,
       }
       render json: response
     else
@@ -62,7 +62,7 @@ class StatusClustersController < ApplicationController
     response = {
       status: 200,
       message: "Status Cluster deleted successfully",
-      data: @status_cluster
+      data: @status_cluster,
     }
 
     render json: response
@@ -70,24 +70,35 @@ class StatusClustersController < ApplicationController
 
   # GET /status/1
   def status
-    @statuses = Status.all.where(:status_cluster_id => params[:id])
-    response = {
-      status: 200,
-      message: "Statuses in Cluster",
-      data: @statuses
-    }
+    if @statuses = Status.all.where(:status_cluster_id => params[:id])
 
-    render json: @statuses
+      if @status = StatusCluster.find_by(:id => params[:id])
+        @status = @status.cluster_description.capitalize
+      end
+      response = {
+        status: 200,
+        message: "Statuses in Cluster: #{@status}",
+        data: @statuses,
+      }
+    else
+      response = {
+        status: 200,
+        message: "No Statuses Found in the specified Cluster",
+        data: [],
+      }
+    end
+    render json: response
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_status_cluster
-      @status_cluster = StatusCluster.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def status_cluster_params
-      params.require(:status_cluster).permit(:status_cluster_id, :cluster_description)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_status_cluster
+    @status_cluster = StatusCluster.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def status_cluster_params
+    params.require(:status_cluster).permit(:status_cluster_id, :cluster_description)
+  end
 end

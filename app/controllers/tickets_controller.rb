@@ -4,23 +4,46 @@ class TicketsController < ApplicationController
   # GET /tickets
   def index
     @tickets = Ticket.all
+    response = {
+      status: 200,
+      message: "All Customer Complains",
+      data: @tickets
+    }
+   
 
-    render json: @tickets
+    render json: response
   end
 
   # GET /tickets/1
   def show
-    render json: @ticket
+    response = {
+      status: 200,
+      message: "All Customer Complains",
+      data: @ticket
+    }
+    render json: response
   end
 
   # POST /tickets
   def create
     @ticket = Ticket.new(ticket_params)
+     
+    
 
     if @ticket.save
-      render json: @ticket, status: :created, location: @ticket
+      response = {
+        status: 200,
+        message: "Ticket Created Successfully",
+        data: @ticket
+      }
+      render json: response, status: :created, location: @ticket
     else
-      render json: @ticket.errors, status: :unprocessable_entity
+      response = {
+        status: 200,
+        message: "Failed to create ticket",
+        data: @ticket.errors
+      }
+      render json: response, status: :unprocessable_entity
     end
   end
 

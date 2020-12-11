@@ -4,8 +4,12 @@ class CustomerTypesController < ApplicationController
   # GET /customer_types
   def index
     @customer_types = CustomerType.all
-
-    render json: @customer_types
+    response = {
+      status: 200,
+      message: "All Customer Types",
+      data: @customer_types
+    }
+    render json: response
   end
 
   # GET /customer_types/1
@@ -16,10 +20,21 @@ class CustomerTypesController < ApplicationController
   # POST /customer_types
   def create
     @customer_type = CustomerType.new(customer_type_params)
-
+    @customer_type.customer_id = CustomerType.customer_type_id
+    
     if @customer_type.save
-      render json: @customer_type, status: :created, location: @customer_type
+      response = {
+        status: 200,
+        message: "Customer Type Created Successfully",
+        data: @customer_type
+      }
+      render json: response, status: :created, location: @customer_type
     else
+      response = {
+        status: 200,
+        message: "Failed to create Customer Type",
+        data: @customer_type.errors
+      }
       render json: @customer_type.errors, status: :unprocessable_entity
     end
   end
@@ -46,6 +61,6 @@ class CustomerTypesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def customer_type_params
-      params.require(:customer_type).permit(:customer_type_id, :customer_type_description, :customer_type_status)
+      params.permit(:customer_type_id, :customer_type_description, :customer_type_status)
     end
 end

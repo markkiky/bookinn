@@ -1,51 +1,121 @@
 class CustomersController < ApplicationController
   before_action :set_customer, only: [:show, :update, :destroy]
+  before_action :authorize_request
 
   # GET /customers
   def index
-    @customers = Customer.all
+    @customers = Customer.all.where(:is_active => 1)
+    @customers_response = []
+    @customers.each do |customer|
+      @customer = {
+        customer_id: customer.id,
+        customer_no: customer.customer_no,
+        customer_type_description: CustomerType.find_by(:id => customer.customer_type_id) ? CustomerType.find_by(:id => customer.customer_type_id).customer_type_description : "Customer Type not defined",
+        country: Country.find_by(:id => customer.country_id) ? Country.find_by(:id => customer.country_id).name : "Country not defined",
+        names: customer.names,
+        gender: customer.gender,
+        email: customer.email,
+        phone: customer.phone,
+        id_no: customer.id_no,
+        bookings: Customer.customer_bookings(customer.id),
+      }
+      @customers_response << @customer
+    end
+    response = {
+      status: 200,
+      message: "All customers and their bookings",
+      data: @customers_response,
+    }
 
-    render json: @customers
+    render json: response
   end
 
   # GET /customers/1
   def show
-    render json: @customer
+    @customer_response = {
+      customer_id: @customer.id,
+      customer_no: @customer.customer_no,
+      customer_type_description: Country.find_by(:id => @customer.country_id) ? Country.find_by(:id => @customer.country_id).name : "Country not defined",
+      country: Country.find_by(:id => @customer.country_id) ? Country.find_by(:id => @customer.country_id).name : "Country not defined",
+      names: @customer.names,
+      gender: @customer.gender,
+      email: @customer.email,
+      phone: @customer.phone,
+      id_no: @customer.id_no,
+      bookings: Customer.customer_bookings(@customer.id),
+    }
+    response = {
+      status: 200,
+      message: "Specific Customer",
+      data: @customer_response,
+    }
+    render json: response
   end
 
   # POST /customers
   def create
     @customer = Customer.new(customer_params)
-
+    @customer.customer_no = Customer.customer_no
+    @customer.customer_id = Customer.customer_id
+    @customer.created_by = current_user
+    
     if @customer.save
-      render json: @customer, status: :created, location: @customer
+      response = {
+        status: 200,
+        message: "Customer created successfully",
+        data: @customer,
+      }
+      render json: response, status: :created, location: @customer
     else
-      render json: @customer.errors, status: :unprocessable_entity
+      response = {
+        status: 200,
+        message: "Failed to create Customer",
+        data: @customer.errors,
+      }
+      render json: response, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /customers/1
   def update
+    @customer.updated_by = current_user
     if @customer.update(customer_params)
-      render json: @customer
+      response = {
+        status: 200,
+        message: "Customer updated successfully",
+        data: @customer,
+      }
+      render json: response
     else
-      render json: @customer.errors, status: :unprocessable_entity
+      response = {
+        status: 200,
+        message: "Failed to update customer",
+        data: @customer.errors,
+      }
+      render json: response, status: :unprocessable_entity
     end
   end
 
   # DELETE /customers/1
   def destroy
-    @customer.destroy
+    @customer.update(:is_active => 0)
+    response = {
+      status: 200,
+      message: "Customer deleted successfully",
+      data: @customer
+    }
+    render json: response
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_customer
-      @customer = Customer.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def customer_params
-      params.permit(:customer_no, :customer_id, :customer_type_id, :country_id, :customer_id_no, :customer_names, :customer_email, :customer_mobile, :customer_address, :customer_postcode, :customer_status, :customer_status_date, :last_visit, :last_invoice, :last_receipt, :created_by, :updated_by, :id_document)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_customer
+    @customer = Customer.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def customer_params
+    params.permit(:customer_no, :customer_id, :customer_type_id, :country_id, :id_no, :gender, :names, :email, :phone, :customer_address, :postal_code, :address, :customer_status, :customer_status_date, :last_visit, :last_invoice, :last_receipt, :created_by, :updated_by)
+  end
 end

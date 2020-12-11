@@ -6,6 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 Customer.create(customer_no: "254", customer_id: "1", customer_type_id: '1', country_id: "1", names: "Mark Kariuki", email: "markkaris438@gmail.com", phone: "254714420943", address: "626 Muranga", postal_code: "10200", customer_status: "25", customer_status_date: "30-01-2020", last_visit: "20-12-2020", last_invoice: "20-12-2020", last_receipt: "20-12-2020", created_by: "1", updated_by: "1")
+CustomerType.create(customer_type_id: CustomerType.customer_type_id ,customer_type_description: "Adult")
 
 RoomType.create(room_type_id: "1", room_type_description: "Deluxe Room", room_type_total: "2", created_by: "1", updated_by: "1", room_type_status: "1")
 RoomType.create(room_type_id: "2", room_type_description: "Standard Room", room_type_total: "5", created_by: "1", updated_by: "1", room_type_status: "1")
@@ -37,11 +38,15 @@ Status.create(status_id: '12', status_cluster_id: "3", status_description: "pref
 Status.create(status_id: "13", status_cluster_id: "4", status_description: "pending")
 Status.create(status_id: "14", status_cluster_id: "4", status_description: "resolved")
 
+Status.create(status_id: "13", status_cluster_id: "4", status_description: "unpaid")
+Status.create(status_id: "14", status_cluster_id: "4", status_description: "paid")
+
 StatusCluster.create(status_cluster_id: "1", cluster_description: "Room Occupation status")
 # StatusCluster.create(status_cluster_id: "2", cluster_description: "Room Type status")
 StatusCluster.create(status_cluster_id: "2", cluster_description: "Booking Order status")
 StatusCluster.create(status_cluster_id: "3", cluster_description: "Need Type status")
 StatusCluster.create(status_cluster_id: "4", cluster_description: "Ticket status")
+StatusCluster.create(status_cluster_id: "5", cluster_description: "Bills status")
 
 BookingOrder.create(booking_order_id: "1", booking_order_date: "21-01-2020", customer_id: "1", total_applicants: "1",  room_type_id: "1", stay_start_date: "01-11-2020", stay_end_date: "31-01-2021", booking_order_status: "2", booking_order_type_id: "1", created_by: "1", updated_by: "1")
 BookingOrder.create(booking_order_id: "2", booking_order_date: "26-11-2020", customer_id: "1", total_applicants: "10", room_type_id: "1", stay_start_date: "01-12-2020", stay_end_date: "05-01-2021", booking_order_status: "2", booking_order_type_id: "3", created_by: "1", updated_by: "1")

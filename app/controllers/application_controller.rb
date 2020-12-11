@@ -26,6 +26,10 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def current_user
+    return @current_user.id
+  end
+
   def execute_statement(sql)
     results = ActiveRecord::Base.connection.execute(sql)
 
