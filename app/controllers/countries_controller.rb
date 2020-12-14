@@ -4,8 +4,14 @@ class CountriesController < ApplicationController
   # GET /countries
   def index
     @countries = Country.all
+    response = {
+      status: 200,
+      message: "All Countries",
+      data: @countries
+    }
+    
 
-    render json: @countries
+    render json: response
   end
 
   # GET /countries/1
