@@ -393,6 +393,37 @@ class FrontOfficeController < ApplicationController
     render json: response
   end
 
+  # POST /bookinn/1/add_customer
+  def add_customer_to_booking
+    # if @customer = 
+    # check if booking exists
+    @booking_order = BookingOrder.find_by(:id => params[:id])
+    @customer = Customer.find_by(:email => customer_params['email']) || Customer.find_by(:id_no => customer_params['id_no'])
+    
+    if @customer == nil
+      # new customer
+      @customer = Customer.new(
+        customer_params
+      )
+      @customer.customer_no = Customer.customer_no
+      @customer.customer_id = Customer.customer_id
+      @customer.save
+    else
+      # update customer
+      @customer.update(
+        customer_params
+      )
+    end
+    @customer_booking = CustomerBooking.new(:customer_id => @customer.id, :booking_order_id => @booking_order.id)
+    @customer_booking.save
+    response = {
+      status: 200,
+      message: "Adding Customer to Booking",
+      data: @customer
+    }
+    render json: response
+  end
+
   # POST check_in
   def check_in
     # allow matching each of our customers to a room
@@ -449,10 +480,10 @@ class FrontOfficeController < ApplicationController
         
       end
 
-      # Generate bill for the assignments
-      @booking_orders.each do |booking|
-        BookingOrder.bill_booking(booking)
-      end
+      # # Generate bill for the assignments
+      # @booking_orders.each do |booking|
+      #   BookingOrder.bill_booking(booking)
+      # end
     end
 
     
@@ -502,6 +533,9 @@ class FrontOfficeController < ApplicationController
   end
 
   private
+  def customer_params
+    params.permit(:customer_no, :customer_id, :customer_type_id, :country_id, :id_no, :gender, :names, :email, :phone, :customer_address, :postal_code, :address, :customer_status, :customer_status_date, :last_visit, :last_invoice, :last_receipt, :created_by, :updated_by)
+  end
 
   def check_in_params
     params.permit(
