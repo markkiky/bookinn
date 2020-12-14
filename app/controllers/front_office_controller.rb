@@ -1,4 +1,5 @@
 class FrontOfficeController < ApplicationController
+  before_action :authorize_request
 
   # POST room/status
   def room_availability
@@ -395,11 +396,11 @@ class FrontOfficeController < ApplicationController
 
   # POST /bookinn/1/add_customer
   def add_customer_to_booking
-    # if @customer = 
+    # if @customer =
     # check if booking exists
     @booking_order = BookingOrder.find_by(:id => params[:id])
-    @customer = Customer.find_by(:email => customer_params['email']) || Customer.find_by(:id_no => customer_params['id_no'])
-    
+    @customer = Customer.find_by(:email => customer_params["email"]) || Customer.find_by(:id_no => customer_params["id_no"])
+
     if @customer == nil
       # new customer
       @customer = Customer.new(
@@ -419,7 +420,7 @@ class FrontOfficeController < ApplicationController
     response = {
       status: 200,
       message: "Adding Customer to Booking",
-      data: @customer
+      data: @customer,
     }
     render json: response
   end
@@ -434,7 +435,7 @@ class FrontOfficeController < ApplicationController
     @booking_orders = []
     @response = nil
     @customer_bookings_response = []
-    puts "Params: " 
+    puts "Params: "
     puts params
 
     # verify customer booking is valid
@@ -443,10 +444,10 @@ class FrontOfficeController < ApplicationController
       check_in_params["assignments"].each do |assignment|
         # byebug
         @customer_booking = CustomerBooking.new(:customer_id => assignment["customer_id"], :booking_order_id => assignment["booking_order_id"], :room_id => assignment["room_id"])
-        @customer = Customer.find_by(:id => assignment['customer_id'])
-        @room = Room.find_by(:id => assignment['room_id'])
-        @booking_order = BookingOrder.find_by(:id => assignment['booking_order_id'])
-        @booking_orders << assignment['booking_order_id']
+        @customer = Customer.find_by(:id => assignment["customer_id"])
+        @room = Room.find_by(:id => assignment["room_id"])
+        @booking_order = BookingOrder.find_by(:id => assignment["booking_order_id"])
+        @booking_orders << assignment["booking_order_id"]
         @bill = BookingOrder.bill_booking(@booking_order.id)
         # byebug
         @customer_booking_response = {
@@ -455,29 +456,27 @@ class FrontOfficeController < ApplicationController
           bill_no: @bill[:bill_no],
           bill_amount: @bill[:bill_amount],
           discount: @booking_order.discount,
-          sharing: @booking_order.total_applicants
+          sharing: @booking_order.total_applicants,
         }
-        @room = Room.find_by(:id => assignment['room_id'])
+        @room = Room.find_by(:id => assignment["room_id"])
         if @room
           @room.status = "2"
           @room.save
           @customer_booking.save
-          @customer_bookings_response << @customer_booking_response 
-          @response ={
+          @customer_bookings_response << @customer_booking_response
+          @response = {
             status: 200,
             message: "Customer Booking created successfully. Room Assigned",
-            data: @customer_bookings_response
+            data: @customer_bookings_response,
           }
         else
           # @room.errors = ["Room not Found"]
           @response = {
             status: 200,
-            message: "Error finding room with ID: #{assignment['room_id']}",
-            data: @room
+            message: "Error finding room with ID: #{assignment["room_id"]}",
+            data: @room,
           }
-          
         end
-        
       end
 
       # # Generate bill for the assignments
@@ -486,7 +485,6 @@ class FrontOfficeController < ApplicationController
       # end
     end
 
-    
     render json: @response
   end
 
@@ -532,7 +530,95 @@ class FrontOfficeController < ApplicationController
     render json: response
   end
 
+  # Creates a booking with many details
+  # Generates a bill and bill details
+  def mass_booking
+    # create booking
+    # byebug
+    @customer = Customer.find_or_create_by(email: "mark@nouveta.tech")
+    begin
+      BookingOrder.transaction do
+        @booking_order = BookingOrder.new(
+          :booking_order_id => BookingOrder.booking_order_id,
+          :booking_order_date => Time.now,
+          :booking_order_type_id => "3",
+          :created_by => @current_user,
+          :customer_id => @customer.id
+        )
+        @booking_order.save
+
+        # create bill
+        # byebug
+        @bill_info = BillInfo.new(
+          :bill_no => BillInfo.bill_no,
+          :bill_date => Time.now,
+          :bill_total => "",
+          :customer_id => @customer.id,
+          :created_by => @current_user.id
+        )
+        @bill_info.save
+        # associate bill, booking order and customer
+        @customer_booking = CustomerBooking.new(:booking_order_id => @booking_order.id, :customer_id => @customer.id, :bill_info_id => @bill_info.id)
+        @customer_booking.save
+        mass_booking_params["bookings"].each do |booking|
+          puts booking
+          @booking_order_detail = BookingOrderDetail.new(
+            :booking_order_id => @booking_order.id,
+            :room_type_id => booking[:room_type_id],
+            :stay_start_date => booking[:stay_start_date],
+            :stay_end_date => booking[:stay_end_date],
+            :total_applicants => booking[:total_applicants],
+          )
+
+          @booking_order_detail.save
+          # generate a bill detail
+          @bill_detail = BillDetail.new(
+            :bill_no => @bill_info.bill_no,
+            :bill_info_id => @bill_info.id,
+            :room_type_id => @booking_order_detail.room_type_id,
+            :booking_order_detail_id => @booking_order_detail.id,
+            :amount => RoomType.find_by(:id => @booking_order_detail.room_type_id).room_price.to_i * @booking_order_detail.total_applicants.to_i
+          )
+          @bill_detail.save
+          # compute bill amount
+          bill_total = 
+          @bill_info.update(:bill_total => @bill_info.bill_total.to_i + @bill_detail.amount.to_i)
+        end
+      end
+      response = {
+        status: 200,
+        message: "Mass Booking created",
+        data: {
+          bill: BookingOrder.bills(@booking_order.id)
+        },
+      }
+    rescue ActiveRecord::RecordInvalid => invalid
+      response = {
+        status: 200,
+        message: "Error saving mass booking",
+        error: invalid
+      }
+    end
+    
+    render json: response
+  end
+
   private
+
+  def mass_booking_params
+    params.permit(
+      :email,
+      :names,
+      :phone,
+      bookings: [
+        :room_type_id,
+        :stay_start_date,
+        :stay_end_date,
+        :total_applicants,
+      ],
+    )
+  end
+
   def customer_params
     params.permit(:customer_no, :customer_id, :customer_type_id, :country_id, :id_no, :gender, :names, :email, :phone, :customer_address, :postal_code, :address, :customer_status, :customer_status_date, :last_visit, :last_invoice, :last_receipt, :created_by, :updated_by)
   end
@@ -555,7 +641,6 @@ class FrontOfficeController < ApplicationController
         :booking_order_id,
       ],
     )
-
   end
 
   def walkin_bookinn_params

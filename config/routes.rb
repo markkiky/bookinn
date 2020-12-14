@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :booking_order_details
   resources :customer_rooms
   resources :customer_bookings
   resources :tickets
@@ -46,6 +47,8 @@ Rails.application.routes.draw do
   post 'bookinn/walkin', to: "front_office#walkin_bookinn"
   post "check_in", to: "front_office#check_in"
   post 'check_out', to: "front_office#check_out"
+
+  post "mass_booking", to: "front_office#mass_booking"
 
   post "bookinn/:id/add_customer", to: "front_office#add_customer_to_booking"
 

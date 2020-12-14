@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_14_073403) do
+ActiveRecord::Schema.define(version: 2020_12_14_144559) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false
@@ -35,6 +35,10 @@ ActiveRecord::Schema.define(version: 2020_12_14_073403) do
 
   create_table "bill_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "bill_no"
+    t.string "bill_info_id"
+    t.string "room_type_id"
+    t.string "booking_order_detail_id"
+    t.string "amount"
     t.string "bill_item_id"
     t.string "bill_item_quantity"
     t.string "bill_item_rate"
@@ -73,6 +77,17 @@ ActiveRecord::Schema.define(version: 2020_12_14_073403) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "booking_order_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "booking_order_id"
+    t.string "room_type_id"
+    t.string "stay_start_date"
+    t.string "stay_end_date"
+    t.string "total_applicants"
+    t.string "amount"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "booking_order_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "booking_order_type_id"
     t.string "booking_order_type_description"
@@ -88,6 +103,7 @@ ActiveRecord::Schema.define(version: 2020_12_14_073403) do
     t.string "booking_order_id"
     t.string "booking_order_date"
     t.string "customer_id"
+    t.string "booking_no"
     t.string "total_applicants"
     t.string "room_type_id"
     t.datetime "stay_start_date"
@@ -124,21 +140,6 @@ ActiveRecord::Schema.define(version: 2020_12_14_073403) do
     t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "countries", id: :integer, limit: 3, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "name", limit: 100, null: false
-    t.string "iso3", limit: 3
-    t.string "iso2", limit: 2
-    t.string "phonecode"
-    t.string "capital"
-    t.string "currency"
-    t.timestamp "created_at"
-    t.timestamp "updated_at", default: -> { "current_timestamp()" }, null: false
-    t.boolean "flag", default: true, null: false
-    t.string "wikiDataId", comment: "Rapid API GeoDB Cities"
-    t.string "is_active", limit: 40, default: "1", null: false
-    t.string "date", limit: 40
   end
 
   create_table "currencies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -384,6 +385,7 @@ ActiveRecord::Schema.define(version: 2020_12_14_073403) do
     t.string "room_type_description"
     t.string "room_type_status"
     t.string "room_type_total"
+    t.string "room_price"
     t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
@@ -397,6 +399,7 @@ ActiveRecord::Schema.define(version: 2020_12_14_073403) do
     t.string "room_name"
     t.string "room_type_id"
     t.string "room_price"
+    t.string "capacity"
     t.string "status"
     t.string "is_active", default: "1"
     t.string "created_by"

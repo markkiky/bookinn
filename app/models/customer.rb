@@ -2,7 +2,7 @@ class Customer < ApplicationRecord
     validates :email, uniqueness: true
     # validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
-    validates :id_no, uniqueness: true
+    # validates :id_no, uniqueness: true
 
     has_many_attached :id_document
 

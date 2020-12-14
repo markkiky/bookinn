@@ -1,4 +1,6 @@
 class BookingOrder < ApplicationRecord
+  has_many :booking_order_details
+  
   def self.booking_customer(booking_order_id)
     @customers = []
     # byebug
@@ -6,6 +8,35 @@ class BookingOrder < ApplicationRecord
       @customers << Customer.find(customer_booking["customer_id"])
     end
     return @customers
+  end
+
+  # return a unique booking order no for each new booking
+  def self.booking_order_no
+    @bill_infos = BookingOrder.all
+    prefix = "BON"
+    year = Date.today.year.to_s
+    year = year.slice(2..3)
+
+    month = Date.today.month.to_s
+    month = month.ljust(2, "0")
+
+    day = Date.today.day.to_s
+    day = day.rjust(2, "0")
+
+    # No present bills. Start new billings
+    if @bill_infos.count < 1
+      series = "9999"
+      bill_no = "#{prefix}#{year}#{day}-#{month}#{series.rjust(4, "0")}"
+      return bill_no
+    else
+      series = @bill_infos.last.booking_order_no.split(//).last(4).join.to_i
+      # @bill_infos.last
+      series = series + 1
+      series = series.to_s
+      bill_no = "#{prefix}#{year}#{day}-#{month}#{series.rjust(4, "0")}"
+
+      return bill_no
+    end
   end
 
   # returns a unique booking_order_id for new booking

@@ -1,0 +1,2 @@
+class BookingOrderDetail < ApplicationRecord
+end

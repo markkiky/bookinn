@@ -4,13 +4,24 @@ class BookingOrderTypesController < ApplicationController
   # GET /booking_order_types
   def index
     @booking_order_types = BookingOrderType.all
+    response = {
+      status: 200,
+      message: "All booking types",
+      data: @booking_order_types
+    }
+    
 
-    render json: @booking_order_types
+    render json: response
   end
 
   # GET /booking_order_types/1
   def show
-    render json: @booking_order_type
+    response = {
+      status: 200,
+      message: "Specific Booking Order Type",
+      data: @booking_order_type
+    }
+    render json: response
   end
 
   # POST /booking_order_types

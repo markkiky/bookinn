@@ -55,6 +55,7 @@ BookingOrder.create(booking_order_id: "2", booking_order_date: "26-11-2020", tot
 BookingOrderType.create(booking_order_type_id: "1", booking_order_type_description: "Self", booking_order_type_status: "2" )
 BookingOrderType.create(booking_order_type_id: "2", booking_order_type_description: "Others", booking_order_type_status: "2" )
 BookingOrderType.create(booking_order_type_id: "3", booking_order_type_description: "Company", booking_order_type_status: "2" )
+BookingOrderType.create(booking_order_type_id: "4", booking_order_type_description: "Channel", booking_order_type_status: "2" )
 
 NeedType.create(need_type_id: '1', need_description: "Rocking Chair", need_type_status: "11")
 NeedType.create(need_type_id: '2', need_description: "Wheel Chair Accessible Parking", need_type_status: "11")

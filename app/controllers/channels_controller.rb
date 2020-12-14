@@ -27,7 +27,8 @@ class ChannelsController < ApplicationController
   # POST /channels
   def create
     @channel = Channel.new(channel_params)
-
+    @channel.channel_id = Channel.channel_id
+    
     if @channel.save
       response = {
         status: 200,

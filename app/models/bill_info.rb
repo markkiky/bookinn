@@ -1,5 +1,5 @@
 class BillInfo < ApplicationRecord
-    has_many :bill_details
+    has_many :bill_details 
     # return a unique bill no for bookinn system only
     def self.bill_no
         @bill_infos = BillInfo.all

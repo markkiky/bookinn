@@ -5,6 +5,7 @@ class CreateRoomTypes < ActiveRecord::Migration[6.0]
       t.string :room_type_description
       t.string :room_type_status
       t.string :room_type_total
+      t.string :room_price
 
       t.string :is_active, :default => "1"
       t.string :created_by
