@@ -37,19 +37,33 @@ class BookingOrder < ApplicationRecord
       # byebug
       bills = BookingOrder.booking_bills(booking.id)
       if bills.count < 1
+        @bill_item = BillItem.new(
+          :bill_item_id => BillItem.bill_item_id,
+          :bill_item_description => "Room Assignment",
+          :bill_item_rate => ""
+        )
+        @bill_item.save
+
+        @bill_detail = BillDetail.new(
+          :bill_no => BillInfo.bill_no,
+          :bill_item_id => @bill_item.id,
+        )
         @bill_info = BillInfo.new(
           :bill_no => BillInfo.bill_no,
           :bill_date => Time.now,
           :customer_id => "1",
           :bill_total => Room.find_by(id: booking.room_id).room_price,
         )
-        @bill_detail = BillDetail.new(
-          :bill_no => BillInfo.bill_no,
-          :bill_item_id => BillDetail.bill_detail_id,
-        )
+        
         @bill_info.save
         booking.update(:bill_info_id => @bill_info.id)
         @bill_detail.save
+
+        response = {
+            bill_no: @bill_info.bill_no,
+            bill_amount: @bill_info.bill_total
+        }
+        return response
       else
         # bill already exists
         # check if we need to add bill details and update bill total

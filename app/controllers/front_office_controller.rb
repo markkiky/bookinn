@@ -416,12 +416,13 @@ class FrontOfficeController < ApplicationController
         @room = Room.find_by(:id => assignment['room_id'])
         @booking_order = BookingOrder.find_by(:id => assignment['booking_order_id'])
         @booking_orders << assignment['booking_order_id']
-
+        @bill = BookingOrder.bill_booking(@booking_order.id)
+        # byebug
         @customer_booking_response = {
           names: @customer.names,
           room_no: @room.room_no,
-          # bill_no: BookingOrder.bill_booking(@booking_order.id),
-          bill_amount: @booking_order.amount,
+          bill_no: @bill[:bill_no],
+          bill_amount: @bill[:bill_amount],
           discount: @booking_order.discount,
           sharing: @booking_order.total_applicants
         }
