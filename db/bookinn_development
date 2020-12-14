@@ -1,0 +1,1232 @@
+-- MySQL dump 10.17  Distrib 10.3.25-MariaDB, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: bookinn_development
+-- ------------------------------------------------------
+-- Server version	10.3.25-MariaDB-0ubuntu0.20.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `active_storage_attachments`
+--
+
+DROP TABLE IF EXISTS `active_storage_attachments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `active_storage_attachments` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `record_type` varchar(255) NOT NULL,
+  `record_id` bigint(20) NOT NULL,
+  `blob_id` bigint(20) NOT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_active_storage_attachments_uniqueness` (`record_type`,`record_id`,`name`,`blob_id`),
+  KEY `index_active_storage_attachments_on_blob_id` (`blob_id`),
+  CONSTRAINT `fk_rails_c3b3935057` FOREIGN KEY (`blob_id`) REFERENCES `active_storage_blobs` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `active_storage_attachments`
+--
+
+LOCK TABLES `active_storage_attachments` WRITE;
+/*!40000 ALTER TABLE `active_storage_attachments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `active_storage_attachments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `active_storage_blobs`
+--
+
+DROP TABLE IF EXISTS `active_storage_blobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `active_storage_blobs` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `key` varchar(255) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `content_type` varchar(255) DEFAULT NULL,
+  `metadata` text DEFAULT NULL,
+  `byte_size` bigint(20) NOT NULL,
+  `checksum` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_active_storage_blobs_on_key` (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `active_storage_blobs`
+--
+
+LOCK TABLES `active_storage_blobs` WRITE;
+/*!40000 ALTER TABLE `active_storage_blobs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `active_storage_blobs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ar_internal_metadata`
+--
+
+DROP TABLE IF EXISTS `ar_internal_metadata`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ar_internal_metadata` (
+  `key` varchar(255) NOT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ar_internal_metadata`
+--
+
+LOCK TABLES `ar_internal_metadata` WRITE;
+/*!40000 ALTER TABLE `ar_internal_metadata` DISABLE KEYS */;
+INSERT INTO `ar_internal_metadata` VALUES ('environment','development','2020-12-03 09:17:25.588877','2020-12-03 09:17:25.588877');
+/*!40000 ALTER TABLE `ar_internal_metadata` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `bill_details`
+--
+
+DROP TABLE IF EXISTS `bill_details`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bill_details` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `bill_no` varchar(255) DEFAULT NULL,
+  `bill_item_id` varchar(255) DEFAULT NULL,
+  `bill_item_quantity` varchar(255) DEFAULT NULL,
+  `bill_item_rate` varchar(255) DEFAULT NULL,
+  `bill_item_amount` varchar(255) DEFAULT NULL,
+  `bill_item_discount` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bill_details`
+--
+
+LOCK TABLES `bill_details` WRITE;
+/*!40000 ALTER TABLE `bill_details` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bill_details` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `bill_infos`
+--
+
+DROP TABLE IF EXISTS `bill_infos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bill_infos` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `bill_no` varchar(255) DEFAULT NULL,
+  `bill_date` datetime DEFAULT NULL,
+  `customer_id` varchar(255) DEFAULT NULL,
+  `bill_total` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bill_infos`
+--
+
+LOCK TABLES `bill_infos` WRITE;
+/*!40000 ALTER TABLE `bill_infos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bill_infos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `bill_items`
+--
+
+DROP TABLE IF EXISTS `bill_items`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `bill_items` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `bill_item_id` varchar(255) DEFAULT NULL,
+  `bill_item_description` varchar(255) DEFAULT NULL,
+  `bill_item_rate` varchar(255) DEFAULT NULL,
+  `bill_item_unit_of_measure_id` varchar(255) DEFAULT NULL,
+  `bill_item_unit_of_measure_description` varchar(255) DEFAULT NULL,
+  `bill_item_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bill_items`
+--
+
+LOCK TABLES `bill_items` WRITE;
+/*!40000 ALTER TABLE `bill_items` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bill_items` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `booking_order_types`
+--
+
+DROP TABLE IF EXISTS `booking_order_types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `booking_order_types` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `booking_order_type_id` varchar(255) DEFAULT NULL,
+  `booking_order_type_description` varchar(255) DEFAULT NULL,
+  `booking_order_type_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `booking_order_types`
+--
+
+LOCK TABLES `booking_order_types` WRITE;
+/*!40000 ALTER TABLE `booking_order_types` DISABLE KEYS */;
+INSERT INTO `booking_order_types` VALUES (1,'1','Self','2','1',NULL,NULL,'2020-12-03 09:17:40.930512','2020-12-03 09:17:40.930512'),(2,'2','Others','2','1',NULL,NULL,'2020-12-03 09:17:41.016306','2020-12-03 09:17:41.016306'),(3,'3','Company','2','1',NULL,NULL,'2020-12-03 09:17:41.234716','2020-12-03 09:17:41.234716');
+/*!40000 ALTER TABLE `booking_order_types` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `booking_orders`
+--
+
+DROP TABLE IF EXISTS `booking_orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `booking_orders` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `booking_order_id` varchar(255) DEFAULT NULL,
+  `booking_order_date` varchar(255) DEFAULT NULL,
+  `customer_id` varchar(255) DEFAULT NULL,
+  `total_applicants` varchar(255) DEFAULT NULL,
+  `room_type_id` varchar(255) DEFAULT NULL,
+  `stay_start_date` datetime DEFAULT NULL,
+  `stay_end_date` datetime DEFAULT NULL,
+  `discount` varchar(255) DEFAULT NULL,
+  `amount` varchar(255) DEFAULT NULL,
+  `booking_order_status` varchar(255) DEFAULT NULL,
+  `booking_order_type_id` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `booking_orders`
+--
+
+LOCK TABLES `booking_orders` WRITE;
+/*!40000 ALTER TABLE `booking_orders` DISABLE KEYS */;
+INSERT INTO `booking_orders` VALUES (1,'1','04-12-2020','1','10','1','2020-12-07 00:00:00','2020-12-09 00:00:00',NULL,NULL,'2','1','1','1','1','2020-12-03 09:17:39.007262','2020-12-04 11:59:32.708950'),(2,'2','26-11-2020','1','10','1','2020-12-01 00:00:00','2021-01-05 00:00:00',NULL,NULL,'2','3','1','1','1','2020-12-03 09:17:39.087533','2020-12-03 09:17:39.087533'),(3,'1','30-12-2020',NULL,'10',NULL,'2020-11-30 00:00:00','2020-12-31 00:00:00',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-04 12:40:12.073982','2020-12-04 12:40:12.073982'),(4,'1','30-12-2020',NULL,'10',NULL,'2020-11-30 00:00:00','2020-12-31 00:00:00',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-04 12:40:19.335939','2020-12-04 12:40:19.335939'),(5,'1','30-12-2020',NULL,'10',NULL,'2020-12-10 00:00:00','2020-12-31 00:00:00',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-10 13:23:23.162538','2020-12-10 13:23:23.162538'),(6,'1','30-12-2020',NULL,'10',NULL,'2020-11-11 00:00:00','2020-12-30 00:00:00',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-10 13:23:24.018956','2020-12-10 13:23:24.018956'),(7,'1','30-12-2020',NULL,'10',NULL,'2020-12-10 00:00:00','2020-12-31 00:00:00',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-10 13:29:07.853414','2020-12-10 13:29:07.853414'),(8,'1','30-12-2020',NULL,'10',NULL,'2020-12-11 00:00:00','2020-12-30 00:00:00',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-10 13:29:08.320808','2020-12-10 13:29:08.320808'),(9,'1','30-12-2020',NULL,'10',NULL,'2020-12-10 00:00:00','2020-12-31 00:00:00',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-11 15:17:54.087091','2020-12-11 15:17:54.087091'),(10,'1','30-12-2020',NULL,'10',NULL,'2020-12-11 00:00:00','2020-12-30 00:00:00',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-11 15:17:59.803911','2020-12-11 15:17:59.803911');
+/*!40000 ALTER TABLE `booking_orders` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `channel_transactions`
+--
+
+DROP TABLE IF EXISTS `channel_transactions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `channel_transactions` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `channel_transaction_id` varchar(255) DEFAULT NULL,
+  `channel_transaction_date` datetime DEFAULT NULL,
+  `channel_transaction_type` varchar(255) DEFAULT NULL,
+  `channel_transaction_amount` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `channel_transactions`
+--
+
+LOCK TABLES `channel_transactions` WRITE;
+/*!40000 ALTER TABLE `channel_transactions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `channel_transactions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `channels`
+--
+
+DROP TABLE IF EXISTS `channels`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `channels` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `channel_id` varchar(255) DEFAULT NULL,
+  `channel_description` varchar(255) DEFAULT NULL,
+  `channel_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `channels`
+--
+
+LOCK TABLES `channels` WRITE;
+/*!40000 ALTER TABLE `channels` DISABLE KEYS */;
+/*!40000 ALTER TABLE `channels` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `countries`
+--
+
+DROP TABLE IF EXISTS `countries`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `countries` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `iso3` char(3) DEFAULT NULL,
+  `iso2` char(2) DEFAULT NULL,
+  `phonecode` varchar(255) DEFAULT NULL,
+  `capital` varchar(255) DEFAULT NULL,
+  `currency` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `flag` tinyint(1) NOT NULL DEFAULT 1,
+  `wikiDataId` varchar(255) DEFAULT NULL COMMENT 'Rapid API GeoDB Cities',
+  `is_active` varchar(40) NOT NULL DEFAULT '1',
+  `date` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=248 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `countries`
+--
+
+LOCK TABLES `countries` WRITE;
+/*!40000 ALTER TABLE `countries` DISABLE KEYS */;
+INSERT INTO `countries` VALUES (1,'Afghanistan','AFG','AF','93','Kabul','AFN','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q889','1',NULL),(2,'Aland Islands','ALA','AX','+358-18','Mariehamn','EUR','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(3,'Albania','ALB','AL','355','Tirana','ALL','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q222','1',NULL),(4,'Algeria','DZA','DZ','213','Algiers','DZD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q262','1',NULL),(5,'American Samoa','ASM','AS','+1-684','Pago Pago','USD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(6,'Andorra','AND','AD','376','Andorra la Vella','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q228','1',NULL),(7,'Angola','AGO','AO','244','Luanda','AOA','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q916','1',NULL),(8,'Anguilla','AIA','AI','+1-264','The Valley','XCD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(9,'Antarctica','ATA','AQ','','','','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(10,'Antigua And Barbuda','ATG','AG','+1-268','St. John\'s','XCD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q781','1',NULL),(11,'Argentina','ARG','AR','54','Buenos Aires','ARS','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q414','1',NULL),(12,'Armenia','ARM','AM','374','Yerevan','AMD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q399','1',NULL),(13,'Aruba','ABW','AW','297','Oranjestad','AWG','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(14,'Australia','AUS','AU','61','Canberra','AUD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q408','1',NULL),(15,'Austria','AUT','AT','43','Vienna','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q40','1',NULL),(16,'Azerbaijan','AZE','AZ','994','Baku','AZN','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q227','1',NULL),(17,'Bahamas The','BHS','BS','+1-242','Nassau','BSD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q778','1',NULL),(18,'Bahrain','BHR','BH','973','Manama','BHD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q398','1',NULL),(19,'Bangladesh','BGD','BD','880','Dhaka','BDT','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q902','1',NULL),(20,'Barbados','BRB','BB','+1-246','Bridgetown','BBD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q244','1',NULL),(21,'Belarus','BLR','BY','375','Minsk','BYR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q184','1',NULL),(22,'Belgium','BEL','BE','32','Brussels','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q31','1',NULL),(23,'Belize','BLZ','BZ','501','Belmopan','BZD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q242','1',NULL),(24,'Benin','BEN','BJ','229','Porto-Novo','XOF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q962','1',NULL),(25,'Bermuda','BMU','BM','+1-441','Hamilton','BMD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(26,'Bhutan','BTN','BT','975','Thimphu','BTN','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q917','1',NULL),(27,'Bolivia','BOL','BO','591','Sucre','BOB','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q750','1',NULL),(28,'Bosnia and Herzegovina','BIH','BA','387','Sarajevo','BAM','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q225','1',NULL),(29,'Botswana','BWA','BW','267','Gaborone','BWP','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q963','1',NULL),(30,'Bouvet Island','BVT','BV','','','NOK','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(31,'Brazil','BRA','BR','55','Brasilia','BRL','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q155','1',NULL),(32,'British Indian Ocean Territory','IOT','IO','246','Diego Garcia','USD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(33,'Brunei','BRN','BN','673','Bandar Seri Begawan','BND','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q921','1',NULL),(34,'Bulgaria','BGR','BG','359','Sofia','BGN','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q219','1',NULL),(35,'Burkina Faso','BFA','BF','226','Ouagadougou','XOF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q965','1',NULL),(36,'Burundi','BDI','BI','257','Bujumbura','BIF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q967','1',NULL),(37,'Cambodia','KHM','KH','855','Phnom Penh','KHR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q424','1',NULL),(38,'Cameroon','CMR','CM','237','Yaounde','XAF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1009','1',NULL),(39,'Canada','CAN','CA','1','Ottawa','CAD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q16','1',NULL),(40,'Cape Verde','CPV','CV','238','Praia','CVE','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1011','1',NULL),(41,'Cayman Islands','CYM','KY','+1-345','George Town','KYD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(42,'Central African Republic','CAF','CF','236','Bangui','XAF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q929','1',NULL),(43,'Chad','TCD','TD','235','N\'Djamena','XAF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q657','1',NULL),(44,'Chile','CHL','CL','56','Santiago','CLP','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q298','1',NULL),(45,'China','CHN','CN','86','Beijing','CNY','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q148','1',NULL),(46,'Christmas Island','CXR','CX','61','Flying Fish Cove','AUD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(47,'Cocos (Keeling) Islands','CCK','CC','61','West Island','AUD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(48,'Colombia','COL','CO','57','Bogota','COP','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q739','1',NULL),(49,'Comoros','COM','KM','269','Moroni','KMF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q970','1',NULL),(50,'Congo','COG','CG','242','Brazzaville','XAF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q971','1',NULL),(51,'Congo The Democratic Republic Of The','COD','CD','243','Kinshasa','CDF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q974','1',NULL),(52,'Cook Islands','COK','CK','682','Avarua','NZD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q26988','1',NULL),(53,'Costa Rica','CRI','CR','506','San Jose','CRC','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q800','1',NULL),(54,'Cote D\'Ivoire (Ivory Coast)','CIV','CI','225','Yamoussoukro','XOF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1008','1',NULL),(55,'Croatia (Hrvatska)','HRV','HR','385','Zagreb','HRK','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q224','1',NULL),(56,'Cuba','CUB','CU','53','Havana','CUP','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q241','1',NULL),(57,'Cyprus','CYP','CY','357','Nicosia','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q229','1',NULL),(58,'Czech Republic','CZE','CZ','420','Prague','CZK','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q213','1',NULL),(59,'Denmark','DNK','DK','45','Copenhagen','DKK','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q35','1',NULL),(60,'Djibouti','DJI','DJ','253','Djibouti','DJF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q977','1',NULL),(61,'Dominica','DMA','DM','+1-767','Roseau','XCD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q784','1',NULL),(62,'Dominican Republic','DOM','DO','+1-809 and 1-829','Santo Domingo','DOP','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q786','1',NULL),(63,'East Timor','TLS','TL','670','Dili','USD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q574','1',NULL),(64,'Ecuador','ECU','EC','593','Quito','USD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q736','1',NULL),(65,'Egypt','EGY','EG','20','Cairo','EGP','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q79','1',NULL),(66,'El Salvador','SLV','SV','503','San Salvador','USD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q792','1',NULL),(67,'Equatorial Guinea','GNQ','GQ','240','Malabo','XAF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q983','1',NULL),(68,'Eritrea','ERI','ER','291','Asmara','ERN','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q986','1',NULL),(69,'Estonia','EST','EE','372','Tallinn','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q191','1',NULL),(70,'Ethiopia','ETH','ET','251','Addis Ababa','ETB','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q115','1',NULL),(71,'Falkland Islands','FLK','FK','500','Stanley','FKP','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(72,'Faroe Islands','FRO','FO','298','Torshavn','DKK','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(73,'Fiji Islands','FJI','FJ','679','Suva','FJD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q712','1',NULL),(74,'Finland','FIN','FI','358','Helsinki','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q33','1',NULL),(75,'France','FRA','FR','33','Paris','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q142','1',NULL),(76,'French Guiana','GUF','GF','594','Cayenne','EUR','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(77,'French Polynesia','PYF','PF','689','Papeete','XPF','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(78,'French Southern Territories','ATF','TF','','Port-aux-Francais','EUR','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(79,'Gabon','GAB','GA','241','Libreville','XAF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1000','1',NULL),(80,'Gambia The','GMB','GM','220','Banjul','GMD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1005','1',NULL),(81,'Georgia','GEO','GE','995','Tbilisi','GEL','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q230','1',NULL),(82,'Germany','DEU','DE','49','Berlin','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q183','1',NULL),(83,'Ghana','GHA','GH','233','Accra','GHS','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q117','1',NULL),(84,'Gibraltar','GIB','GI','350','Gibraltar','GIP','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(85,'Greece','GRC','GR','30','Athens','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q41','1',NULL),(86,'Greenland','GRL','GL','299','Nuuk','DKK','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(87,'Grenada','GRD','GD','+1-473','St. George\'s','XCD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q769','1',NULL),(88,'Guadeloupe','GLP','GP','590','Basse-Terre','EUR','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(89,'Guam','GUM','GU','+1-671','Hagatna','USD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(90,'Guatemala','GTM','GT','502','Guatemala City','GTQ','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q774','1',NULL),(91,'Guernsey and Alderney','GGY','GG','+44-1481','St Peter Port','GBP','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(92,'Guinea','GIN','GN','224','Conakry','GNF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1006','1',NULL),(93,'Guinea-Bissau','GNB','GW','245','Bissau','XOF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1007','1',NULL),(94,'Guyana','GUY','GY','592','Georgetown','GYD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q734','1',NULL),(95,'Haiti','HTI','HT','509','Port-au-Prince','HTG','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q790','1',NULL),(96,'Heard and McDonald Islands','HMD','HM',' ','','AUD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(97,'Honduras','HND','HN','504','Tegucigalpa','HNL','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q783','1',NULL),(98,'Hong Kong S.A.R.','HKG','HK','852','Hong Kong','HKD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(99,'Hungary','HUN','HU','36','Budapest','HUF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q28','1',NULL),(100,'Iceland','ISL','IS','354','Reykjavik','ISK','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q189','1',NULL),(101,'India','IND','IN','91','New Delhi','INR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q668','1',NULL),(102,'Indonesia','IDN','ID','62','Jakarta','IDR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q252','1',NULL),(103,'Iran','IRN','IR','98','Tehran','IRR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q794','1',NULL),(104,'Iraq','IRQ','IQ','964','Baghdad','IQD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q796','1',NULL),(105,'Ireland','IRL','IE','353','Dublin','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q27','1',NULL),(106,'Israel','ISR','IL','972','Jerusalem','ILS','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q801','1',NULL),(107,'Italy','ITA','IT','39','Rome','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q38','1',NULL),(108,'Jamaica','JAM','JM','+1-876','Kingston','JMD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q766','1',NULL),(109,'Japan','JPN','JP','81','Tokyo','JPY','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q17','1',NULL),(110,'Jersey','JEY','JE','+44-1534','Saint Helier','GBP','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q785','1',NULL),(111,'Jordan','JOR','JO','962','Amman','JOD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q810','1',NULL),(112,'Kazakhstan','KAZ','KZ','7','Astana','KZT','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q232','1',NULL),(113,'Kenya','KEN','KE','254','Nairobi','KES','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q114','1',NULL),(114,'Kiribati','KIR','KI','686','Tarawa','AUD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q710','1',NULL),(115,'Korea North\n','PRK','KP','850','Pyongyang','KPW','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q423','1',NULL),(116,'Korea South','KOR','KR','82','Seoul','KRW','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q884','1',NULL),(117,'Kuwait','KWT','KW','965','Kuwait City','KWD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q817','1',NULL),(118,'Kyrgyzstan','KGZ','KG','996','Bishkek','KGS','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q813','1',NULL),(119,'Laos','LAO','LA','856','Vientiane','LAK','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q819','1',NULL),(120,'Latvia','LVA','LV','371','Riga','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q211','1',NULL),(121,'Lebanon','LBN','LB','961','Beirut','LBP','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q822','1',NULL),(122,'Lesotho','LSO','LS','266','Maseru','LSL','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1013','1',NULL),(123,'Liberia','LBR','LR','231','Monrovia','LRD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1014','1',NULL),(124,'Libya','LBY','LY','218','Tripolis','LYD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1016','1',NULL),(125,'Liechtenstein','LIE','LI','423','Vaduz','CHF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q347','1',NULL),(126,'Lithuania','LTU','LT','370','Vilnius','LTL','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q37','1',NULL),(127,'Luxembourg','LUX','LU','352','Luxembourg','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q32','1',NULL),(128,'Macau S.A.R.','MAC','MO','853','Macao','MOP','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(129,'Macedonia','MKD','MK','389','Skopje','MKD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q221','1',NULL),(130,'Madagascar','MDG','MG','261','Antananarivo','MGA','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1019','1',NULL),(131,'Malawi','MWI','MW','265','Lilongwe','MWK','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1020','1',NULL),(132,'Malaysia','MYS','MY','60','Kuala Lumpur','MYR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q833','1',NULL),(133,'Maldives','MDV','MV','960','Male','MVR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q826','1',NULL),(134,'Mali','MLI','ML','223','Bamako','XOF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q912','1',NULL),(135,'Malta','MLT','MT','356','Valletta','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q233','1',NULL),(136,'Man (Isle of)','IMN','IM','+44-1624','Douglas, Isle of Man','GBP','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(137,'Marshall Islands','MHL','MH','692','Majuro','USD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q709','1',NULL),(138,'Martinique','MTQ','MQ','596','Fort-de-France','EUR','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(139,'Mauritania','MRT','MR','222','Nouakchott','MRO','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1025','1',NULL),(140,'Mauritius','MUS','MU','230','Port Louis','MUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1027','1',NULL),(141,'Mayotte','MYT','YT','262','Mamoudzou','EUR','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(142,'Mexico','MEX','MX','52','Mexico City','MXN','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q96','1',NULL),(143,'Micronesia','FSM','FM','691','Palikir','USD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q702','1',NULL),(144,'Moldova','MDA','MD','373','Chisinau','MDL','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q217','1',NULL),(145,'Monaco','MCO','MC','377','Monaco','EUR','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(146,'Mongolia','MNG','MN','976','Ulan Bator','MNT','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q711','1',NULL),(147,'Montenegro','MNE','ME','382','Podgorica','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q236','1',NULL),(148,'Montserrat','MSR','MS','+1-664','Plymouth','XCD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(149,'Morocco','MAR','MA','212','Rabat','MAD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1028','1',NULL),(150,'Mozambique','MOZ','MZ','258','Maputo','MZN','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1029','1',NULL),(151,'Myanmar','MMR','MM','95','Nay Pyi Taw','MMK','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q836','1',NULL),(152,'Namibia','NAM','NA','264','Windhoek','NAD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1030','1',NULL),(153,'Nauru','NRU','NR','674','Yaren','AUD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q697','1',NULL),(154,'Nepal','NPL','NP','977','Kathmandu','NPR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q837','1',NULL),(155,'Netherlands Antilles','ANT','AN','','','','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(156,'Netherlands The','NLD','NL','31','Amsterdam','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q55','1',NULL),(157,'New Caledonia','NCL','NC','687','Noumea','XPF','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(158,'New Zealand','NZL','NZ','64','Wellington','NZD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q664','1',NULL),(159,'Nicaragua','NIC','NI','505','Managua','NIO','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q811','1',NULL),(160,'Niger','NER','NE','227','Niamey','XOF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1032','1',NULL),(161,'Nigeria','NGA','NG','234','Abuja','NGN','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1033','1',NULL),(162,'Niue','NIU','NU','683','Alofi','NZD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q34020','1',NULL),(163,'Norfolk Island','NFK','NF','672','Kingston','AUD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(164,'Northern Mariana Islands','MNP','MP','+1-670','Saipan','USD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(165,'Norway','NOR','NO','47','Oslo','NOK','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q20','1',NULL),(166,'Oman','OMN','OM','968','Muscat','OMR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q842','1',NULL),(167,'Pakistan','PAK','PK','92','Islamabad','PKR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q843','1',NULL),(168,'Palau','PLW','PW','680','Melekeok','USD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q695','1',NULL),(169,'Palestinian Territory Occupied','PSE','PS','970','East Jerusalem','ILS','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(170,'Panama','PAN','PA','507','Panama City','PAB','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q804','1',NULL),(171,'Papua new Guinea','PNG','PG','675','Port Moresby','PGK','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q691','1',NULL),(172,'Paraguay','PRY','PY','595','Asuncion','PYG','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q733','1',NULL),(173,'Peru','PER','PE','51','Lima','PEN','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q419','1',NULL),(174,'Philippines','PHL','PH','63','Manila','PHP','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q928','1',NULL),(175,'Pitcairn Island','PCN','PN','870','Adamstown','NZD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(176,'Poland','POL','PL','48','Warsaw','PLN','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q36','1',NULL),(177,'Portugal','PRT','PT','351','Lisbon','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q45','1',NULL),(178,'Puerto Rico','PRI','PR','+1-787 and 1-939','San Juan','USD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(179,'Qatar','QAT','QA','974','Doha','QAR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q846','1',NULL),(180,'Reunion','REU','RE','262','Saint-Denis','EUR','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(181,'Romania','ROU','RO','40','Bucharest','RON','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q218','1',NULL),(182,'Russia','RUS','RU','7','Moscow','RUB','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q159','1',NULL),(183,'Rwanda','RWA','RW','250','Kigali','RWF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1037','1',NULL),(184,'Saint Helena','SHN','SH','290','Jamestown','SHP','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(185,'Saint Kitts And Nevis','KNA','KN','+1-869','Basseterre','XCD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q763','1',NULL),(186,'Saint Lucia','LCA','LC','+1-758','Castries','XCD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q760','1',NULL),(187,'Saint Pierre and Miquelon','SPM','PM','508','Saint-Pierre','EUR','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(188,'Saint Vincent And The Grenadines','VCT','VC','+1-784','Kingstown','XCD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q757','1',NULL),(189,'Saint-Barthelemy','BLM','BL','590','Gustavia','EUR','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(190,'Saint-Martin (French part)','MAF','MF','590','Marigot','EUR','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(191,'Samoa','WSM','WS','685','Apia','WST','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q683','1',NULL),(192,'San Marino','SMR','SM','378','San Marino','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q238','1',NULL),(193,'Sao Tome and Principe','STP','ST','239','Sao Tome','STD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1039','1',NULL),(194,'Saudi Arabia','SAU','SA','966','Riyadh','SAR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q851','1',NULL),(195,'Senegal','SEN','SN','221','Dakar','XOF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1041','1',NULL),(196,'Serbia','SRB','RS','381','Belgrade','RSD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q403','1',NULL),(197,'Seychelles','SYC','SC','248','Victoria','SCR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1042','1',NULL),(198,'Sierra Leone','SLE','SL','232','Freetown','SLL','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1044','1',NULL),(199,'Singapore','SGP','SG','65','Singapur','SGD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q334','1',NULL),(200,'Slovakia','SVK','SK','421','Bratislava','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q214','1',NULL),(201,'Slovenia','SVN','SI','386','Ljubljana','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q215','1',NULL),(202,'Solomon Islands','SLB','SB','677','Honiara','SBD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q685','1',NULL),(203,'Somalia','SOM','SO','252','Mogadishu','SOS','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1045','1',NULL),(204,'South Africa','ZAF','ZA','27','Pretoria','ZAR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q258','1',NULL),(205,'South Georgia','SGS','GS','','Grytviken','GBP','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(206,'South Sudan','SSD','SS','211','Juba','SSP','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q958','1',NULL),(207,'Spain','ESP','ES','34','Madrid','EUR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q29','1',NULL),(208,'Sri Lanka','LKA','LK','94','Colombo','LKR','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q854','1',NULL),(209,'Sudan','SDN','SD','249','Khartoum','SDG','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1049','1',NULL),(210,'Suriname','SUR','SR','597','Paramaribo','SRD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q730','1',NULL),(211,'Svalbard And Jan Mayen Islands','SJM','SJ','47','Longyearbyen','NOK','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(212,'Swaziland','SWZ','SZ','268','Mbabane','SZL','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1050','1',NULL),(213,'Sweden','SWE','SE','46','Stockholm','SEK','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q34','1',NULL),(214,'Switzerland','CHE','CH','41','Berne','CHF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q39','1',NULL),(215,'Syria','SYR','SY','963','Damascus','SYP','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q858','1',NULL),(216,'Taiwan','TWN','TW','886','Taipei','TWD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q865','1',NULL),(217,'Tajikistan','TJK','TJ','992','Dushanbe','TJS','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q863','1',NULL),(218,'Tanzania','TZA','TZ','255','Dodoma','TZS','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q924','1',NULL),(219,'Thailand','THA','TH','66','Bangkok','THB','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q869','1',NULL),(220,'Togo','TGO','TG','228','Lome','XOF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q945','1',NULL),(221,'Tokelau','TKL','TK','690','','NZD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(222,'Tonga','TON','TO','676','Nuku\'alofa','TOP','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q678','1',NULL),(223,'Trinidad And Tobago','TTO','TT','+1-868','Port of Spain','TTD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q754','1',NULL),(224,'Tunisia','TUN','TN','216','Tunis','TND','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q948','1',NULL),(225,'Turkey','TUR','TR','90','Ankara','TRY','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q43','1',NULL),(226,'Turkmenistan','TKM','TM','993','Ashgabat','TMT','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q874','1',NULL),(227,'Turks And Caicos Islands','TCA','TC','+1-649','Cockburn Town','USD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(228,'Tuvalu','TUV','TV','688','Funafuti','AUD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q672','1',NULL),(229,'Uganda','UGA','UG','256','Kampala','UGX','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q1036','1',NULL),(230,'Ukraine','UKR','UA','380','Kiev','UAH','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q212','1',NULL),(231,'United Arab Emirates','ARE','AE','971','Abu Dhabi','AED','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q878','1',NULL),(232,'United Kingdom','GBR','GB','44','London','GBP','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q145','1',NULL),(233,'United States','USA','US','1','Washington','USD','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q30','1',NULL),(234,'United States Minor Outlying Islands','UMI','UM','1','','USD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(235,'Uruguay','URY','UY','598','Montevideo','UYU','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q77','1',NULL),(236,'Uzbekistan','UZB','UZ','998','Tashkent','UZS','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q265','1',NULL),(237,'Vanuatu','VUT','VU','678','Port Vila','VUV','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q686','1',NULL),(238,'Vatican City State (Holy See)','VAT','VA','379','Vatican City','EUR','2018-07-20 11:41:03','2019-08-02 16:38:22',1,'Q237','1',NULL),(239,'Venezuela','VEN','VE','58','Caracas','VEF','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q717','1',NULL),(240,'Vietnam','VNM','VN','84','Hanoi','VND','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q881','1',NULL),(241,'Virgin Islands (British)','VGB','VG','+1-284','Road Town','USD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(242,'Virgin Islands (US)','VIR','VI','+1-340','Charlotte Amalie','USD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(243,'Wallis And Futuna Islands','WLF','WF','681','Mata Utu','XPF','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(244,'Western Sahara','ESH','EH','212','El-Aaiun','MAD','2018-07-20 11:41:03','2018-07-20 11:41:03',1,NULL,'1',NULL),(245,'Yemen','YEM','YE','967','Sanaa','YER','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q805','1',NULL),(246,'Zambia','ZMB','ZM','260','Lusaka','ZMK','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q953','1',NULL),(247,'Zimbabwe','ZWE','ZW','263','Harare','ZWL','2018-07-20 11:41:03','2019-08-02 16:38:23',1,'Q954','1',NULL);
+/*!40000 ALTER TABLE `countries` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `currencies`
+--
+
+DROP TABLE IF EXISTS `currencies`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `currencies` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `currency_id` varchar(255) DEFAULT NULL,
+  `currency_symbol` varchar(255) DEFAULT NULL,
+  `currency_name` varchar(255) DEFAULT NULL,
+  `country_id` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `currencies`
+--
+
+LOCK TABLES `currencies` WRITE;
+/*!40000 ALTER TABLE `currencies` DISABLE KEYS */;
+/*!40000 ALTER TABLE `currencies` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `currency_exchange_rates`
+--
+
+DROP TABLE IF EXISTS `currency_exchange_rates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `currency_exchange_rates` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `currency_exchange_rate_id` varchar(255) DEFAULT NULL,
+  `base_currency_id` varchar(255) DEFAULT NULL,
+  `secondary_currency_id` varchar(255) DEFAULT NULL,
+  `exchange_rate` varchar(255) DEFAULT NULL,
+  `start_date` varchar(255) DEFAULT NULL,
+  `end_date` varchar(255) DEFAULT NULL,
+  `exchange_rate_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `currency_exchange_rates`
+--
+
+LOCK TABLES `currency_exchange_rates` WRITE;
+/*!40000 ALTER TABLE `currency_exchange_rates` DISABLE KEYS */;
+/*!40000 ALTER TABLE `currency_exchange_rates` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customer_bookings`
+--
+
+DROP TABLE IF EXISTS `customer_bookings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customer_bookings` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customer_id` varchar(255) DEFAULT NULL,
+  `booking_order_id` varchar(255) DEFAULT NULL,
+  `room_id` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customer_bookings`
+--
+
+LOCK TABLES `customer_bookings` WRITE;
+/*!40000 ALTER TABLE `customer_bookings` DISABLE KEYS */;
+INSERT INTO `customer_bookings` VALUES (1,'1','1','1','1',NULL,NULL,'2020-12-03 09:18:56.211003','2020-12-03 09:18:56.211003'),(2,'2','3',NULL,'1',NULL,NULL,'2020-12-04 12:40:14.829675','2020-12-04 12:40:14.829675'),(3,'2','3',NULL,'1',NULL,NULL,'2020-12-04 12:40:18.582066','2020-12-04 12:40:18.582066'),(4,'2','4',NULL,'1',NULL,NULL,'2020-12-04 12:40:22.056362','2020-12-04 12:40:22.056362'),(5,'2','1','2','1',NULL,NULL,'2020-12-04 15:52:17.421694','2020-12-04 15:52:17.421694'),(6,'2','1','2','1',NULL,NULL,'2020-12-04 15:52:17.432921','2020-12-04 15:52:17.432921'),(7,'2','5',NULL,'1',NULL,NULL,'2020-12-10 13:23:23.586094','2020-12-10 13:23:23.586094'),(8,'2','5',NULL,'1',NULL,NULL,'2020-12-10 13:23:23.885098','2020-12-10 13:23:23.885098'),(9,'2','6',NULL,'1',NULL,NULL,'2020-12-10 13:23:24.132143','2020-12-10 13:23:24.132143'),(10,'2','7',NULL,'1',NULL,NULL,'2020-12-10 13:29:07.898766','2020-12-10 13:29:07.898766'),(11,'2','7',NULL,'1',NULL,NULL,'2020-12-10 13:29:08.033960','2020-12-10 13:29:08.033960'),(12,'2','8',NULL,'1',NULL,NULL,'2020-12-10 13:29:08.434991','2020-12-10 13:29:08.434991'),(13,'2','1','2','1',NULL,NULL,'2020-12-11 14:21:43.718914','2020-12-11 14:21:43.718914'),(14,'12','9',NULL,'1',NULL,NULL,'2020-12-11 15:17:56.895267','2020-12-11 15:17:56.895267'),(15,'12','9',NULL,'1',NULL,NULL,'2020-12-11 15:17:59.295829','2020-12-11 15:17:59.295829'),(16,'12','10',NULL,'1',NULL,NULL,'2020-12-11 15:18:02.099534','2020-12-11 15:18:02.099534'),(17,'2','1','2','1',NULL,NULL,'2020-12-11 16:27:13.113197','2020-12-11 16:27:13.113197'),(18,'2','1','2','1',NULL,NULL,'2020-12-11 16:27:17.525221','2020-12-11 16:27:17.525221'),(19,'2','1','2','1',NULL,NULL,'2020-12-11 16:28:41.501128','2020-12-11 16:28:41.501128'),(20,'2','1','2','1',NULL,NULL,'2020-12-11 16:28:52.231504','2020-12-11 16:28:52.231504'),(21,'2','1','2','1',NULL,NULL,'2020-12-11 16:30:43.422546','2020-12-11 16:30:43.422546'),(22,'2','1','4','1',NULL,NULL,'2020-12-11 22:15:42.216078','2020-12-11 22:15:42.216078'),(23,'2','1','4','1',NULL,NULL,'2020-12-11 22:17:52.832043','2020-12-11 22:17:52.832043'),(24,'4','14','3','1',NULL,NULL,'2020-12-11 22:17:52.837311','2020-12-11 22:17:52.837311');
+/*!40000 ALTER TABLE `customer_bookings` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customer_needs`
+--
+
+DROP TABLE IF EXISTS `customer_needs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customer_needs` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customer_id` varchar(255) DEFAULT NULL,
+  `need_type_id` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customer_needs`
+--
+
+LOCK TABLES `customer_needs` WRITE;
+/*!40000 ALTER TABLE `customer_needs` DISABLE KEYS */;
+INSERT INTO `customer_needs` VALUES (1,'1','1','1',NULL,NULL,'2020-12-05 20:39:27.537200','2020-12-05 20:39:27.537200'),(2,'1','2','1',NULL,NULL,'2020-12-05 20:39:28.892757','2020-12-05 20:39:28.892757');
+/*!40000 ALTER TABLE `customer_needs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customer_rooms`
+--
+
+DROP TABLE IF EXISTS `customer_rooms`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customer_rooms` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customer_id` varchar(255) DEFAULT NULL,
+  `room_id` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customer_rooms`
+--
+
+LOCK TABLES `customer_rooms` WRITE;
+/*!40000 ALTER TABLE `customer_rooms` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customer_rooms` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customer_types`
+--
+
+DROP TABLE IF EXISTS `customer_types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customer_types` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customer_type_id` varchar(255) DEFAULT NULL,
+  `customer_type_description` varchar(255) DEFAULT NULL,
+  `customer_type_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customer_types`
+--
+
+LOCK TABLES `customer_types` WRITE;
+/*!40000 ALTER TABLE `customer_types` DISABLE KEYS */;
+INSERT INTO `customer_types` VALUES (1,NULL,'Adult',NULL,'1',NULL,NULL,'2020-12-11 11:21:44.520799','2020-12-11 11:21:44.520799');
+/*!40000 ALTER TABLE `customer_types` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customers`
+--
+
+DROP TABLE IF EXISTS `customers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customers` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customer_no` varchar(255) DEFAULT NULL,
+  `customer_id` varchar(255) DEFAULT NULL,
+  `customer_type_id` varchar(255) DEFAULT NULL,
+  `country_id` varchar(255) DEFAULT NULL,
+  `names` varchar(255) DEFAULT NULL,
+  `gender` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `postal_code` varchar(255) DEFAULT NULL,
+  `customer_status` varchar(255) DEFAULT NULL,
+  `id_no` varchar(255) DEFAULT NULL,
+  `customer_status_date` datetime DEFAULT NULL,
+  `last_visit` datetime DEFAULT NULL,
+  `last_invoice` datetime DEFAULT NULL,
+  `last_receipt` datetime DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customers`
+--
+
+LOCK TABLES `customers` WRITE;
+/*!40000 ALTER TABLE `customers` DISABLE KEYS */;
+INSERT INTO `customers` VALUES (1,'C#001',NULL,'1','113','keep a distance','male','mark@nouveta.tech','0714420943','626 Meru','10200',NULL,'332467854',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-11 10:46:12.231563','2020-12-11 11:09:07.198114'),(2,'C#002',NULL,'1','113','keep a distance','male','markcopolo@gmai.com','0714420943',NULL,'10200',NULL,'33246785',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-11 10:46:43.182616','2020-12-11 10:46:43.182616'),(3,'C#003',NULL,'1','113','keep a distance','male','markcopolo@gmai.com','0714420943',NULL,'10200',NULL,'33246785',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-11 10:46:48.380653','2020-12-11 10:46:48.380653'),(4,'C#004',NULL,'1','113','keep a distance','male','markcopolo@gmai.com','0714420943',NULL,'10200',NULL,'33246785',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-11 10:48:49.602131','2020-12-11 10:48:49.602131'),(5,'C#005',NULL,'1','113','keep a distance','male','markcopolo@gmai.com','0714420943',NULL,'10200',NULL,'33246785',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-11 10:49:47.969817','2020-12-11 10:49:47.969817'),(6,'C#006',NULL,'1','113','keep a distance','male','markcopolo@gmai.com','0714420943',NULL,'10200',NULL,'33246785',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-11 10:49:49.816097','2020-12-11 10:49:49.816097'),(7,'C#007',NULL,'1','113','keep a distance','male','','0714420943','626 Meru','10200',NULL,'',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-11 10:53:19.541311','2020-12-11 10:53:19.541311'),(8,'C#008','008','1','113','mark kariuki ndungu','male','mark@nouveta.tech2','07123456789','626 Meru','10200',NULL,'332467852',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-11 13:16:58.073241','2020-12-11 13:16:58.073241'),(9,'C#009','009','1','113','mark kariuki ndungu','male','mark@nouveta.tech21','07123456789','626 Meru','10200',NULL,'3324678521',NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-11 13:34:03.040663','2020-12-11 13:34:03.040663'),(10,'C#010','010','1','113','mark kariuki ndungu','male','mark@nouveta.tech212','07123456789','626 Meru','10200',NULL,'33246785212',NULL,NULL,NULL,NULL,'0','2','2','2020-12-11 14:01:22.277478','2020-12-11 14:11:02.605894'),(11,'C#011','011','1','113','mark kariuki ndungu','male','mark@nouveta.tech2121','07123456789','626 Meru','10200',NULL,'332467852121',NULL,NULL,NULL,NULL,'1','2',NULL,'2020-12-11 14:13:37.131519','2020-12-11 14:13:37.131519'),(12,NULL,'1',NULL,'2','Mark ',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'1',NULL,NULL,'2020-12-11 15:17:55.871814','2020-12-11 15:18:00.402208');
+/*!40000 ALTER TABLE `customers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `hotel_amenities`
+--
+
+DROP TABLE IF EXISTS `hotel_amenities`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `hotel_amenities` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `hotel_amenity_id` varchar(255) DEFAULT NULL,
+  `hotel_amenity_name` varchar(255) DEFAULT NULL,
+  `hotel_amenity_description` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `hotel_amenities`
+--
+
+LOCK TABLES `hotel_amenities` WRITE;
+/*!40000 ALTER TABLE `hotel_amenities` DISABLE KEYS */;
+/*!40000 ALTER TABLE `hotel_amenities` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `hotel_wings`
+--
+
+DROP TABLE IF EXISTS `hotel_wings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `hotel_wings` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `hotel_wing_id` varchar(255) DEFAULT NULL,
+  `wing_description` varchar(255) DEFAULT NULL,
+  `hotel_wing_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `hotel_wings`
+--
+
+LOCK TABLES `hotel_wings` WRITE;
+/*!40000 ALTER TABLE `hotel_wings` DISABLE KEYS */;
+/*!40000 ALTER TABLE `hotel_wings` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `hotels`
+--
+
+DROP TABLE IF EXISTS `hotels`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `hotels` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `hotel_id` varchar(255) DEFAULT NULL,
+  `hotel_name` varchar(255) DEFAULT NULL,
+  `hotel_email` varchar(255) DEFAULT NULL,
+  `hotel_contact_person` varchar(255) DEFAULT NULL,
+  `hotel_mobile` varchar(255) DEFAULT NULL,
+  `hotel_type_id` varchar(255) DEFAULT NULL,
+  `parent_hotel_id` varchar(255) DEFAULT NULL,
+  `hotel_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `hotels`
+--
+
+LOCK TABLES `hotels` WRITE;
+/*!40000 ALTER TABLE `hotels` DISABLE KEYS */;
+/*!40000 ALTER TABLE `hotels` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `id_documents`
+--
+
+DROP TABLE IF EXISTS `id_documents`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `id_documents` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_document_no` varchar(255) DEFAULT NULL,
+  `id_document_type` varchar(255) DEFAULT NULL,
+  `id_document_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `id_documents`
+--
+
+LOCK TABLES `id_documents` WRITE;
+/*!40000 ALTER TABLE `id_documents` DISABLE KEYS */;
+/*!40000 ALTER TABLE `id_documents` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `logs`
+--
+
+DROP TABLE IF EXISTS `logs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `logs` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `company_code` varchar(255) DEFAULT NULL,
+  `token` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `logs`
+--
+
+LOCK TABLES `logs` WRITE;
+/*!40000 ALTER TABLE `logs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `logs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `need_types`
+--
+
+DROP TABLE IF EXISTS `need_types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `need_types` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `need_type_id` varchar(255) DEFAULT NULL,
+  `need_description` varchar(255) DEFAULT NULL,
+  `need_type_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `need_types`
+--
+
+LOCK TABLES `need_types` WRITE;
+/*!40000 ALTER TABLE `need_types` DISABLE KEYS */;
+INSERT INTO `need_types` VALUES (1,'1','Rocking Chair','11','1',NULL,NULL,'2020-12-03 09:17:41.393604','2020-12-03 09:17:41.393604'),(2,'2','Wheel Chair Accessible Parking','11','1',NULL,NULL,'2020-12-03 09:17:41.467903','2020-12-03 09:17:41.467903'),(3,'3','Large Windows','12','1',NULL,NULL,'2020-12-03 09:17:41.655188','2020-12-03 09:17:41.655188');
+/*!40000 ALTER TABLE `need_types` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `payment_modes`
+--
+
+DROP TABLE IF EXISTS `payment_modes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `payment_modes` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `payment_mode_id` varchar(255) DEFAULT NULL,
+  `payment_mode_description` varchar(255) DEFAULT NULL,
+  `payment_mode_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `payment_modes`
+--
+
+LOCK TABLES `payment_modes` WRITE;
+/*!40000 ALTER TABLE `payment_modes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `payment_modes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `payment_transaction_types`
+--
+
+DROP TABLE IF EXISTS `payment_transaction_types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `payment_transaction_types` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `payment_transaction_type_id` varchar(255) DEFAULT NULL,
+  `payment_transaction_type_description` varchar(255) DEFAULT NULL,
+  `payment_transaction_type_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `payment_transaction_types`
+--
+
+LOCK TABLES `payment_transaction_types` WRITE;
+/*!40000 ALTER TABLE `payment_transaction_types` DISABLE KEYS */;
+/*!40000 ALTER TABLE `payment_transaction_types` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `payment_transactions`
+--
+
+DROP TABLE IF EXISTS `payment_transactions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `payment_transactions` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `payment_transaction_id` varchar(255) DEFAULT NULL,
+  `booking_order_no` varchar(255) DEFAULT NULL,
+  `bill_no` varchar(255) DEFAULT NULL,
+  `payment_transaction_date` datetime DEFAULT NULL,
+  `payment_transaction_type` varchar(255) DEFAULT NULL,
+  `payment_transaction_amount` varchar(255) DEFAULT NULL,
+  `payment_mode_id` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `payment_transactions`
+--
+
+LOCK TABLES `payment_transactions` WRITE;
+/*!40000 ALTER TABLE `payment_transactions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `payment_transactions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `roles` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `role_id` varchar(255) DEFAULT NULL,
+  `role_description` varchar(255) DEFAULT NULL,
+  `role_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `roles`
+--
+
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+INSERT INTO `roles` VALUES (1,'1','Admin','1','1',NULL,NULL,'2020-12-03 09:17:41.795594','2020-12-03 09:17:41.795594'),(2,'2','Finance','1','1',NULL,NULL,'2020-12-03 09:17:41.883921','2020-12-03 09:17:41.883921'),(3,'3','Front Office','1','1',NULL,NULL,'2020-12-03 09:17:44.469007','2020-12-03 09:17:44.469007'),(4,'4','Maintainance','1','1',NULL,NULL,'2020-12-03 09:17:44.587535','2020-12-03 09:17:44.587535');
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `room_amenities`
+--
+
+DROP TABLE IF EXISTS `room_amenities`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `room_amenities` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `room_amenity_id` varchar(255) DEFAULT NULL,
+  `room_amenity_name` varchar(255) DEFAULT NULL,
+  `room_amenity_description` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `room_amenities`
+--
+
+LOCK TABLES `room_amenities` WRITE;
+/*!40000 ALTER TABLE `room_amenities` DISABLE KEYS */;
+/*!40000 ALTER TABLE `room_amenities` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `room_assignments`
+--
+
+DROP TABLE IF EXISTS `room_assignments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `room_assignments` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `room_assignment_id` varchar(255) DEFAULT NULL,
+  `customer_id` varchar(255) DEFAULT NULL,
+  `customer_names` varchar(255) DEFAULT NULL,
+  `booking_order_id` varchar(255) DEFAULT NULL,
+  `room_id` varchar(255) DEFAULT NULL,
+  `start_date` varchar(255) DEFAULT NULL,
+  `end_date` varchar(255) DEFAULT NULL,
+  `room_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `room_assignments`
+--
+
+LOCK TABLES `room_assignments` WRITE;
+/*!40000 ALTER TABLE `room_assignments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `room_assignments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `room_types`
+--
+
+DROP TABLE IF EXISTS `room_types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `room_types` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `room_type_id` varchar(255) DEFAULT NULL,
+  `room_type_description` varchar(255) DEFAULT NULL,
+  `room_type_status` varchar(255) DEFAULT NULL,
+  `room_type_total` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `room_types`
+--
+
+LOCK TABLES `room_types` WRITE;
+/*!40000 ALTER TABLE `room_types` DISABLE KEYS */;
+INSERT INTO `room_types` VALUES (1,'1','Deluxe Room','1','2','1','1','1','2020-12-03 09:17:32.379383','2020-12-03 09:17:32.379383'),(2,'2','Standard Room','1','5','1','1','1','2020-12-03 09:17:32.865187','2020-12-03 09:17:32.865187');
+/*!40000 ALTER TABLE `room_types` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `rooms`
+--
+
+DROP TABLE IF EXISTS `rooms`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `rooms` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `room_id` varchar(255) DEFAULT NULL,
+  `room_no` varchar(255) DEFAULT NULL,
+  `room_name` varchar(255) DEFAULT NULL,
+  `room_type_id` varchar(255) DEFAULT NULL,
+  `room_price` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rooms`
+--
+
+LOCK TABLES `rooms` WRITE;
+/*!40000 ALTER TABLE `rooms` DISABLE KEYS */;
+INSERT INTO `rooms` VALUES (1,'1','B22','Kiboko House','1','20000','2','1',NULL,NULL,'2020-12-03 09:17:33.095099','2020-12-03 09:29:18.877272'),(2,'2','A21','Mwiko House','1','10000','2','1',NULL,NULL,'2020-12-03 09:17:33.457288','2020-12-04 15:52:17.414300'),(3,'3','G01','Simba Hut','2','2000','2','1',NULL,NULL,'2020-12-03 09:17:34.496421','2020-12-11 22:17:52.835409'),(4,'4','G02','Membly  Court','2','40000','2','1',NULL,NULL,'2020-12-03 09:17:34.697633','2020-12-11 22:15:42.002207');
+/*!40000 ALTER TABLE `rooms` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `schema_migrations`
+--
+
+DROP TABLE IF EXISTS `schema_migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `schema_migrations` (
+  `version` varchar(255) NOT NULL,
+  PRIMARY KEY (`version`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `schema_migrations`
+--
+
+LOCK TABLES `schema_migrations` WRITE;
+/*!40000 ALTER TABLE `schema_migrations` DISABLE KEYS */;
+INSERT INTO `schema_migrations` VALUES ('20201117161640'),('20201117162231'),('20201117162315'),('20201117170518'),('20201117171406'),('20201117171741'),('20201117171938'),('20201117172505'),('20201117172840'),('20201117172942'),('20201117173018'),('20201117175401'),('20201118072850'),('20201118072958'),('20201118073232'),('20201118073525'),('20201118073855'),('20201118074152'),('20201118074445'),('20201118074627'),('20201118075534'),('20201118075744'),('20201118075931'),('20201118080211'),('20201118081114'),('20201118081238'),('20201118081436'),('20201118081631'),('20201118082157'),('20201118082520'),('20201118093841'),('20201127133508'),('20201130071310'),('20201130145845'),('20201201082231');
+/*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `status_clusters`
+--
+
+DROP TABLE IF EXISTS `status_clusters`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `status_clusters` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `status_cluster_id` varchar(255) DEFAULT NULL,
+  `cluster_description` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `status_clusters`
+--
+
+LOCK TABLES `status_clusters` WRITE;
+/*!40000 ALTER TABLE `status_clusters` DISABLE KEYS */;
+INSERT INTO `status_clusters` VALUES (1,'1','Room Occupation status','1',NULL,NULL,'2020-12-03 09:17:38.512578','2020-12-03 09:17:38.512578'),(2,'2','Booking Order status','1',NULL,NULL,'2020-12-03 09:17:38.589391','2020-12-03 09:17:38.589391'),(3,'3','Need Type status','1',NULL,NULL,'2020-12-03 09:17:38.738200','2020-12-03 09:17:38.738200'),(4,'4','Ticket status','1',NULL,NULL,'2020-12-03 09:17:38.880608','2020-12-03 09:17:38.880608');
+/*!40000 ALTER TABLE `status_clusters` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `statuses`
+--
+
+DROP TABLE IF EXISTS `statuses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `statuses` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `status_id` varchar(255) DEFAULT NULL,
+  `status_cluster_id` varchar(255) DEFAULT NULL,
+  `status_description` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `statuses`
+--
+
+LOCK TABLES `statuses` WRITE;
+/*!40000 ALTER TABLE `statuses` DISABLE KEYS */;
+INSERT INTO `statuses` VALUES (1,'1','1','available','1',NULL,NULL,'2020-12-03 09:17:35.068179','2020-12-03 09:17:35.068179'),(2,'2','1','occupied','1',NULL,NULL,'2020-12-03 09:17:35.359982','2020-12-03 09:17:35.359982'),(3,'3','1','booked','1',NULL,NULL,'2020-12-03 09:17:35.428964','2020-12-03 09:17:35.428964'),(4,'4','1','maintainance','1',NULL,NULL,'2020-12-03 09:17:35.497267','2020-12-03 09:17:35.497267'),(5,'5','1','unavailable','1',NULL,NULL,'2020-12-03 09:17:35.567653','2020-12-03 09:17:35.567653'),(6,'6','2','booked','1',NULL,NULL,'2020-12-03 09:17:35.811675','2020-12-03 09:17:35.811675'),(7,'7','2','cancelled','1',NULL,NULL,'2020-12-03 09:17:35.887654','2020-12-03 09:17:35.887654'),(8,'8','2','transfered','1',NULL,NULL,'2020-12-03 09:17:36.262568','2020-12-03 09:17:36.262568'),(9,'9','2','checked_in','1',NULL,NULL,'2020-12-03 09:17:36.330019','2020-12-03 09:17:36.330019'),(10,'10','2','checked_out','1',NULL,NULL,'2020-12-03 09:17:36.390128','2020-12-03 09:17:36.390128'),(11,'11','3','need','1',NULL,NULL,'2020-12-03 09:17:36.823124','2020-12-03 09:17:36.823124'),(12,'12','3','preference','1',NULL,NULL,'2020-12-03 09:17:38.180772','2020-12-03 09:17:38.180772'),(13,'13','4','pending','1',NULL,NULL,'2020-12-03 09:17:38.251494','2020-12-03 09:17:38.251494'),(14,'14','4','resolved','1',NULL,NULL,'2020-12-03 09:17:38.404516','2020-12-03 09:17:38.404516');
+/*!40000 ALTER TABLE `statuses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tickets`
+--
+
+DROP TABLE IF EXISTS `tickets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tickets` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ticket_id` varchar(255) DEFAULT NULL,
+  `ticket_no` varchar(255) DEFAULT NULL,
+  `customer_id` varchar(255) DEFAULT NULL,
+  `ticket_description` varchar(255) DEFAULT NULL,
+  `ticket_date` varchar(255) DEFAULT NULL,
+  `ticket_status` varchar(255) DEFAULT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tickets`
+--
+
+LOCK TABLES `tickets` WRITE;
+/*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
+INSERT INTO `tickets` VALUES (1,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2020-12-10 23:43:41.342099','2020-12-10 23:43:41.342099'),(2,NULL,NULL,'1','No Iron box in room',NULL,NULL,NULL,NULL,'2020-12-10 23:45:11.773631','2020-12-10 23:45:11.773631'),(3,NULL,NULL,'1','No Iron box in room',NULL,NULL,NULL,NULL,'2020-12-10 23:47:27.934208','2020-12-10 23:47:27.934208'),(4,NULL,NULL,'1','No Iron box in room',NULL,NULL,NULL,NULL,'2020-12-10 23:48:28.250561','2020-12-10 23:48:28.250561');
+/*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `unit_of_measures`
+--
+
+DROP TABLE IF EXISTS `unit_of_measures`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `unit_of_measures` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `unit_id` varchar(255) DEFAULT NULL,
+  `unit_description` varchar(255) DEFAULT NULL,
+  `unit_status` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `unit_of_measures`
+--
+
+LOCK TABLES `unit_of_measures` WRITE;
+/*!40000 ALTER TABLE `unit_of_measures` DISABLE KEYS */;
+/*!40000 ALTER TABLE `unit_of_measures` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `id_document_no` varchar(255) DEFAULT NULL,
+  `id_document_type` varchar(255) DEFAULT NULL,
+  `identification_no` varchar(255) DEFAULT NULL,
+  `user_department` varchar(255) DEFAULT NULL,
+  `user_type_id` varchar(255) DEFAULT NULL,
+  `user_status` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `password_digest` varchar(255) DEFAULT NULL,
+  `role_id` varchar(255) DEFAULT NULL,
+  `is_active` varchar(255) DEFAULT '1',
+  `created_by` varchar(255) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,NULL,'BT',NULL,NULL,NULL,NULL,NULL,NULL,'too@nouveta.tech','$2a$12$0c0VIF.peey1kf.IQp/zjO2ogI6p9Vf87iO/SmgQ1qey/MT4.heK.','1','1',NULL,NULL,'2020-12-03 09:17:45.693496','2020-12-03 09:17:45.693496'),(2,NULL,'MK',NULL,NULL,NULL,NULL,NULL,NULL,'mark@nouveta.tech','$2a$12$k5vYx7.4M/Ilca0T74gLDuNAZsCReIVal69QGxjm/Mo8TQpnQTdxW','1','1',NULL,NULL,'2020-12-03 09:17:46.740635','2020-12-03 09:17:46.740635');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2020-12-12  1:35:02

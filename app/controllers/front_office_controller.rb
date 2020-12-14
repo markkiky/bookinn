@@ -333,8 +333,8 @@ class FrontOfficeController < ApplicationController
     # loop through bookings
     walkin_bookinn_params["booking"].each do |bookinn|
       @bookinn = BookingOrder.new(
-        booking_order_id: bookinn["booking_order_id"],
-        booking_order_date: bookinn["booking_order_date"],
+        booking_order_id: BookingOrder.booking_order_id,
+        booking_order_date: Date.parse(bookinn["booking_order_date"]) ? bookinn["booking_order_date"] : Date.today,
         stay_start_date: bookinn["stay_start_date"],
         stay_end_date: bookinn["stay_end_date"],
         total_applicants: bookinn["total_applicants"],
@@ -355,7 +355,7 @@ class FrontOfficeController < ApplicationController
           )
         else
           @customer = Customer.new(
-            customer_id: customer["customer_id"],
+            customer_id: Customer.customer_id,
             names: "#{customer["first_name"]} #{customer["last_name"]}",
             id_no: customer["id_no"],
             country_id: customer["country_id"],
@@ -400,33 +400,68 @@ class FrontOfficeController < ApplicationController
     # change the status of assigned rooms to booked in
     # Utilize room_
     # CustomerRoom.new
+    @booking_orders = []
+    @response = nil
+    @customer_bookings_response = []
+    puts "Params: " 
+    puts params
+
+    # verify customer booking is valid
     CustomerBooking.transaction do
+      # loop through each assignment
       check_in_params["assignments"].each do |assignment|
+        # byebug
         @customer_booking = CustomerBooking.new(:customer_id => assignment["customer_id"], :booking_order_id => assignment["booking_order_id"], :room_id => assignment["room_id"])
+        @customer = Customer.find_by(:id => assignment['customer_id'])
+        @room = Room.find_by(:id => assignment['room_id'])
+        @booking_order = BookingOrder.find_by(:id => assignment['booking_order_id'])
+        @booking_orders << assignment['booking_order_id']
+
+        @customer_booking_response = {
+          names: @customer.names,
+          room_no: @room.room_no,
+          # bill_no: BookingOrder.bill_booking(@booking_order.id),
+          bill_amount: @booking_order.amount,
+          discount: @booking_order.discount,
+          sharing: @booking_order.total_applicants
+        }
         @room = Room.find_by(:id => assignment['room_id'])
         if @room
           @room.status = "2"
           @room.save
           @customer_booking.save
+          @customer_bookings_response << @customer_booking_response 
+          @response ={
+            status: 200,
+            message: "Customer Booking created successfully. Room Assigned",
+            data: @customer_bookings_response
+          }
         else
-
+          # @room.errors = ["Room not Found"]
+          @response = {
+            status: 200,
+            message: "Error finding room with ID: #{assignment['room_id']}",
+            data: @room
+          }
+          
         end
         
       end
+
+      # Generate bill for the assignments
+      @booking_orders.each do |booking|
+        BookingOrder.bill_booking(booking)
+      end
     end
 
-    # CustomerBooking.new
-    response = {
-      status: 200,
-      message: "Check In successful",
-      data: [],
-    }
-
-    render json: response
+    
+    render json: @response
   end
 
   # POST check_out
   def check_out
+    # provide the booking_order and the customer checking out
+
     response = {
       status: 200,
       message: "Check Out successful",
@@ -436,7 +471,7 @@ class FrontOfficeController < ApplicationController
   end
 
   def dashboard
-    response = {
+    @response = {
       status: 200,
       message: "Dashboard values",
       data: {
@@ -446,7 +481,7 @@ class FrontOfficeController < ApplicationController
         available_rooms: "2",
       },
     }
-    render json: response
+    render json: @response
   end
 
   def upload_customers_csv
@@ -475,6 +510,17 @@ class FrontOfficeController < ApplicationController
         :booking_order_id,
       ],
     )
+  end
+
+  def check_out_params
+    params.permit(
+      assignments: [
+        :customer_id,
+        :room_id,
+        :booking_order_id,
+      ],
+    )
+
   end
 
   def walkin_bookinn_params

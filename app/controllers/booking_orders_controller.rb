@@ -1,5 +1,6 @@
 class BookingOrdersController < ApplicationController
   before_action :set_booking_order, only: [:show, :update, :destroy]
+  before_action :authorize_request
 
   # GET /booking_orders
   def index
@@ -43,6 +44,7 @@ class BookingOrdersController < ApplicationController
   # POST /booking_orders
   def create
     @booking_order = BookingOrder.new(booking_order_params)
+    @booking_order.created_by = @current_user
 
     if @booking_order.save
       render json: @booking_order, status: :created, location: @booking_order

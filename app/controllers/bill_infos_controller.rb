@@ -4,13 +4,24 @@ class BillInfosController < ApplicationController
   # GET /bill_infos
   def index
     @bill_infos = BillInfo.all
+    response = {
+      status: 200,
+      message: "ALL Bill Infos",
+      data: @bill_infos
+    }
+    
 
-    render json: @bill_infos
+    render json: response
   end
 
   # GET /bill_infos/1
   def show
-    render json: @bill_info
+    response = {
+      status: 200,
+      message: "Bill Info",
+      data: @bill_info
+    }
+    render json: response
   end
 
   # POST /bill_infos
@@ -18,24 +29,49 @@ class BillInfosController < ApplicationController
     @bill_info = BillInfo.new(bill_info_params)
     @bill_info.bill_no = BillInfo.bill_no
     if @bill_info.save
-      render json: @bill_info, status: :created, location: @bill_info
+      response = {
+        status: 200,
+        message: "Created Bill Info",
+        data: @bill_info
+      }
+      render json: response, status: :created, location: @bill_info
     else
-      render json: @bill_info.errors, status: :unprocessable_entity
+      response = {
+        status: 200,
+        message: "Failed Bill Info",
+        data: @bill_info.errors
+      }
+      render json:response, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /bill_infos/1
   def update
     if @bill_info.update(bill_info_params)
-      render json: @bill_info
+      response = {
+        status: 200,
+        message: "Updated",
+        data: @bill_info
+      }
+      render json: response
     else
+      response = {
+        status: 200,
+        message: "Updated",
+        data: @bill_infos.errors
+      }
       render json: @bill_info.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /bill_infos/1
   def destroy
-    @bill_info.destroy
+    @bill_info.updated(:is_active => 0)
+    response = {
+      status: 200,
+      message: "Deleted"
+    }
+    # @bill_info.destroy
   end
 
   private

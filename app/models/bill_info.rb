@@ -1,5 +1,5 @@
 class BillInfo < ApplicationRecord
-
+    has_many :bill_details
     # return a unique bill no for bookinn system only
     def self.bill_no
         @bill_infos = BillInfo.all
@@ -22,7 +22,7 @@ class BillInfo < ApplicationRecord
             series = @bill_infos.last.bill_no.split(//).last(4).join.to_i
             # @bill_infos.last
             series = series + 1
-            serial = series.to_s
+            series = series.to_s
             bill_no = "#{prefix}#{year}#{day}-#{month}#{series.rjust(4, "0")}"
 
             return bill_no
