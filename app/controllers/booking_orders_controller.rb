@@ -15,6 +15,8 @@ class BookingOrdersController < ApplicationController
         room_type_description: RoomType.find_by(:id => booking_order.room_type_id) ? RoomType.find_by(:id => booking_order.room_type_id).room_type_description : "Room Type not defined",
         stay_start_date: booking_order.stay_start_date,
         stay_end_date: booking_order.stay_end_date,
+        billed: BookingOrder.booking_bills(booking_order.id).count > 0 ? true : false,
+        bills: BookingOrder.booking_bills(booking_order.id).count > 0 ? BookingOrder.bills(booking_order.id) : false,
         customers: BookingOrder.booking_customer(booking_order.id),
         # billed: "true"
       }

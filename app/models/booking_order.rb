@@ -40,7 +40,7 @@ class BookingOrder < ApplicationRecord
         @bill_item = BillItem.new(
           :bill_item_id => BillItem.bill_item_id,
           :bill_item_description => "Room Assignment",
-          :bill_item_rate => ""
+          :bill_item_rate => "",
         )
         @bill_item.save
 
@@ -54,14 +54,14 @@ class BookingOrder < ApplicationRecord
           :customer_id => "1",
           :bill_total => Room.find_by(id: booking.room_id).room_price,
         )
-        
+
         @bill_info.save
         booking.update(:bill_info_id => @bill_info.id)
         @bill_detail.save
 
         response = {
-            bill_no: @bill_info.bill_no,
-            bill_amount: @bill_info.bill_total
+          bill_no: @bill_info.bill_no,
+          bill_amount: @bill_info.bill_total,
         }
         return response
       else
@@ -74,7 +74,7 @@ class BookingOrder < ApplicationRecord
 
   #  checks if a particular booking has been billed before and returns bill no if true
   def self.booking_bills(booking_order_id)
-    @customer_bookings = CustomerBooking.where(:booking_order_id => booking_order_id)
+    @customer_bookings = CustomerBooking.where(:booking_order_id => booking_order_id, :is_active => 1)
     @bill_infos = []
     @customer_bookings.each do |booking|
       if booking.bill_info_id != nil
@@ -82,5 +82,20 @@ class BookingOrder < ApplicationRecord
       end
     end
     return @bill_infos
+  end
+
+  def self.bills(booking_order_id)
+    @bill_info_ids = BookingOrder.booking_bills(booking_order_id)
+    @bills = []
+    # byebug
+    if @bill_info_ids.count > 0
+      @bill_info_ids.each do |bill_id|
+        @bill_info = BillInfo.find_by(id: bill_id)
+        @bills << @bill_info
+      end
+      return @bills
+    else
+      return @bills
+    end
   end
 end
