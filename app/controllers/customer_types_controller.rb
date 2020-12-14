@@ -20,7 +20,7 @@ class CustomerTypesController < ApplicationController
   # POST /customer_types
   def create
     @customer_type = CustomerType.new(customer_type_params)
-    @customer_type.customer_id = CustomerType.customer_type_id
+    @customer_type.customer_type_id = CustomerType.customer_type_id
     
     if @customer_type.save
       response = {
