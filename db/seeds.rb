@@ -5,13 +5,16 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-Customer.create(customer_no: "254", customer_id: Customer.customer_id, customer_no: Customer.customer_no, customer_type_id: '1', country_id: "1", names: "Mark Kariuki", email: "markkaris438@gmail.com", phone: "254714420943", address: "626 Muranga", postal_code: "10200", customer_status: "25", customer_status_date: "30-01-2020", last_visit: "20-12-2020", last_invoice: "20-12-2020", last_receipt: "20-12-2020", created_by: "1", updated_by: "1")
+Customer.create(customer_no: Customer.customer_no, customer_id: Customer.customer_id, customer_type_id: '1', country_id: "1", names: "Channel Booker", email: "channel@gmail.com", phone: "254714420943", address: "626 Muranga", postal_code: "10200", customer_status: "25", customer_status_date: "30-01-2020", last_visit: "20-12-2020", last_invoice: "20-12-2020", last_receipt: "20-12-2020", created_by: "1", updated_by: "1", is_channel: "1", channel_id: "1")
+Customer.create(customer_no: Customer.customer_no, customer_id: Customer.customer_id, customer_type_id: '2', country_id: "113", names: "Mark Kariuki", email: "markkaris438@gmail.com", phone: "254714420943", address: "626 Muranga", postal_code: "10200", customer_status: "25", customer_status_date: "30-01-2020", last_visit: "20-12-2020", last_invoice: "20-12-2020", last_receipt: "20-12-2020", created_by: "1", updated_by: "1")
+CustomerType.create(customer_type_id: CustomerType.customer_type_id, customer_type_description: "Channel")
 CustomerType.create(customer_type_id: CustomerType.customer_type_id ,customer_type_description: "Adult")
 
-RoomType.create(room_type_id: "1", room_type_description: "Deluxe Room", room_type_total: "2", created_by: "1", updated_by: "1", room_type_status: "1")
-RoomType.create(room_type_id: "2", room_type_description: "Standard Room", room_type_total: "2", created_by: "1", updated_by: "1", room_type_status: "1")
-RoomType.create(room_type_id: "3", room_type_description: "Single Room", room_type_total: "10", created_by: "1", updated_by: "1", room_type_status: "1")
-RoomType.create(room_type_id: "3", room_type_description: "Double Room", room_type_total: "5", created_by: "1", updated_by: "1", room_type_status: "1")
+
+RoomType.create(room_type_id: "1", room_type_description: "Deluxe Room", room_type_total: "2", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "20000")
+RoomType.create(room_type_id: "2", room_type_description: "Standard Room", room_type_total: "2", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "5000")
+RoomType.create(room_type_id: "3", room_type_description: "Single Room", room_type_total: "10", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "10000")
+RoomType.create(room_type_id: "3", room_type_description: "Double Room", room_type_total: "5", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "15000")
 # Deluxe Rooms
 Room.create(room_id: "1", room_no: "B22", room_name: "Kiboko House", room_type_id: "3", room_price: "20000", capacity: "1", status: '1' )
 Room.create(room_id: "2", room_no: "A21", room_name: "Mwiko House", room_type_id: "1", room_price: "10000", capacity: "10", status: '1' )

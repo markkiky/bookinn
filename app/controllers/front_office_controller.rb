@@ -535,7 +535,8 @@ class FrontOfficeController < ApplicationController
   def mass_booking
     # create booking
     # byebug
-    @customer = Customer.find_or_create_by(email: "mark@nouveta.tech")
+    
+    @customer = Customer.find_by(id: mass_booking_params["customer_id"])
     begin
       BookingOrder.transaction do
         @booking_order = BookingOrder.new(
@@ -607,9 +608,7 @@ class FrontOfficeController < ApplicationController
 
   def mass_booking_params
     params.permit(
-      :email,
-      :names,
-      :phone,
+      :customer_id,
       bookings: [
         :room_type_id,
         :stay_start_date,
