@@ -3,6 +3,13 @@ class AuthenticationController < ApplicationController
     # post /auth/login
     def login
       @user = User.find_by_email(params[:email])
+      @user_response = {
+        id: @user.id,
+        username: @user.username,
+        role_id: @user.role_id,
+        role: Role.find_by(:id => @user.role_id) ? Role.find_by(:id => @user.role_id).role_description : "Role is not defined",
+        email: @user.email
+      }
       if @user&.authenticate(params[:password])
         token = JsonWebToken.encode(user_id: @user.id)
         time = Time.now + 24.hours.to_i
@@ -10,7 +17,7 @@ class AuthenticationController < ApplicationController
             status: 200,
             access_token: token, 
             exp: time,
-            data: @user
+            data: @user_response
             },
             status: :ok
       else

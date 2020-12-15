@@ -1,16 +1,27 @@
 class RoomAmenitiesController < ApplicationController
   before_action :set_room_amenity, only: [:show, :update, :destroy]
+  before_action :authorize_request
 
   # GET /room_amenities
   def index
     @room_amenities = RoomAmenity.all
-
-    render json: @room_amenities
+    response = {
+      status: 200,
+      message: "All room amenities",
+      data: @room_amenities
+    }
+    
+    render json: response
   end
 
   # GET /room_amenities/1
   def show
-    render json: @room_amenity
+    response = {
+      status: 200,
+      message: "Specific Room Amenity",
+      data: @room_amenity
+    }
+    render json: response
   end
 
   # POST /room_amenities
@@ -18,24 +29,50 @@ class RoomAmenitiesController < ApplicationController
     @room_amenity = RoomAmenity.new(room_amenity_params)
 
     if @room_amenity.save
-      render json: @room_amenity, status: :created, location: @room_amenity
+      response = {
+        status: 200,
+        message: "Room amenity created successfully",
+        data: @room_amenity
+      }
+      render json: response, status: :created, location: @room_amenity
     else
-      render json: @room_amenity.errors, status: :unprocessable_entity
+      response = {
+        status: 200,
+        message: "Failed to create Room Amenity",
+        data: @room_amenity.errors
+      }
+      render json: response, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /room_amenities/1
   def update
     if @room_amenity.update(room_amenity_params)
-      render json: @room_amenity
+      response = {
+        status: 200,
+        message: "Room Amenity updated successfully",
+        data: @room_amenity
+      }
+      render json: response
     else
-      render json: @room_amenity.errors, status: :unprocessable_entity
+      response = {
+        status: 200,
+        message: "Failed to update room amenity",
+        data: @room_amenity.errors
+      }
+      render json: response, status: :unprocessable_entity
     end
   end
 
   # DELETE /room_amenities/1
   def destroy
-    @room_amenity.destroy
+    @room_amenity.update(:is_active => '1')
+    response = {
+      status: 200,
+      message: "Room Amenity deleted successfully",
+      data: @room_amenity
+    }
+   
   end
 
   private

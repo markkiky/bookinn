@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  discount_id: MyString
+  amount: MyString
+  discount_rate: MyString
+
+two:
+  discount_id: MyString
+  amount: MyString
+  discount_rate: MyString

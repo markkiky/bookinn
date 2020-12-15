@@ -12,7 +12,7 @@ class RoomTypesController < ApplicationController
       data: @room_types
     }
 
-    render json: response
+    render json: response, status: :ok
   end
 
   # GET /room_types/1
@@ -22,7 +22,7 @@ class RoomTypesController < ApplicationController
       message: "A specific room type",
       data: @room_type
     }
-    render json: response
+    render json: response, status: :ok
   end
 
   # POST /room_types
@@ -38,22 +38,32 @@ class RoomTypesController < ApplicationController
     if @room_type.save
       render json: response, status: :created, location: @room_type
     else
-      render json: @room_type.errors, status: :unprocessable_entity
+      response = {
+        status: 400,
+        message: "Failed to create room type",
+        data: @room_type.errors
+      }
+      render json: response, status: :ok
     end
   end
 
   # PATCH/PUT /room_types/1
   def update
     if @room_type.update(room_type_params)
-
       response = {
         status: 200,
         message: "Room Type updated successfully",
         data: @room_type
       }
-      render json: response
+      render json: response, status: :ok
     else
-      render json: @room_type.errors, status: :unprocessable_entity
+
+      response = {
+        status: 400,
+        message: "Failed to update Room Type",
+        data: @room_type.errors
+      }
+      render json: response, status: :ok
     end
   end
 
@@ -65,7 +75,7 @@ class RoomTypesController < ApplicationController
       message: "Room Type deleted successfully",
       data: @room_type
     }
-    render json: response
+    render json: response, status: :ok
   end
 
   private
