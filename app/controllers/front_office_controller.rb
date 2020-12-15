@@ -616,14 +616,14 @@ class FrontOfficeController < ApplicationController
         }
       rescue ActiveRecord::RecordInvalid => invalid
         response = {
-          status: 200,
+          status: 400,
           message: "Error saving mass booking",
           error: invalid,
         }
       end
     else
       response = {
-        status: 200,
+        status: 400,
         message: "Customer channel Not found",
         data: @customer,
       }
