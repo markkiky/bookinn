@@ -557,7 +557,7 @@ class FrontOfficeController < ApplicationController
             :channel_transaction_date => Time.now,
             :channel_transaction_type => "",
             :channel_transaction_amount => "",
-            :created_by => @current_user.id
+            :created_by => @current_user.id,
           )
           @channel_transaction.save
 
@@ -566,8 +566,12 @@ class FrontOfficeController < ApplicationController
             :bill_no => BillInfo.bill_no,
             :bill_date => Time.now,
             :bill_total => "",
+            :booking_order_id => @booking_order.id,
+            :bill_info_description => mass_booking_params["bill_info_description"],
             :customer_id => @customer.id,
             :created_by => @current_user.id,
+            :reducing_balance => "",
+            :bill_status => "15"
           )
           @bill_info.save
 
@@ -593,14 +597,14 @@ class FrontOfficeController < ApplicationController
               :bill_info_id => @bill_info.id,
               :room_type_id => @booking_order_detail.room_type_id,
               :booking_order_detail_id => @booking_order_detail.id,
+              :bill_detail_description => booking[:description],
               :amount => RoomType.find_by(:id => @booking_order_detail.room_type_id).room_price.to_i * @booking_order_detail.total_applicants.to_i,
             )
             @bill_detail.save
 
             # compute bill amount
-            @bill_info.update(:bill_total => @bill_info.bill_total.to_i + @bill_detail.amount.to_i)
+            @bill_info.update(:bill_total => @bill_info.bill_total.to_i + @bill_detail.amount.to_i, :reducing_balance => @bill_info.bill_total.to_i + @bill_detail.amount.to_i)
             @channel_transaction.update(:channel_transaction_amount => @bill_info.bill_total)
-            
           end
         end
         response = {
@@ -621,11 +625,11 @@ class FrontOfficeController < ApplicationController
       response = {
         status: 200,
         message: "Customer channel Not found",
-        data: @customer
+        data: @customer,
       }
     end
 
-    render json: response
+    render json: response, status: :ok
   end
 
   private
@@ -633,11 +637,13 @@ class FrontOfficeController < ApplicationController
   def mass_booking_params
     params.permit(
       :customer_id,
+      :bill_info_description,
       bookings: [
         :room_type_id,
         :stay_start_date,
         :stay_end_date,
         :total_applicants,
+        :description,
       ],
     )
   end

@@ -4,7 +4,11 @@ class CreateBillInfos < ActiveRecord::Migration[6.0]
       t.string :bill_no
       t.datetime :bill_date
       t.string :customer_id
+      t.string :booking_order_id
+      t.string :bill_info_description
       t.string :bill_total
+      t.string :reducing_balance
+      t.string :bill_status, :default => "15"
 
       t.string :is_active, :default => "1"
       t.string :created_by

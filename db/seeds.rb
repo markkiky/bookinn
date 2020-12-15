@@ -42,11 +42,13 @@ Status.create(status_id: '12', status_cluster_id: "3", status_description: "pref
 Status.create(status_id: "13", status_cluster_id: "4", status_description: "pending")
 Status.create(status_id: "14", status_cluster_id: "4", status_description: "resolved")
 
-Status.create(status_id: "13", status_cluster_id: "4", status_description: "unpaid")
-Status.create(status_id: "14", status_cluster_id: "4", status_description: "paid")
+Status.create(status_id: "15", status_cluster_id: "5", status_description: "unpaid")
+Status.create(status_id: "16", status_cluster_id: "5", status_description: "partial")
+Status.create(status_id: "17", status_cluster_id: "5", status_description: "paid")
+Status.create(status_id: "18", status_cluster_id: "5", status_description: "overpaid")
+Status.create(status_id: "19", status_cluster_id: "5", status_description: "cancelled")
 
 StatusCluster.create(status_cluster_id: "1", cluster_description: "Room Occupation status")
-# StatusCluster.create(status_cluster_id: "2", cluster_description: "Room Type status")
 StatusCluster.create(status_cluster_id: "2", cluster_description: "Booking Order status")
 StatusCluster.create(status_cluster_id: "3", cluster_description: "Need Type status")
 StatusCluster.create(status_cluster_id: "4", cluster_description: "Ticket status")

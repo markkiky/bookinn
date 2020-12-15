@@ -34,9 +34,11 @@ ActiveRecord::Schema.define(version: 2020_12_15_075329) do
   end
 
   create_table "bill_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "bill_detail_id"
     t.string "bill_no"
     t.string "bill_info_id"
     t.string "room_type_id"
+    t.string "bill_detail_description"
     t.string "booking_order_detail_id"
     t.string "amount"
     t.string "bill_item_id"
@@ -55,7 +57,11 @@ ActiveRecord::Schema.define(version: 2020_12_15_075329) do
     t.string "bill_no"
     t.datetime "bill_date"
     t.string "customer_id"
+    t.string "booking_order_id"
+    t.string "bill_info_description"
     t.string "bill_total"
+    t.string "reducing_balance"
+    t.string "bill_status"
     t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
