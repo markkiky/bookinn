@@ -4,13 +4,23 @@ class ChannelTransactionsController < ApplicationController
   # GET /channel_transactions
   def index
     @channel_transactions = ChannelTransaction.all
-
-    render json: @channel_transactions
+    response = {
+      status: 200,
+      message: "All Channel Transactions",
+      data: @channel_transactions
+    }
+    
+    render json: response
   end
 
   # GET /channel_transactions/1
   def show
-    render json: @channel_transaction
+    response = {
+      status: 200,
+      message: "Specific Channel Transaction",
+      data: @channel_transactions
+    }
+    render json: response
   end
 
   # POST /channel_transactions
@@ -18,24 +28,51 @@ class ChannelTransactionsController < ApplicationController
     @channel_transaction = ChannelTransaction.new(channel_transaction_params)
 
     if @channel_transaction.save
-      render json: @channel_transaction, status: :created, location: @channel_transaction
+      response = {
+        status: 200,
+        message: "Channel Transaction created successfully",
+        data: @channel_transaction
+      }
+      render json: response, status: :ok, location: @channel_transaction
     else
-      render json: @channel_transaction.errors, status: :unprocessable_entity
+      response = {
+        status: 200,
+        message: "Failed to create Transaction",
+        data: @channel_transaction.errors
+      }
+      render json: response, status: :ok
     end
   end
 
   # PATCH/PUT /channel_transactions/1
   def update
     if @channel_transaction.update(channel_transaction_params)
-      render json: @channel_transaction
+      response = {
+        status: 200,
+        message: "Channel Transaction updated successfully",
+        data: @channel_transaction
+      }
+      render json: response, status: :ok
     else
-      render json: @channel_transaction.errors, status: :unprocessable_entity
+      response = {
+        status: 400,
+        message: "Failed to update channel transaction",
+        data: @channel_transaction.errors
+      }
+      render json: @channel_transaction.errors, status: :ok
     end
   end
 
   # DELETE /channel_transactions/1
   def destroy
-    @channel_transaction.destroy
+    @channel_transaction.update(:is_active => '0')
+    response = {
+      status: 200,
+      message: "Channel Transaction deleted successfully",
+      data: @channel_transaction
+    }
+    
+    render json: response
   end
 
   private

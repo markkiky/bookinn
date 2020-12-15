@@ -533,74 +533,98 @@ class FrontOfficeController < ApplicationController
   # Creates a booking with many details
   # Generates a bill and bill details
   def mass_booking
-    # create booking
-    # byebug
-    
+    # requires a valid channel customer
     @customer = Customer.find_by(id: mass_booking_params["customer_id"])
-    begin
-      BookingOrder.transaction do
-        @booking_order = BookingOrder.new(
-          :booking_order_id => BookingOrder.booking_order_id,
-          :booking_order_date => Time.now,
-          :booking_order_type_id => "3",
-          :created_by => @current_user,
-          :customer_id => @customer.id
-        )
-        @booking_order.save
+    @channel = Channel.find_by(id: @customer.channel_id)
 
-        # create bill
-        # byebug
-        @bill_info = BillInfo.new(
-          :bill_no => BillInfo.bill_no,
-          :bill_date => Time.now,
-          :bill_total => "",
-          :customer_id => @customer.id,
-          :created_by => @current_user.id
-        )
-        @bill_info.save
-        # associate bill, booking order and customer
-        @customer_booking = CustomerBooking.new(:booking_order_id => @booking_order.id, :customer_id => @customer.id, :bill_info_id => @bill_info.id)
-        @customer_booking.save
-        mass_booking_params["bookings"].each do |booking|
-          puts booking
-          @booking_order_detail = BookingOrderDetail.new(
-            :booking_order_id => @booking_order.id,
-            :room_type_id => booking[:room_type_id],
-            :stay_start_date => booking[:stay_start_date],
-            :stay_end_date => booking[:stay_end_date],
-            :total_applicants => booking[:total_applicants],
+    # check for a valid customer in channel
+    if @channel != nil
+      begin
+        BookingOrder.transaction do
+          # create booking order
+          @booking_order = BookingOrder.new(
+            :booking_order_id => BookingOrder.booking_order_id,
+            :booking_order_date => Time.now,
+            :booking_order_type_id => "4",
+            :created_by => @current_user,
+            :customer_id => @customer.id,
           )
+          @booking_order.save
 
-          @booking_order_detail.save
-          # generate a bill detail
-          @bill_detail = BillDetail.new(
-            :bill_no => @bill_info.bill_no,
-            :bill_info_id => @bill_info.id,
-            :room_type_id => @booking_order_detail.room_type_id,
-            :booking_order_detail_id => @booking_order_detail.id,
-            :amount => RoomType.find_by(:id => @booking_order_detail.room_type_id).room_price.to_i * @booking_order_detail.total_applicants.to_i
+          # create channel transaction
+          @channel_transaction = ChannelTransaction.new(
+            :channel_transaction_id => ChannelTransaction.channel_transaction_id,
+            :channel_transaction_date => Time.now,
+            :channel_transaction_type => "",
+            :channel_transaction_amount => "",
+            :created_by => @current_user.id
           )
-          @bill_detail.save
-          # compute bill amount
-          bill_total = 
-          @bill_info.update(:bill_total => @bill_info.bill_total.to_i + @bill_detail.amount.to_i)
+          @channel_transaction.save
+
+          # create bill
+          @bill_info = BillInfo.new(
+            :bill_no => BillInfo.bill_no,
+            :bill_date => Time.now,
+            :bill_total => "",
+            :customer_id => @customer.id,
+            :created_by => @current_user.id,
+          )
+          @bill_info.save
+
+          # associate bill, booking order and customer
+          @customer_booking = CustomerBooking.new(:booking_order_id => @booking_order.id, :customer_id => @customer.id, :bill_info_id => @bill_info.id)
+          @customer_booking.save
+
+          # loop through each booking detail
+          mass_booking_params["bookings"].each do |booking|
+            # puts booking
+            @booking_order_detail = BookingOrderDetail.new(
+              :booking_order_id => @booking_order.id,
+              :room_type_id => booking[:room_type_id],
+              :stay_start_date => booking[:stay_start_date],
+              :stay_end_date => booking[:stay_end_date],
+              :total_applicants => booking[:total_applicants],
+            )
+            @booking_order_detail.save
+
+            # generate a bill detail
+            @bill_detail = BillDetail.new(
+              :bill_no => @bill_info.bill_no,
+              :bill_info_id => @bill_info.id,
+              :room_type_id => @booking_order_detail.room_type_id,
+              :booking_order_detail_id => @booking_order_detail.id,
+              :amount => RoomType.find_by(:id => @booking_order_detail.room_type_id).room_price.to_i * @booking_order_detail.total_applicants.to_i,
+            )
+            @bill_detail.save
+
+            # compute bill amount
+            @bill_info.update(:bill_total => @bill_info.bill_total.to_i + @bill_detail.amount.to_i)
+            @channel_transaction.update(:channel_transaction_amount => @bill_info.bill_total)
+            
+          end
         end
+        response = {
+          status: 200,
+          message: "Mass Booking created",
+          data: {
+            bill: BookingOrder.bills(@booking_order.id),
+          },
+        }
+      rescue ActiveRecord::RecordInvalid => invalid
+        response = {
+          status: 200,
+          message: "Error saving mass booking",
+          error: invalid,
+        }
       end
+    else
       response = {
         status: 200,
-        message: "Mass Booking created",
-        data: {
-          bill: BookingOrder.bills(@booking_order.id)
-        },
-      }
-    rescue ActiveRecord::RecordInvalid => invalid
-      response = {
-        status: 200,
-        message: "Error saving mass booking",
-        error: invalid
+        message: "Customer channel Not found",
+        data: @customer
       }
     end
-    
+
     render json: response
   end
 
