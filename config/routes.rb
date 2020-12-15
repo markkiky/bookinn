@@ -68,4 +68,5 @@ Rails.application.routes.draw do
 
   # Upload Customers CSV
   post 'upload/customer/csv', to: "front_office#upload_customers_csv"
+  get 'channel_customers', to: "customers#channel_customers"
 end

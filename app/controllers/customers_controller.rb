@@ -107,6 +107,16 @@ class CustomersController < ApplicationController
     render json: response
   end
 
+  def channel_customers
+    @customers = Customer.all.where(:is_channel => 1)
+    response = {
+      status: 200,
+      message: "Returning customers who are channels",
+      data: @customers
+    }
+    render json: response, status: :ok
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
