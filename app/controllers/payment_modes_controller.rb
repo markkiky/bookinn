@@ -1,16 +1,26 @@
 class PaymentModesController < ApplicationController
   before_action :set_payment_mode, only: [:show, :update, :destroy]
+  before_action :authorize_request
 
   # GET /payment_modes
   def index
     @payment_modes = PaymentMode.all
-
-    render json: @payment_modes
+    response = {
+      status: 200,
+      message: "All payment modes",
+      data: @payment_modes
+    }
+    render json: response
   end
 
   # GET /payment_modes/1
   def show
-    render json: @payment_mode
+    response = {
+      status: 200,
+      message: "Specific Payment Mode",
+      data: @payment_mode
+    }
+    render json: response
   end
 
   # POST /payment_modes
@@ -18,24 +28,52 @@ class PaymentModesController < ApplicationController
     @payment_mode = PaymentMode.new(payment_mode_params)
 
     if @payment_mode.save
-      render json: @payment_mode, status: :created, location: @payment_mode
+      response = {
+        status: 200,
+        message: "Payment Mode created Successfully",
+        data: @payment_mode
+      }
+      render json: response, status: :created, location: @payment_mode
     else
-      render json: @payment_mode.errors, status: :unprocessable_entity
+      response = {
+        status: 400,
+        message: "Failed to create payment mode",
+        data: @payment_mode.errors
+      }
+      render json: response, status: :ok
     end
   end
 
   # PATCH/PUT /payment_modes/1
   def update
     if @payment_mode.update(payment_mode_params)
-      render json: @payment_mode
+      response = {
+        status: 200,
+        message: "Payment Mode updated Successfully",
+        data: @payment_mode
+      }
+      render json: response, status: :ok
     else
-      render json: @payment_mode.errors, status: :unprocessable_entity
+      response = {
+        status: 400,
+        message: "Failed to update payment mode",
+        data: @payment_mode.errors
+      }
+      render json: @payment_mode.errors, status: :ok
     end
   end
 
   # DELETE /payment_modes/1
   def destroy
-    @payment_mode.destroy
+    @payment_mode.update(:is_active => "0")
+
+    response  = {
+      status: 200,
+      message: "Payment Mode deleted Successfully",
+      data: @payment_mode
+    }
+    
+    render json: response, status: :ok
   end
 
   private

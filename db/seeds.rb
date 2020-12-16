@@ -74,3 +74,7 @@ Role.create(role_id: "4", role_description: "Maintainance", role_status: "1")
 
 User.create(email: "too@nouveta.tech", password: "123456", username: "BT", role_id: "1")
 User.create(email: "mark@nouveta.tech", password: "123456", username: "MK", role_id: "1")
+
+PaymentMode.create(payment_mode_id: PaymentMode.payment_mode_id, payment_mode_description: "MPESA", payment_mode_status: "", created_by: "2")
+PaymentMode.create(payment_mode_id: PaymentMode.payment_mode_id, payment_mode_description: "CARD", payment_mode_status: "", created_by: "2")
+PaymentMode.create(payment_mode_id: PaymentMode.payment_mode_id, payment_mode_description: "AIRTEL", payment_mode_status: "", created_by: "2")

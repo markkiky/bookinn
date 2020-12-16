@@ -488,6 +488,16 @@ class FrontOfficeController < ApplicationController
     render json: @response
   end
 
+  def get_check_in
+    # returns a list of all checkin customers and their rooms
+    
+    response = {
+      status: 200,
+      message: "Checked In customers",
+      data: []
+    }
+  end
+
   # POST check_out
   def check_out
     # provide the booking_order and the customer checking out
