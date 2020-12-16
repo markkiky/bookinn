@@ -8,6 +8,7 @@ class BillInfosController < ApplicationController
 
     @bill_infos.each do |bill_info|
       @bill_info_response = {
+        bill_info_id: bill_info.id,
         bill_no: bill_info.bill_no,
         bill_date: bill_info.bill_date,
         customer_id: bill_info.customer_id,

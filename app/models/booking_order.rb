@@ -29,7 +29,8 @@ class BookingOrder < ApplicationRecord
       bill_no = "#{prefix}#{year}#{day}-#{month}#{series.rjust(4, "0")}"
       return bill_no
     else
-      series = @bill_infos.last.booking_order_no.split(//).last(4).join.to_i
+      # series = @bill_infos.last.booking_no.split(//).last(4).join.to_i
+      series = 254
       # @bill_infos.last
       series = series + 1
       series = series.to_s

@@ -11,6 +11,7 @@ class BookingOrdersController < ApplicationController
         # booking: booking_order,
         booking_order_id: booking_order.id,
         booking_order_date: booking_order.booking_order_date,
+        customer: Customer.find_by(:id => booking_order.id) ? Customer.find_by(:id => booking_order.id).names : "marcus garvey",
         total_applicants: booking_order.total_applicants,
         room_type_description: RoomType.find_by(:id => booking_order.room_type_id) ? RoomType.find_by(:id => booking_order.room_type_id).room_type_description : "Room Type not defined",
         stay_start_date: booking_order.stay_start_date,
@@ -18,14 +19,15 @@ class BookingOrdersController < ApplicationController
         billed: BookingOrder.booking_bills(booking_order.id).count > 0 ? true : false,
         bills: BookingOrder.booking_bills(booking_order.id).count > 0 ? BookingOrder.bills(booking_order.id) : [],
         customers: BookingOrder.booking_customer(booking_order.id),
-        # billed: "true"
+        booking_details: booking_order.booking_order_details,
+      # billed: "true"
       }
       @bookings << @booking
     end
     response = {
       status: 200,
       message: "Booking orders and their customers",
-      data: @bookings
+      data: @bookings,
     }
     render json: response
   end
@@ -35,11 +37,11 @@ class BookingOrdersController < ApplicationController
     response = {
       status: 200,
       message: "booking and customer",
-      data:  {
+      data: {
         status: 200,
         booking: @booking_order,
-        customers: BookingOrder.booking_customer(@booking_order.id)
-      }
+        customers: BookingOrder.booking_customer(@booking_order.id),
+      },
     }
     render json: response
   end
@@ -71,13 +73,14 @@ class BookingOrdersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_booking_order
-      @booking_order = BookingOrder.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def booking_order_params
-      params.require(:booking_order).permit(:booking_order_id, :booking_order_date, :customer_id, :total_applicants, :room_type_id, :stay_start_date, :stay_end_date, :booking_order_status, :booking_order_type_id, :created_by, :updated_by)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_booking_order
+    @booking_order = BookingOrder.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def booking_order_params
+    params.require(:booking_order).permit(:booking_order_id, :booking_order_date, :customer_id, :total_applicants, :room_type_id, :stay_start_date, :stay_end_date, :booking_order_status, :booking_order_type_id, :created_by, :updated_by)
+  end
 end

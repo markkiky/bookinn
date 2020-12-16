@@ -325,72 +325,91 @@ class FrontOfficeController < ApplicationController
   def walkin_bookinn
     # Creates customer or updates existing customer with email
     # Creates a bookinn
-    # BookingOrder.new()
-    # byebug
+    # create booking order detail
+    # Create bill for the bookinn
+    # create bill detail for bookinn
+
     @booking_response = []
     @customer_response = []
     @walkin_bookinn_response = []
+    begin
+      BookingOrder.transaction do
+        # loop through bookings
+        walkin_bookinn_params["booking"].each do |bookinn|
+          @booking_order = BookingOrder.new(
+            booking_no: BookingOrder.booking_order_no,
+            booking_order_id: BookingOrder.booking_order_id,
+            booking_order_date: Date.parse(bookinn["booking_order_date"]) ? bookinn["booking_order_date"] : Date.today,
+            booking_order_type_id: bookinn["booking_order_type_id"],
+            stay_start_date: bookinn["stay_start_date"],
+            stay_end_date: bookinn["stay_end_date"],
+            total_applicants: bookinn["total_applicants"],
+            room_type_id: bookinn["room_type_id"],
+            customer_id: bookinn["customer_id"],
+            amount: "",
+            discount: "",
+            created_by: @current_user.id,
 
-    # loop through bookings
-    walkin_bookinn_params["booking"].each do |bookinn|
-      @bookinn = BookingOrder.new(
-        booking_order_id: BookingOrder.booking_order_id,
-        booking_order_date: Date.parse(bookinn["booking_order_date"]) ? bookinn["booking_order_date"] : Date.today,
-        stay_start_date: bookinn["stay_start_date"],
-        stay_end_date: bookinn["stay_end_date"],
-        total_applicants: bookinn["total_applicants"],
-      )
-      @bookinn.save
-      @booking_response << @bookinn
+          )
+          @booking_order.save
+          @booking_response << @booking_order
 
-      # loop through customers in the bookinn
-      bookinn["customers"].each do |customer|
-        # check if customer exists
-        if @customer = Customer.where(:email => customer["email"]).first
-          # update customers details
-          @customer.update(
-            names: "#{customer["first_name"]} #{customer["last_name"]}",
-            id_no: customer["id_no"],
-            country_id: customer["country_id"],
-            phone: customer["phone"],
-          )
-        else
-          @customer = Customer.new(
-            customer_id: Customer.customer_id,
-            names: "#{customer["first_name"]} #{customer["last_name"]}",
-            id_no: customer["id_no"],
-            country_id: customer["country_id"],
-            phone: customer["phone"],
-            email: customer["email"],
-          )
+          # loop through customers in the bookinn
+          bookinn["customers"].each do |customer|
+            # check if customer exists
+            if @customer = Customer.where(:email => customer["email"]).first
+              # update customers details
+              @customer.update(
+                names: "#{customer["first_name"]} #{customer["last_name"]}",
+                id_no: customer["id_no"],
+                country_id: customer["country_id"],
+                phone: customer["phone"],
+              )
+            else
+              @customer = Customer.new(
+                customer_id: Customer.customer_id,
+                names: "#{customer["first_name"]} #{customer["last_name"]}",
+                id_no: customer["id_no"],
+                country_id: customer["country_id"],
+                phone: customer["phone"],
+                email: customer["email"],
+              )
+            end
+            @customer.save
+            @customer_response << @customer
+         
+            # Save as a booking belonging to particular customer
+            CustomerBooking.create(customer_id: @customer.id, booking_order_id: @booking_order.id)
+          end
+          @booked = {
+            booking_order_id: @booking_order.booking_order_id,
+            booking_order_date: @booking_order.booking_order_date,
+            stay_start_date: @booking_order.stay_start_date,
+            stay_end_date: @booking_order.stay_end_date,
+            total_applicants: @booking_order.total_applicants,
+            customers: @customer_response,
+          }
+          @walkin_bookinn_response << @booked
+          # byebug
+          @customer_response = []
         end
-        @customer.save
-        @customer_response << @customer
-
-        # Save as a booking belonging to particular customer
-        CustomerBooking.create(customer_id: @customer.id, booking_order_id: @bookinn.id)
+        # BookingOrder.new()
+        puts walkin_bookinn_params
+        # byebug
+        response = {
+          status: 200,
+          message: "Walkin Bookins",
+          data: @walkin_bookinn_response,
+        }
+        # byebug
       end
-      @booked = {
-        booking_order_id: @bookinn.booking_order_id,
-        booking_order_date: @bookinn.booking_order_date,
-        stay_start_date: @bookinn.stay_start_date,
-        stay_end_date: @bookinn.stay_end_date,
-        total_applicants: @bookinn.total_applicants,
-        customers: @customer_response,
+    rescue ActiveRecord::RecordInvalid => invalid
+      response = {
+        status: 400,
+        message: "Error creating booking order",
+        data: invalid
       }
-      @walkin_bookinn_response << @booked
-      # byebug
-      @customer_response = []
     end
-    # BookingOrder.new()
-    puts walkin_bookinn_params
-    # byebug
-    response = {
-      status: 200,
-      message: "Walkin Bookins",
-      data: @walkin_bookinn_response,
-    }
-    # byebug
     render json: response
   end
 
@@ -432,29 +451,42 @@ class FrontOfficeController < ApplicationController
     # change the status of assigned rooms to booked in
     # Utilize room_
     # CustomerRoom.new
-    @booking_orders = []
+    # @booking_orders = []
     @response = nil
     @customer_bookings_response = []
     puts "Params: "
     puts params
-
+    # byebug
     # verify customer booking is valid
-    CustomerBooking.transaction do
+    RoomAssignment.transaction do
       # loop through each assignment
       check_in_params["assignments"].each do |assignment|
         # byebug
-        @customer_booking = CustomerBooking.new(:customer_id => assignment["customer_id"], :booking_order_id => assignment["booking_order_id"], :room_id => assignment["room_id"])
+        @room_assignment = RoomAssignment.new(
+          :room_assignment_id => RoomAssignment.room_assignment_id,
+          :customer_id => assignment["customer_id"],
+          :customer_names => Customer.find_by(:id => assignment["customer_id"]) ? Customer.find_by(:id => assignment["customer_id"]).names : "Customer is not defined",
+          :booking_order_id => assignment["booking_order_id"],
+          :room_id => assignment["room_id"],
+          :start_date => assignment["start_date"] ? assignment["start_date"] : BookingOrder.find_by(:id => assignment["booking_order_id"]).stay_start_date,
+          :end_date => assignment["end_date"] ? assignment["start_date"] : BookingOrder.find_by(:id => assignment["booking_order_id"]).stay_end_date,
+          :room_status => "2", #room occupied status
+          :created_by => @current_user.id,
+        )
+        @room_assignment.save
+        # @customer_booking = CustomerBooking.new(:customer_id => assignment["customer_id"], :booking_order_id => assignment["booking_order_id"], :room_id => assignment["room_id"])
         @customer = Customer.find_by(:id => assignment["customer_id"])
         @room = Room.find_by(:id => assignment["room_id"])
         @booking_order = BookingOrder.find_by(:id => assignment["booking_order_id"])
-        @booking_orders << assignment["booking_order_id"]
-        @bill = BookingOrder.bill_booking(@booking_order.id)
+        @bill = BillInfo.find_by(:booking_order_id => assignment["booking_order_id"])
+        # @booking_orders << assignment["booking_order_id"]
+        # @bill = BookingOrder.bill_booking(@booking_order.id)
         # byebug
         @customer_booking_response = {
           names: @customer.names,
           room_no: @room.room_no,
-          bill_no: @bill[:bill_no],
-          bill_amount: @bill[:bill_amount],
+          bill_no: @bill.bill_no,
+          bill_amount: @bill.bill_total,
           discount: @booking_order.discount,
           sharing: @booking_order.total_applicants,
         }
@@ -462,7 +494,7 @@ class FrontOfficeController < ApplicationController
         if @room
           @room.status = "2"
           @room.save
-          @customer_booking.save
+          # @customer_booking.save
           @customer_bookings_response << @customer_booking_response
           @response = {
             status: 200,
@@ -490,12 +522,15 @@ class FrontOfficeController < ApplicationController
 
   def get_check_in
     # returns a list of all checkin customers and their rooms
-    
+    @room_assignments = RoomAssignment.all
+
     response = {
       status: 200,
       message: "Checked In customers",
-      data: []
+      data: @room_assignments,
     }
+
+    render json: response
   end
 
   # POST check_out
@@ -546,18 +581,25 @@ class FrontOfficeController < ApplicationController
     # requires a valid channel customer
     @customer = Customer.find_by(id: mass_booking_params["customer_id"])
     @channel = Channel.find_by(id: @customer.channel_id)
-
+    @bill_info = nil
     # check for a valid customer in channel
     if @channel != nil
       begin
         BookingOrder.transaction do
           # create booking order
           @booking_order = BookingOrder.new(
+            :booking_no => BookingOrder.booking_order_no,
             :booking_order_id => BookingOrder.booking_order_id,
             :booking_order_date => Time.now,
-            :booking_order_type_id => "4",
-            :created_by => @current_user,
+            :booking_order_type_id => "4", # channel bookings
             :customer_id => @customer.id,
+            :total_applicants => "",
+            :room_type_id => "",
+            :stay_start_date => "",
+            :stay_end_date => "",
+            :discount => "",
+            :amount => "",
+            :created_by => @current_user,
           )
           @booking_order.save
 
@@ -581,7 +623,7 @@ class FrontOfficeController < ApplicationController
             :customer_id => @customer.id,
             :created_by => @current_user.id,
             :reducing_balance => "",
-            :bill_status => "15"
+            :bill_status => "15",
           )
           @bill_info.save
 
@@ -613,7 +655,40 @@ class FrontOfficeController < ApplicationController
             @bill_detail.save
 
             # compute bill amount
-            @bill_info.update(:bill_total => @bill_info.bill_total.to_i + @bill_detail.amount.to_i, :reducing_balance => @bill_info.bill_total.to_i + @bill_detail.amount.to_i)
+            @bill_info.update(
+              :bill_total => @bill_info.bill_total.to_i + @bill_detail.amount.to_i,
+              :reducing_balance => @bill_info.bill_total.to_i + @bill_detail.amount.to_i,
+            )
+            booking_start_date = nil
+
+            if @booking_order.stay_start_date != nil
+              if @booking_order.stay_start_date < @booking_order_detail.stay_start_date
+                booking_start_date = @booking_order.stay_start_date
+              else
+                booking_start_date = @booking_order_detail.stay_start_date
+              end
+            else
+              booking_start_date = @booking_order_detail.stay_start_date
+            end
+
+            booking_end_date = nil
+            if @booking_order.stay_end_date != nil
+              if @booking_order.stay_end_date > @booking_order_detail.stay_end_date
+                booking_end_date = @booking_order.stay_end_date
+              else
+                booking_end_date = @booking_order_detail.stay_end_date
+              end
+            else
+              booking_end_date = @booking_order_detail.stay_end_date
+            end
+
+            # update booking_order with dates
+            @booking_order.update(
+              :total_applicants => @booking_order.total_applicants.to_i + @booking_order_detail.total_applicants.to_i,
+              :room_type_id => @booking_order_detail.room_type_id,
+              :stay_start_date => booking_start_date,
+              :stay_end_date => booking_end_date,
+            )
             @channel_transaction.update(:channel_transaction_amount => @bill_info.bill_total)
           end
         end
@@ -621,7 +696,7 @@ class FrontOfficeController < ApplicationController
           status: 200,
           message: "Mass Booking created",
           data: {
-            bill: BookingOrder.bills(@booking_order.id),
+            bill: @bill_info,
           },
         }
       rescue ActiveRecord::RecordInvalid => invalid
@@ -689,6 +764,8 @@ class FrontOfficeController < ApplicationController
         :booking_order_date,
         :stay_start_date,
         :stay_end_date,
+        :customer_id,
+        :room_type_id,
         :total_applicants,
         customers: [
 
