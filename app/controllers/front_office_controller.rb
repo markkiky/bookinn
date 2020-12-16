@@ -332,6 +332,7 @@ class FrontOfficeController < ApplicationController
     @booking_response = []
     @customer_response = []
     @walkin_bookinn_response = []
+    response = nil
     begin
       BookingOrder.transaction do
         # loop through bookings
@@ -352,6 +353,45 @@ class FrontOfficeController < ApplicationController
 
           )
           @booking_order.save
+
+          @bill_info = BillInfo.new(
+            :bill_no => BillInfo.bill_no,
+            :bill_date => Time.now,
+            :bill_total => "",
+            :reducing_balance => "",
+            :booking_order_id => @booking_order.id,
+            :bill_info_description => "",
+            :customer_id => Customer.find_by(:id => bookinn["customer_id"]) ? Customer.find_by(:id => bookinn["customer_id"]).id : "1",
+            :created_by => @current_user.id,
+            :bill_status => "15",
+          )
+          @bill_info.save
+
+          @booking_order_detail = BookingOrderDetail.new(
+            :booking_order_id => @booking_order.id,
+            :room_type_id => bookinn[:room_type_id],
+            :stay_start_date => bookinn[:stay_start_date],
+            :stay_end_date => bookinn[:stay_end_date],
+            :total_applicants => bookinn[:total_applicants],
+          )
+          @booking_order_detail.save
+
+          # generate a bill detail
+          @bill_detail = BillDetail.new(
+            :bill_no => @bill_info.bill_no,
+            :bill_info_id => @bill_info.id,
+            :room_type_id => @booking_order_detail.room_type_id,
+            :booking_order_detail_id => @booking_order_detail.id,
+            :bill_detail_description => bookinn[:description],
+            :amount => RoomType.find_by(:id => @booking_order_detail.room_type_id).room_price.to_i * @booking_order_detail.total_applicants.to_i,
+          )
+          @bill_detail.save
+
+          @bill_info.update(
+            :bill_total => @bill_info.bill_total.to_i + @bill_detail.amount.to_i,
+            :reducing_balance => @bill_info.bill_total.to_i + @bill_detail.amount.to_i,
+          )
+
           @booking_response << @booking_order
 
           # loop through customers in the bookinn
@@ -377,7 +417,7 @@ class FrontOfficeController < ApplicationController
             end
             @customer.save
             @customer_response << @customer
-         
+
             # Save as a booking belonging to particular customer
             CustomerBooking.create(customer_id: @customer.id, booking_order_id: @booking_order.id)
           end
@@ -407,7 +447,7 @@ class FrontOfficeController < ApplicationController
       response = {
         status: 400,
         message: "Error creating booking order",
-        data: invalid
+        data: invalid,
       }
     end
     render json: response
