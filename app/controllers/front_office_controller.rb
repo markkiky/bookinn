@@ -332,11 +332,13 @@ class FrontOfficeController < ApplicationController
     @booking_response = []
     @customer_response = []
     @walkin_bookinn_response = []
+    @bill_total = nil
     response = nil
     begin
       BookingOrder.transaction do
         # loop through bookings
         walkin_bookinn_params["booking"].each do |bookinn|
+          @bill_total = bookinn["cost"]
           @booking_order = BookingOrder.new(
             booking_no: BookingOrder.booking_order_no,
             booking_order_id: BookingOrder.booking_order_id,
@@ -348,7 +350,7 @@ class FrontOfficeController < ApplicationController
             total_applicants: bookinn["total_applicants"],
             room_type_id: bookinn["room_type_id"],
             customer_id: bookinn["customer_id"],
-            amount: "",
+            amount: @bill_total,
             discount: "",
             created_by: @current_user.id,
 
@@ -358,8 +360,8 @@ class FrontOfficeController < ApplicationController
           @bill_info = BillInfo.new(
             :bill_no => BillInfo.bill_no,
             :bill_date => Time.now,
-            :bill_total => "",
-            :reducing_balance => "",
+            :bill_total => @bill_total,
+            :reducing_balance => @bill_total,
             :booking_order_id => @booking_order.id,
             :bill_info_description => "",
             :customer_id => Customer.find_by(:id => bookinn["customer_id"]) ? Customer.find_by(:id => bookinn["customer_id"]).id : "1",
@@ -384,14 +386,15 @@ class FrontOfficeController < ApplicationController
             :room_type_id => @booking_order_detail.room_type_id,
             :booking_order_detail_id => @booking_order_detail.id,
             :bill_detail_description => bookinn[:description],
-            :amount => RoomType.find_by(:id => @booking_order_detail.room_type_id).room_price.to_i * @booking_order_detail.total_applicants.to_i,
+            # :amount => RoomType.find_by(:id => @booking_order_detail.room_type_id).room_price.to_i * @booking_order_detail.total_applicants.to_i,
+            :amount => @bill_total,
           )
           @bill_detail.save
 
-          @bill_info.update(
-            :bill_total => @bill_info.bill_total.to_i + @bill_detail.amount.to_i,
-            :reducing_balance => @bill_info.bill_total.to_i + @bill_detail.amount.to_i,
-          )
+          # @bill_info.update(
+          #   :bill_total => @bill_info.bill_total.to_i + @bill_detail.amount.to_i,
+          #   :reducing_balance => @bill_info.bill_total.to_i + @bill_detail.amount.to_i,
+          # )
 
           @booking_response << @booking_order
 
@@ -522,7 +525,7 @@ class FrontOfficeController < ApplicationController
 
         # update booking order status to checked_in
         @booking_order.update(
-          :booking_order_status => "9"
+          :booking_order_status => "9",
         )
 
         @bill = BillInfo.find_by(:booking_order_id => assignment["booking_order_id"])
@@ -583,9 +586,7 @@ class FrontOfficeController < ApplicationController
   # POST check_out
   def check_out
     # provide the booking_order and the customer checking out
-    RoomAssignment.transaction do 
-
-
+    RoomAssignment.transaction do
     end
     response = {
       status: 200,
@@ -793,8 +794,8 @@ class FrontOfficeController < ApplicationController
       assignments: [
         :customer_id,
         :room_id,
-        :booking_order_id
-      ]
+        :booking_order_id,
+      ],
     )
   end
 
@@ -822,6 +823,8 @@ class FrontOfficeController < ApplicationController
     params.permit(
       booking: [
         :booking_order_id,
+        :cost,
+        :days,
         :booking_order_date,
         :stay_start_date,
         :stay_end_date,
@@ -842,14 +845,6 @@ class FrontOfficeController < ApplicationController
         ],
       ],
     )
-  end
-
-  def walkin_bookinn_param
-    params.permit(customer: [
-                    :customer_id,
-                  ], booking: [
-                    :booking_order_id,
-                  ])
   end
 
   def show_needs_preferences_params
