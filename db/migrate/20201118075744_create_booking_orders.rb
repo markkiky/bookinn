@@ -11,7 +11,7 @@ class CreateBookingOrders < ActiveRecord::Migration[6.0]
       t.datetime :stay_end_date
       t.string :discount
       t.string :amount
-      t.string :booking_order_status
+      t.string :booking_order_status, :default => "6"
       t.string :booking_order_type_id
 
       t.string :is_active, :default => "1"

@@ -11,6 +11,8 @@ class BookingOrdersController < ApplicationController
         # booking: booking_order,
         booking_order_id: booking_order.id,
         booking_order_date: booking_order.booking_order_date,
+        booking_order_status_id: booking_order.booking_order_status,
+        booking_order_status: Status.find_by(:id => booking_order.booking_order_status) ? Status.find_by(:id => booking_order.booking_order_status).status_description : "Status not defined",
         customer: Customer.find_by(:id => booking_order.customer_id) ? Customer.find_by(:id => booking_order.customer_id).names : "marcus garvey",
         total_applicants: booking_order.total_applicants,
         room_type_description: RoomType.find_by(:id => booking_order.room_type_id) ? RoomType.find_by(:id => booking_order.room_type_id).room_type_description : "Room Type not defined",

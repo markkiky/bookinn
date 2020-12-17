@@ -342,6 +342,7 @@ class FrontOfficeController < ApplicationController
             booking_order_id: BookingOrder.booking_order_id,
             booking_order_date: Date.parse(bookinn["booking_order_date"]) ? bookinn["booking_order_date"] : Date.today,
             booking_order_type_id: bookinn["booking_order_type_id"],
+            booking_order_status: "6",
             stay_start_date: bookinn["stay_start_date"],
             stay_end_date: bookinn["stay_end_date"],
             total_applicants: bookinn["total_applicants"],
@@ -419,7 +420,7 @@ class FrontOfficeController < ApplicationController
             @customer_response << @customer
 
             # Save as a booking belonging to particular customer
-            CustomerBooking.create(customer_id: @customer.id, booking_order_id: @booking_order.id)
+            CustomerBooking.create(customer_id: @customer.id, booking_order_id: @booking_order.id, bill_info_id: @bill_info.id)
           end
           @booked = {
             booking_order_id: @booking_order.booking_order_id,
@@ -439,7 +440,7 @@ class FrontOfficeController < ApplicationController
         response = {
           status: 200,
           message: "Walkin Bookins",
-          data: @walkin_bookinn_response,
+          data: @bill_info,
         }
         # byebug
       end
@@ -518,6 +519,12 @@ class FrontOfficeController < ApplicationController
         @customer = Customer.find_by(:id => assignment["customer_id"])
         @room = Room.find_by(:id => assignment["room_id"])
         @booking_order = BookingOrder.find_by(:id => assignment["booking_order_id"])
+
+        # update booking order status to checked_in
+        @booking_order.update(
+          :booking_order_status => "9"
+        )
+
         @bill = BillInfo.find_by(:booking_order_id => assignment["booking_order_id"])
         # @booking_orders << assignment["booking_order_id"]
         # @bill = BookingOrder.bill_booking(@booking_order.id)
@@ -576,7 +583,10 @@ class FrontOfficeController < ApplicationController
   # POST check_out
   def check_out
     # provide the booking_order and the customer checking out
+    RoomAssignment.transaction do 
 
+
+    end
     response = {
       status: 200,
       message: "Check Out successful",
@@ -632,6 +642,7 @@ class FrontOfficeController < ApplicationController
             :booking_order_id => BookingOrder.booking_order_id,
             :booking_order_date => Time.now,
             :booking_order_type_id => "4", # channel bookings
+            :booking_order_status => "6",
             :customer_id => @customer.id,
             :total_applicants => "",
             :room_type_id => "",
@@ -775,6 +786,16 @@ class FrontOfficeController < ApplicationController
 
   def customer_params
     params.permit(:customer_no, :customer_id, :customer_type_id, :country_id, :id_no, :gender, :names, :email, :phone, :customer_address, :postal_code, :address, :customer_status, :customer_status_date, :last_visit, :last_invoice, :last_receipt, :created_by, :updated_by)
+  end
+
+  def check_out_params
+    params.permit(
+      assignments: [
+        :customer_id,
+        :room_id,
+        :booking_order_id
+      ]
+    )
   end
 
   def check_in_params
