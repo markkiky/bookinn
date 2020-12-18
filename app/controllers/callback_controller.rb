@@ -62,7 +62,8 @@ class CallbackController < ApplicationController
       :account_from,
       :date,
       :message,
-      :payment_mode
+      :payment_mode,
+      :transaction_code
     )
   end
 
