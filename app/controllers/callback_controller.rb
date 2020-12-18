@@ -1,5 +1,6 @@
 class CallbackController < ApplicationController
   def mpesa_frontend_transaction
+    response = nil
     puts mpesa_frontend_transaction_params
     response_params = {
       PayBillNumber: mpesa_frontend_transaction_params["account_to"],
@@ -10,12 +11,42 @@ class CallbackController < ApplicationController
       TransactionDesc: mpesa_frontend_transaction_params["TransactionDesc"],
       FullNames: "",
       TransTime: mpesa_frontend_transaction_params["date"],
+      PaymentMode: mpesa_frontend_transaction_params['payment_mode'],
     }
-    response = {
-      status: 200,
-      message: "MPESA transaction received from front end",
-      data: response_params,
-    }
+    @bill_info = BillInfo.find_by(:bill_no => mpesa_frontend_transaction_params['ref'])
+    if @bill_info != nil
+      BillInfo.transaction do 
+        @bill_info.update(
+          :reducing_balance => @bill_info.reducing_balance.to_i - mpesa_frontend_transaction_params['amount'].to_i,
+        )
+    
+        if @bill_info.reducing_balance.to_i > 0
+          @bill_info.update(
+            :bill_status => "16"
+          )
+        elsif @bill_info.reducing_balance.to_i == 0
+          @bill_info.update(
+            :bill_status => "17"
+          )
+        elsif @bill_info.reducing_balance.to_i < 0
+          @bill_info.update(
+            :bill_status => "18"
+          )
+        end
+      end
+      response = {
+        status: 200,
+        message: "Bill payed successfully",
+        data: @bill_info
+      }
+    else
+      response = {
+        status: 200,
+        message: "Bill not found"
+      }
+    end
+   
+  
     render json: response
   end
 
@@ -33,6 +64,7 @@ class CallbackController < ApplicationController
       FullNames: receive_mpesa_transactions_params["FullNames"],
       TransTime: receive_mpesa_transactions_params["TransTime"],
     }
+    
     response = {
       status: 200,
       message: "MPESA transaction received successfully",
