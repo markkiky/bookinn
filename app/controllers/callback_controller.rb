@@ -16,6 +16,7 @@ class CallbackController < ApplicationController
       message: "MPESA transaction received from front end",
       data: response_params,
     }
+    render json: response
   end
 
   # POST /mpesa_transactions
