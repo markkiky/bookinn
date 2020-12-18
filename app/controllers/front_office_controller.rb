@@ -586,12 +586,32 @@ class FrontOfficeController < ApplicationController
   # POST check_out
   def check_out
     # provide the booking_order and the customer checking out
+    puts params
+    response = nil
+    # byebug
     RoomAssignment.transaction do
+      check_out_params['assignments'].each do |assignment|
+        @room_assignment = RoomAssignment.find_by(:customer_id => assignment["customer_id"], :room_id => assignment["room_id"], :booking_order_id => assignment["booking_order_id"])
+        # byebug
+        if @room_assignment != nil
+          @room = Room.find_by(:id => @room_assignment.customer_id)
+          @room.status = "4"
+          @room.save
+          @room_assignment.room_status = "4"
+          @room_assignment.save
+          response = {
+            status: 200,
+            message: "Check Out successful",
+          }
+        else
+          response = {
+            status: 200,
+            message: "Check Out failed, Room and Customer not found",
+          }
+        end
+      end
     end
-    response = {
-      status: 200,
-      message: "Check Out successful",
-    }
+    
 
     render json: response
   end

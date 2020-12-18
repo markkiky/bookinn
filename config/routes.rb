@@ -73,6 +73,7 @@ Rails.application.routes.draw do
 
   # Payment Callbacks
   post "receive_mpesa_transactions", to: "callback#receive_mpesa_transactions"
+  post "mpesa_response", to: "callback#mpesa_frontend_transaction"
   post "receive_card_transactions", to: "callback#receive_card_transactions"
   
 end

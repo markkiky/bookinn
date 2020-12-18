@@ -8,7 +8,6 @@ class BookingOrdersController < ApplicationController
     @bookings = []
     @booking_orders.each do |booking_order|
       @booking = {
-        # booking: booking_order,
         booking_order_id: booking_order.id,
         booking_order_date: booking_order.booking_order_date,
         booking_order_status_id: booking_order.booking_order_status,
@@ -22,7 +21,6 @@ class BookingOrdersController < ApplicationController
         bills: BookingOrder.booking_bills(booking_order.id).count > 0 ? BookingOrder.bills(booking_order.id) : [],
         customers: BookingOrder.booking_customer(booking_order.id),
         booking_details: booking_order.booking_order_details,
-      # billed: "true"
       }
       @bookings << @booking
     end
