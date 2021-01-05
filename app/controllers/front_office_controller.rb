@@ -505,66 +505,68 @@ class FrontOfficeController < ApplicationController
     RoomAssignment.transaction do
       # loop through each assignment
       check_in_params["assignments"].each do |assignment|
-        # byebug
-        @room_assignment = RoomAssignment.new(
-          :room_assignment_id => RoomAssignment.room_assignment_id,
-          :customer_id => assignment["customer_id"],
-          :customer_names => Customer.find_by(:id => assignment["customer_id"]) ? Customer.find_by(:id => assignment["customer_id"]).names : "Customer is not defined",
-          :booking_order_id => assignment["booking_order_id"],
-          :room_id => assignment["room_id"],
-          :start_date => assignment["start_date"] ? assignment["start_date"] : BookingOrder.find_by(:id => assignment["booking_order_id"]).stay_start_date,
-          :end_date => assignment["end_date"] ? assignment["start_date"] : BookingOrder.find_by(:id => assignment["booking_order_id"]).stay_end_date,
-          :room_status => "2", #room occupied status
-          :created_by => @current_user.id,
-        )
-        @room_assignment.save
-        # @customer_booking = CustomerBooking.new(:customer_id => assignment["customer_id"], :booking_order_id => assignment["booking_order_id"], :room_id => assignment["room_id"])
-        @customer = Customer.find_by(:id => assignment["customer_id"])
-        @room = Room.find_by(:id => assignment["room_id"])
-        @booking_order = BookingOrder.find_by(:id => assignment["booking_order_id"])
+        if Room.room_available(assignment["room_id"])
+          @room_assignment = RoomAssignment.new(
+            :room_assignment_id => RoomAssignment.room_assignment_id,
+            :customer_id => assignment["customer_id"],
+            :customer_names => Customer.find_by(:id => assignment["customer_id"]) ? Customer.find_by(:id => assignment["customer_id"]).names : "Customer is not defined",
+            :booking_order_id => assignment["booking_order_id"],
+            :room_id => assignment["room_id"],
+            :start_date => assignment["start_date"] ? assignment["start_date"] : BookingOrder.find_by(:id => assignment["booking_order_id"]).stay_start_date,
+            :end_date => assignment["end_date"] ? assignment["start_date"] : BookingOrder.find_by(:id => assignment["booking_order_id"]).stay_end_date,
+            :room_status => "2", #room occupied status
+            :created_by => @current_user.id,
+          )
+          @room_assignment.save
+          # @customer_booking = CustomerBooking.new(:customer_id => assignment["customer_id"], :booking_order_id => assignment["booking_order_id"], :room_id => assignment["room_id"])
+          @customer = Customer.find_by(:id => assignment["customer_id"])
+          @room = Room.find_by(:id => assignment["room_id"])
+          @booking_order = BookingOrder.find_by(:id => assignment["booking_order_id"])
 
-        # update booking order status to checked_in
-        @booking_order.update(
-          :booking_order_status => "9",
-        )
+          # update booking order status to checked_in
+          @booking_order.update(
+            :booking_order_status => "9",
+          )
 
-        @bill = BillInfo.find_by(:booking_order_id => assignment["booking_order_id"])
-        # @booking_orders << assignment["booking_order_id"]
-        # @bill = BookingOrder.bill_booking(@booking_order.id)
-        # byebug
-        @customer_booking_response = {
-          names: @customer.names,
-          room_no: @room.room_no,
-          bill_no: @bill.bill_no,
-          bill_amount: @bill.bill_total,
-          discount: @booking_order.discount,
-          sharing: @booking_order.total_applicants,
-        }
-        @room = Room.find_by(:id => assignment["room_id"])
-        if @room
-          @room.status = "2"
-          @room.save
-          # @customer_booking.save
-          @customer_bookings_response << @customer_booking_response
-          @response = {
-            status: 200,
-            message: "Customer Booking created successfully. Room Assigned",
-            data: @customer_bookings_response,
+          @bill = BillInfo.find_by(:booking_order_id => assignment["booking_order_id"])
+          # @booking_orders << assignment["booking_order_id"]
+          # @bill = BookingOrder.bill_booking(@booking_order.id)
+          # byebug
+          @customer_booking_response = {
+            names: @customer.names,
+            room_no: @room.room_no,
+            bill_no: @bill.bill_no,
+            bill_amount: @bill.bill_total,
+            discount: @booking_order.discount,
+            sharing: @booking_order.total_applicants,
           }
+          @room = Room.find_by(:id => assignment["room_id"])
+          if @room
+            @room.status = "2"
+            @room.save
+            # @customer_booking.save
+            @customer_bookings_response << @customer_booking_response
+            @response = {
+              status: 200,
+              message: "Customer Booking created successfully. Room Assigned",
+              data: @customer_bookings_response,
+            }
+          else
+            # @room.errors = ["Room not Found"]
+            @response = {
+              status: 400,
+              message: "Error finding room with ID: #{assignment["room_id"]}",
+              data: @room,
+            }
+          end
         else
-          # @room.errors = ["Room not Found"]
           @response = {
-            status: 200,
-            message: "Error finding room with ID: #{assignment["room_id"]}",
+            status: 400,
+            message: "Error assigning room: #{assignment["room_id"]} Room not Available",
             data: @room,
           }
         end
       end
-
-      # # Generate bill for the assignments
-      # @booking_orders.each do |booking|
-      #   BookingOrder.bill_booking(booking)
-      # end
     end
 
     render json: @response
@@ -590,7 +592,7 @@ class FrontOfficeController < ApplicationController
     response = nil
     # byebug
     RoomAssignment.transaction do
-      check_out_params['assignments'].each do |assignment|
+      check_out_params["assignments"].each do |assignment|
         @room_assignment = RoomAssignment.find_by(:customer_id => assignment["customer_id"], :room_id => assignment["room_id"], :booking_order_id => assignment["booking_order_id"])
         # byebug
         if @room_assignment != nil
@@ -611,7 +613,6 @@ class FrontOfficeController < ApplicationController
         end
       end
     end
-    
 
     render json: response
   end
@@ -722,7 +723,7 @@ class FrontOfficeController < ApplicationController
               :room_type_id => @booking_order_detail.room_type_id,
               :booking_order_detail_id => @booking_order_detail.id,
               :bill_detail_description => booking[:description],
-              :amount => RoomType.find_by(:id => @booking_order_detail.room_type_id).room_price.to_i * @booking_order_detail.total_applicants.to_i,
+              :amount => BillInfo.calculate_fee(RoomType.find_by(:id => @booking_order_detail.room_type_id).room_price.to_i, @booking_order_detail.total_applicants.to_i)
             )
             @bill_detail.save
 
@@ -789,7 +790,104 @@ class FrontOfficeController < ApplicationController
     render json: response, status: :ok
   end
 
+  # POST /transfer/1
+  def room_assignment_transfer
+    @response_message = nil
+    @room_assignment = RoomAssignment.find(room_assignment_transfer_params["id"])
+    @booking_order = BookingOrder.find_by(:id => @room_assignment.booking_order_id)
+
+    @initial_room = Room.find(@room_assignment.room_id)
+    @initial_room_type = RoomType.find(@initial_room.room_type_id)
+    # byebug
+    @initial_bill = BookingOrder.bills(@booking_order.id)
+
+    if Room.room_available(room_assignment_transfer_params["room_id"])
+      # Get the new room
+      @new_room = Room.find(room_assignment_transfer_params["room_id"])
+      @new_room_type = RoomType.find(@new_room.room_type_id)
+
+      # check if the room assignment is an upgrade or downgrade or similar
+      if @initial_room_type.room_price.to_i < @new_room_type.room_price.to_i
+        # upgrade - new room is more expensive than previous
+        @response_message = "Room Upgrade from #{@initial_room_type.room_type_description} to #{@new_room_type.room_type_description}"
+        puts "Processing upgrade: Marking previous bill as inactive"
+        @bill_detail = BillDetail.find_by(:room_type_id => @initial_room_type["room_type_id"], :is_active => "1")
+        @bill_detail ? @bill_detail.update(:is_active => "0") : "Bill detail not found"
+
+        puts "Creating new bill"
+        @bill_info = BillInfo.find_by(:booking_order_id => @booking_order.id, :is_active => "1")
+        @bill_detail = BillDetail.new(
+          :bill_no => @bill_info.bill_no,
+          :bill_info_id => @bill_info.id,
+          :room_type_id => @new_room_type.id,
+          :booking_order_detail_id => @booking_order.booking_order_details.ids.last,
+          :bill_detail_description => @response_message,
+          :amount => RoomType.find_by(:id => @new_room_type.id).room_price.to_i,
+        )
+        @bill_detail.save
+
+        @bill_info.update(
+          :bill_total => @bill_detail.amount,
+          :reducing_balance => @bill_detail.amount,
+        )
+
+        @room_assignment.update(:room_id => room_assignment_transfer_params["room_id"], :customer_id => room_assignment_transfer_params["customer_id"])
+      elsif @initial_room_type.room_price.to_i > @new_room_type.room_price.to_i
+        # downgrade - new room is less expensive than previous
+        @response_message = "Room downgrade from #{@initial_room_type.room_type_description} to #{@new_room_type.room_type_description}"
+        # byebug
+        puts "Processing downgrade: Marking previous bill as inactive"
+        @bill_detail = BillDetail.find_by(:room_type_id => @initial_room_type["room_type_id"], :is_active => "1")
+        # byebug
+        @bill_detail ? @bill_detail.update(:is_active => "0") : "Bill detail not found"
+
+        puts "Creating new bill"
+        @bill_info = BillInfo.find_by(:booking_order_id => @booking_order.id, :is_active => "1")
+        @bill_detail = BillDetail.new(
+          :bill_no => @bill_info.bill_no,
+          :bill_info_id => @bill_info.id,
+          :room_type_id => @new_room_type.id,
+          :booking_order_detail_id => @booking_order.booking_order_details.ids.last,
+          :bill_detail_description => @response_message,
+          :amount => RoomType.find_by(:id => @new_room_type.id).room_price.to_i,
+        )
+        @bill_detail.save
+
+        @bill_info.update(
+          :bill_total => @bill_detail.amount,
+          :reducing_balance => @bill_detail.amount,
+        )
+
+        @room_assignment.update(:room_id => room_assignment_transfer_params["room_id"], :customer_id => room_assignment_transfer_params["customer_id"])
+      elsif @initial_room_type.room_price.to_i == @new_room_type.room_price.to_i
+        # similar - rooms have equivalent prices
+        @response_message = "Room similar from #{@initial_room_type.room_type_description} to #{@new_room_type.room_type_description}"
+        # bill is not updated. Change the room to be assigned
+        @room_assignment.update(:room_id => room_assignment_transfer_params["room_id"], :customer_id => room_assignment_transfer_params["customer_id"])
+      end
+      response = {
+        status: 200,
+        message: @response_message,
+        data: [],
+      }
+    else
+      # Room Not Available
+      response = {
+        status: 400,
+        message: Room.find_by(:id => room_assignment_transfer_params["room_id"]) ? "Room With Id #{room_assignment_transfer_params["room_id"]} Not Available" : "Room with Id Id #{room_assignment_transfer_params["room_id"]} not found",
+        data: [],
+      }
+    end
+    # check if room am assigning is avaliable
+
+    render json: response
+  end
+
   private
+
+  def room_assignment_transfer_params
+    params.permit(:id, :customer_id, :customer_names, :room_id, :start_date, :end_date)
+  end
 
   def mass_booking_params
     params.permit(

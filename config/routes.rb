@@ -54,6 +54,8 @@ Rails.application.routes.draw do
 
   post "bookinn/:id/add_customer", to: "front_office#add_customer_to_booking"
 
+  post "transfer/:id", to: "front_office#room_assignment_transfer"
+
   # status
   get 'status/:id', to: "status_clusters#status"
 
@@ -75,5 +77,7 @@ Rails.application.routes.draw do
   post "receive_mpesa_transactions", to: "callback#receive_mpesa_transactions"
   post "mpesa_response", to: "callback#mpesa_frontend_transaction"
   post "receive_card_transactions", to: "callback#receive_card_transactions"
+
+
   
 end

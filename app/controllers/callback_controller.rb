@@ -11,42 +11,53 @@ class CallbackController < ApplicationController
       TransactionDesc: mpesa_frontend_transaction_params["TransactionDesc"],
       FullNames: "",
       TransTime: mpesa_frontend_transaction_params["date"],
-      PaymentMode: mpesa_frontend_transaction_params['payment_mode'],
+      PaymentMode: mpesa_frontend_transaction_params["payment_mode"],
     }
-    @bill_info = BillInfo.find_by(:bill_no => mpesa_frontend_transaction_params['ref'])
+    @bill_info = BillInfo.find_by(:bill_no => mpesa_frontend_transaction_params["ref"])
     if @bill_info != nil
-      BillInfo.transaction do 
+      @booking_order = BookingOrder.find_by(:id => @bill_info.booking_order_id)
+      BillInfo.transaction do
         @bill_info.update(
-          :reducing_balance => @bill_info.reducing_balance.to_i - mpesa_frontend_transaction_params['amount'].to_i,
+          :reducing_balance => @bill_info.reducing_balance.to_i - mpesa_frontend_transaction_params["amount"].to_i,
         )
-    
+
         if @bill_info.reducing_balance.to_i > 0
           @bill_info.update(
-            :bill_status => "16"
+            :bill_status => "16",
           )
         elsif @bill_info.reducing_balance.to_i == 0
           @bill_info.update(
-            :bill_status => "17"
+            :bill_status => "17",
           )
         elsif @bill_info.reducing_balance.to_i < 0
           @bill_info.update(
-            :bill_status => "18"
+            :bill_status => "18",
           )
         end
+        @payment_transaction = PaymentTransaction.new(
+          payment_transaction_id: PaymentTransaction.payment_transaction_id,
+          booking_order_id: @booking_order.id,
+          bill_no: @bill_info.bill_no,
+          payment_transaction_date: mpesa_frontend_transaction_params["date"],
+          payment_transaction_type_id: "",
+          payment_transaction_amount: mpesa_frontend_transaction_params["amount"],
+          payment_mode_id: PaymentMode.find_by(:payment_mode_description => mpesa_frontend_transaction_params["payment_mode"]).id,
+        )
+        @payment_transaction.save
       end
+      
       response = {
         status: 200,
         message: "Bill payed successfully",
-        data: @bill_info
+        data: @bill_info,
       }
     else
       response = {
         status: 200,
-        message: "Bill not found"
+        message: "Bill not found",
       }
     end
-   
-  
+
     render json: response
   end
 
@@ -64,7 +75,7 @@ class CallbackController < ApplicationController
       FullNames: receive_mpesa_transactions_params["FullNames"],
       TransTime: receive_mpesa_transactions_params["TransTime"],
     }
-    
+
     response = {
       status: 200,
       message: "MPESA transaction received successfully",

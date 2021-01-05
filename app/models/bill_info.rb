@@ -28,4 +28,28 @@ class BillInfo < ApplicationRecord
       return bill_no
     end
   end
+
+  # Returns a fee for room price, nights spent and the total applicants
+  def self.calculate_fee(room_price, no_of_nights, applicants)
+    @bill_total = room_price * no_of_nights * applicants 
+    return @bill_total
+  end
+
+  # Returns a fee for room price and the nights spent
+  def self.calculate_fee_price_and_nights(room_price, no_of_nights)
+    @bill_total = room_price * no_of_nights
+    return @bill_total
+  end
+
+  # Returns a fee for the sum of all the bill details of a bill
+  def self.calculate_fee_sum_details(bill_info_id)
+    @bill_info = BillInfo.find(bill_info_id)
+    @bill_total = 0
+
+    @bill_details = BillDetail.all.where(:bill_info_id => bill_info_id, :is_active => "1")
+    @bill_details.each do |bill_detail|
+      @bill_total = @bill_total + bill_detail.amount.to_i
+    end
+    return @bill_total
+  end
 end

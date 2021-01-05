@@ -14,6 +14,7 @@ class RoomsController < ApplicationController
         room_no: room.room_no,
         room_name: room.room_name,
         room_price: room.room_price,
+        capacity: room.capacity,
         room_status: room.status,
         room_type_id: @room_type.id,
         room_type_description: @room_type.room_type_description,

@@ -106,24 +106,50 @@ class BookingOrder < ApplicationRecord
 
   #  checks if a particular booking has been billed before and returns bill no if true
   def self.booking_bills(booking_order_id)
-    @customer_bookings = CustomerBooking.where(:booking_order_id => booking_order_id, :is_active => 1)
-    @bill_infos = []
-    @customer_bookings.each do |booking|
-      if booking.bill_info_id != nil
-        @bill_infos << booking.bill_info_id
-      end
+    @bill_infos = BillInfo.where(:booking_order_id => booking_order_id, :is_active => "1")
+
+    # @customer_bookings = CustomerBooking.where(:booking_order_id => booking_order_id, :is_active => 1)
+    @bill_info_ids = []
+    # byebug
+    @bill_infos.each do |booking|
+     
+        @bill_info_ids << booking.id
+      
     end
-    return @bill_infos
+    return @bill_info_ids
   end
 
   def self.bills(booking_order_id)
-    @bill_info_ids = BookingOrder.booking_bills(booking_order_id)
+    @bill_info_ids = BillInfo.all.where(:booking_order_id => booking_order_id, :is_active => "1")
     @bills = []
     # byebug
     if @bill_info_ids.count > 0
       @bill_info_ids.each do |bill_id|
         @bill_info = BillInfo.find_by(id: bill_id)
-        @bills << @bill_info
+        @bill_details = BillDetail.where(bill_info_id: bill_id, is_active: "1")
+
+        @bill_detail_response = []
+        @bill_details.each do |bill_detail|
+          @bill_detail_response << {
+            bill_detail_id: bill_detail.id,
+            bill_no: bill_detail.bill_no,
+            room_type: RoomType.find_by(id: bill_detail.room_type_id) ? RoomType.find_by(id: bill_detail.room_type_id).room_type_description : "Room Type is undefined",
+            room_type_id: bill_detail.room_type_id,
+            amount: bill_detail.amount
+          }
+        end
+        @bill_info_response = {
+          bill_info_id: @bill_info.id,
+          bill_no: @bill_info.bill_no,
+          bill_date: @bill_info.bill_date,
+          customer: Customer.find_by(id: @bill_info.customer_id)? Customer.find_by(id: @bill_info.customer_id).names : "Customer is not defined",
+          customer_id: @bill_info.customer_id,
+          bill_total: @bill_info.bill_total,
+          reducing_balance: @bill_info.reducing_balance,
+          bill_status: Status.find_by(id: @bill_info.bill_status)? Status.find_by(id: @bill_info.bill_status).status_description : "Status is not defined",
+          bill_details: @bill_detail_response
+        }
+        @bills << @bill_info_response
       end
       return @bills
     else
