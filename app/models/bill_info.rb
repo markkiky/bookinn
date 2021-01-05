@@ -29,6 +29,15 @@ class BillInfo < ApplicationRecord
     end
   end
 
+  def self.bill_details(bill_info_id)
+    # @bill_info = BillInfo.find(bill_info_id)
+
+    @bill_details = BillDetail.all.where(bill_info_id: bill_info_id)
+
+    return @bill_details
+
+  end
+
   # Returns a fee for room price, nights spent and the total applicants
   def self.calculate_fee(room_price, no_of_nights, applicants)
     @bill_total = room_price * no_of_nights * applicants 

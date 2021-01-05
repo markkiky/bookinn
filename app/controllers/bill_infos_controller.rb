@@ -103,7 +103,35 @@ class BillInfosController < ApplicationController
     # @bill_info.destroy
   end
 
+  # POST /search_bill
+  def search_bill
+    @bill_info = BillInfo.find_by(:bill_no => search_bill_params['bill_no'])
+    @booking_order = BookingOrder.find_by(:id => @bill_info.booking_order_id)
+    @booking_order_detail = BookingOrderDetail.where(:booking_order_id => @booking_order.id)
+    @payment_transactions = PaymentTransaction.where(:bill_no => @bill_info.bill_no)
+    @bill_response = {
+      bill: @bill_info,
+      bill_details: BillInfo.bill_details(@bill_info.id),
+      payments: @payment_transactions,
+      booking_order: @booking_order,
+      booking_order_detail: @booking_order_detail
+    }
+    response = {
+      status: 200,
+      message: "Bill Found",
+      data: @bill_response
+    }
+
+    render json: response
+  end
+
+
+
   private
+
+  def search_bill_params
+    params.permit(:bill_no)
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_bill_info

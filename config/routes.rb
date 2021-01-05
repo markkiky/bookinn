@@ -85,4 +85,7 @@ Rails.application.routes.draw do
   # hotels
   get "hotel_rooms/:id", to: "hotels#hotel_rooms"
   get "hotel_sisters/:id", to: "hotels#sister_hotels"
+
+  # bills 
+  post "search_bill", to: "bill_infos#search_bill"
 end
