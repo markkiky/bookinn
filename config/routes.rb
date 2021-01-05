@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :laundries
+  resources :laundry_packages
   resources :discounts
   resources :booking_order_details
   resources :customer_rooms
@@ -52,7 +54,8 @@ Rails.application.routes.draw do
 
   post "bookinn/mass_booking", to: "front_office#mass_booking"
 
-  post "bookinn/:id/add_customer", to: "front_office#add_customer_to_booking"
+  post "bookinn/add_customer", to: "front_office#add_customer_to_booking"
+  post "bookinn/remove_customer", to: "front_office#remove_customer_from_booking"
 
   post "transfer/:id", to: "front_office#room_assignment_transfer"
 
@@ -79,5 +82,7 @@ Rails.application.routes.draw do
   post "receive_card_transactions", to: "callback#receive_card_transactions"
 
 
-  
+  # hotels
+  get "hotel_rooms/:id", to: "hotels#hotel_rooms"
+  get "hotel_sisters/:id", to: "hotels#sister_hotels"
 end

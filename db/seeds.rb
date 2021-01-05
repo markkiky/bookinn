@@ -5,6 +5,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+Channel.create(channel_id: Channel.channel_id, channel_description: "Agent", channel_status: "2")
 Customer.create(customer_no: Customer.customer_no, customer_id: Customer.customer_id, customer_type_id: '1', country_id: "1", names: "Channel Booker", email: "channel@gmail.com", phone: "254714420943", address: "626 Muranga", postal_code: "10200", customer_status: "25", customer_status_date: "30-01-2020", last_visit: "20-12-2020", last_invoice: "20-12-2020", last_receipt: "20-12-2020", created_by: "1", updated_by: "1", is_channel: "1", channel_id: "1")
 Customer.create(customer_no: Customer.customer_no, customer_id: Customer.customer_id, customer_type_id: '2', country_id: "113", names: "Mark Kariuki", email: "markkaris438@gmail.com", phone: "254714420943", address: "626 Muranga", postal_code: "10200", customer_status: "25", customer_status_date: "30-01-2020", last_visit: "20-12-2020", last_invoice: "20-12-2020", last_receipt: "20-12-2020", created_by: "1", updated_by: "1")
 CustomerType.create(customer_type_id: CustomerType.customer_type_id, customer_type_description: "Channel")
@@ -15,12 +16,14 @@ RoomType.create(room_type_id: "1", room_type_description: "Deluxe Room", room_ty
 RoomType.create(room_type_id: "2", room_type_description: "Standard Room", room_type_total: "2", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "5000")
 RoomType.create(room_type_id: "3", room_type_description: "Single Room", room_type_total: "10", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "10000")
 RoomType.create(room_type_id: "3", room_type_description: "Double Room", room_type_total: "5", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "15000")
+
+Hotel.create(hotel_id: Hotel.hotel_id, hotel_name: "Hill Park", hotel_email: "hotel@email.com", hotel_contact_person: "Melvin", hotel_mobile: "0722654789", hotel_type_id: "2", parent_hotel_id: "2", hotel_status: "204")
 # Deluxe Rooms
-Room.create(room_id: "1", room_no: "B22", room_name: "Kiboko House", room_type_id: "3", room_price: "20000", capacity: "1", status: '1' )
-Room.create(room_id: "2", room_no: "A21", room_name: "Mwiko House", room_type_id: "1", room_price: "10000", capacity: "10", status: '1' )
+Room.create(room_id: "1", room_no: "B22", room_name: "Kiboko House", room_type_id: "3", room_price: "20000", capacity: "1", status: '1', hotel_id: "1" )
+Room.create(room_id: "2", room_no: "A21", room_name: "Mwiko House", room_type_id: "1", room_price: "10000", capacity: "10", status: '1', hotel_id: "1" )
 # Standard Rooms
-Room.create(room_id: "3", room_no: "G01", room_name: "Simba Hut", room_type_id: "4", room_price: "2000",  capacity: "2", status: '1' )
-Room.create(room_id: "4", room_no: "G02", room_name: "Membly  Court", room_type_id: "2", room_price: "40000", capacity: "4", status: '1' )
+Room.create(room_id: "3", room_no: "G01", room_name: "Simba Hut", room_type_id: "4", room_price: "2000",  capacity: "2", status: '1', hotel_id: "1" )
+Room.create(room_id: "4", room_no: "G02", room_name: "Membly  Court", room_type_id: "2", room_price: "40000", capacity: "4", status: '1', hotel_id: "1" )
 
 
 Status.create(status_id: "1", status_cluster_id: "1", status_description: "available")
@@ -72,8 +75,8 @@ Role.create(role_id: "3", role_description: "Front Office", role_status: "1")
 Role.create(role_id: "4", role_description: "Maintainance", role_status: "1")
 
 
-User.create(email: "too@nouveta.tech", password: "123456", username: "BT", role_id: "1")
-User.create(email: "mark@nouveta.tech", password: "123456", username: "MK", role_id: "1")
+User.create(email: "too@nouveta.tech", password: "123456", username: "BT", role_id: "1", hotel_id: "1")
+User.create(email: "mark@nouveta.tech", password: "123456", username: "MK", role_id: "1", hotel_id: "2")
 
 PaymentMode.create(payment_mode_id: PaymentMode.payment_mode_id, payment_mode_description: "MPESA", payment_mode_status: "", created_by: "2")
 PaymentMode.create(payment_mode_id: PaymentMode.payment_mode_id, payment_mode_description: "CARD", payment_mode_status: "", created_by: "2")

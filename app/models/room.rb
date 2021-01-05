@@ -1,5 +1,5 @@
 class Room < ApplicationRecord
-
+  belongs_to :hotel
   # returns a room type object
   def self.room_type(room_id)
     # @room_type = []

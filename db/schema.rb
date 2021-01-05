@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_15_075329) do
+ActiveRecord::Schema.define(version: 2021_01_05_094755) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false
@@ -178,7 +178,6 @@ ActiveRecord::Schema.define(version: 2020_12_15_075329) do
   create_table "customer_bookings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "customer_id"
     t.string "booking_order_id"
-    t.string "room_id"
     t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
@@ -281,7 +280,7 @@ ActiveRecord::Schema.define(version: 2020_12_15_075329) do
     t.string "hotel_contact_person"
     t.string "hotel_mobile"
     t.string "hotel_type_id"
-    t.string "parent_hotel_id"
+    t.string "parent_hotel_id", null: false
     t.string "hotel_status"
     t.string "is_active", default: "1"
     t.string "created_by"
@@ -297,6 +296,22 @@ ActiveRecord::Schema.define(version: 2020_12_15_075329) do
     t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "laundries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "laundry_package_id"
+    t.string "customer_id"
+    t.string "booking_order_id"
+    t.string "laundry_status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "laundry_packages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "laundry_description"
+    t.string "amount"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -411,6 +426,7 @@ ActiveRecord::Schema.define(version: 2020_12_15_075329) do
   end
 
   create_table "rooms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "hotel_id"
     t.string "room_id"
     t.string "room_no"
     t.string "room_name"
@@ -482,6 +498,7 @@ ActiveRecord::Schema.define(version: 2020_12_15_075329) do
     t.string "email"
     t.string "password_digest"
     t.string "role_id"
+    t.string "hotel_id"
     t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"

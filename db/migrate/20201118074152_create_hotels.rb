@@ -7,7 +7,7 @@ class CreateHotels < ActiveRecord::Migration[6.0]
       t.string :hotel_contact_person
       t.string :hotel_mobile
       t.string :hotel_type_id
-      t.string :parent_hotel_id
+      t.string :parent_hotel_id, null: false
       t.string :hotel_status
       
       t.string :is_active, :default => "1"

@@ -58,6 +58,8 @@ class RoomsController < ApplicationController
   # POST /rooms
   def create
     @room = Room.new(room_params)
+    @room.hotel_id = @current_user['hotel_id'] ? @current_user['hotel_id'] : "1"
+
     response = {
       status: 200,
       message: "Room created successfully",

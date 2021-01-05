@@ -457,34 +457,59 @@ class FrontOfficeController < ApplicationController
     render json: response
   end
 
-  # POST /bookinn/1/add_customer
+  # POST /bookinn/add_customer
   def add_customer_to_booking
-    # if @customer =
-    # check if booking exists
-    @booking_order = BookingOrder.find_by(:id => params[:id])
-    @customer = Customer.find_by(:email => customer_params["email"]) || Customer.find_by(:id_no => customer_params["id_no"])
+    @booking_order = BookingOrder.find_by(:id => add_customer_to_booking_params["booking_id"])
+    @customers = []
+    add_customer_to_booking_params["customers"].each do |customer|
+      # byebug
+      @customer = Customer.find_by(:email => customer["email"]) || Customer.find_by(:id_no => customer["id_no"])
+      if @customer == nil
+        # new customer
+        @customer = Customer.new(
+          customer
+        )
+        @customer.customer_no = Customer.customer_no
+        @customer.customer_id = Customer.customer_id
+        @customer.save
+      else
+        # update customer
+        @customer.update(
+          customer
+        )
+      end
 
-    if @customer == nil
-      # new customer
-      @customer = Customer.new(
-        customer_params
-      )
-      @customer.customer_no = Customer.customer_no
-      @customer.customer_id = Customer.customer_id
-      @customer.save
-    else
-      # update customer
-      @customer.update(
-        customer_params
-      )
+      @customer_booking = CustomerBooking.make(@customer.id, @booking_order.id)
+      @customers << @customer
     end
-    @customer_booking = CustomerBooking.new(:customer_id => @customer.id, :booking_order_id => @booking_order.id)
-    @customer_booking.save
+
     response = {
       status: 200,
       message: "Adding Customer to Booking",
-      data: @customer,
+      data: @customers,
     }
+    render json: response
+  end
+
+  def remove_customer_from_booking
+    # byebug
+    @customer = Customer.find_by(:id => remove_customer_from_booking_params["customer_id"])
+    @booking_order = BookingOrder.find_by(:id => remove_customer_from_booking_params["booking_id"])
+
+    if CustomerBooking.remove(@customer.id, @booking_order.id)
+      response = {
+        status: 200,
+        message: "Removing Customer from Booking",
+        data: @customer,
+      }
+    else
+      response = {
+        status: 400,
+        message: "Error Removing Customer from Booking",
+        data: @customer,
+      }
+    end
+
     render json: response
   end
 
@@ -500,7 +525,7 @@ class FrontOfficeController < ApplicationController
     @customer_bookings_response = []
     puts "Params: "
     puts params
-    # byebug
+    
     # verify customer booking is valid
     RoomAssignment.transaction do
       # loop through each assignment
@@ -633,15 +658,25 @@ class FrontOfficeController < ApplicationController
 
   def upload_customers_csv
     # byebug
-    csv_path = params["customer_csv"].path
+    customers_csv = params["customer_csv"]
+
+    @customers = Customer.import(customers_csv)
+    @booking_order = BookingOrder.find(params["booking_id"])
+
+    @customers.each do |customer|
+      CustomerBooking.make(customer.id, @booking_order.id)
+    end
     # records =
     # CSV.foreach(csv_path, headers: true, :encoding => "ISO-8859-1").map { |row|
     #   byebug
     # }
 
-    table = CSV.parse(File.read(csv_path), headers: true)
+    # table = CSV.parse(File.read(csv_path), headers: true)
+    # byebug
     response = {
       status: 200,
+      message: "Customers Added to Booking with Id #{@booking_order.id}",
+      data: @customers,
     }
 
     render json: response
@@ -723,7 +758,7 @@ class FrontOfficeController < ApplicationController
               :room_type_id => @booking_order_detail.room_type_id,
               :booking_order_detail_id => @booking_order_detail.id,
               :bill_detail_description => booking[:description],
-              :amount => BillInfo.calculate_fee(RoomType.find_by(:id => @booking_order_detail.room_type_id).room_price.to_i, @booking_order_detail.total_applicants.to_i)
+              :amount => BillInfo.calculate_fee(RoomType.find_by(:id => @booking_order_detail.room_type_id).room_price.to_i, @booking_order_detail.total_applicants.to_i),
             )
             @bill_detail.save
 
@@ -905,6 +940,23 @@ class FrontOfficeController < ApplicationController
 
   def customer_params
     params.permit(:customer_no, :customer_id, :customer_type_id, :country_id, :id_no, :gender, :names, :email, :phone, :customer_address, :postal_code, :address, :customer_status, :customer_status_date, :last_visit, :last_invoice, :last_receipt, :created_by, :updated_by)
+  end
+
+  def add_customer_to_booking_params
+    params.permit(
+      :booking_id,
+      customers: [
+        :customer_no, :customer_id, :customer_type_id, :country_id, :id_no, :gender, :names, :email, :phone, :customer_address, :postal_code, :address, :customer_status, :customer_status_date, :last_visit, :last_invoice, :last_receipt, :created_by, :updated_by,
+      ],
+
+    )
+  end
+
+  def remove_customer_from_booking_params
+    params.permit(
+      :customer_id,
+      :booking_id
+    )
   end
 
   def check_out_params

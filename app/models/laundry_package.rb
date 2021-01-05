@@ -1,0 +1,2 @@
+class LaundryPackage < ApplicationRecord
+end

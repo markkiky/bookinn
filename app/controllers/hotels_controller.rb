@@ -5,37 +5,103 @@ class HotelsController < ApplicationController
   def index
     @hotels = Hotel.all
 
-    render json: @hotels
+    response = {
+      status: 200,
+      message: "All hotels",
+      data: @hotels
+    }
+    render json: response
   end
 
   # GET /hotels/1
   def show
-    render json: @hotel
+    response = {
+      status: 200,
+      message: "Specific hotel",
+      data: @hotel
+    }
+    render json: response
   end
 
   # POST /hotels
   def create
     @hotel = Hotel.new(hotel_params)
+    @hotel.id = Hotel.hotel_id
+    @hotel.parent_hotel_id = hotel_params['parent_hotel_id'] ? hotel_params["parent_hotel_id"] : Hotel.hotel_id
 
     if @hotel.save
-      render json: @hotel, status: :created, location: @hotel
+      response = {
+        status: 200,
+        message: "Hotel created successfully",
+        data: @hotel
+      }
+      render json: response, status: :ok, location: @hotel
     else
-      render json: @hotel.errors, status: :unprocessable_entity
+      response = {
+        status: 400,
+        message: "Failed to created Hotel",
+        data: @hotel.errors
+      }
+      render json: response
     end
   end
 
   # PATCH/PUT /hotels/1
   def update
     if @hotel.update(hotel_params)
-      render json: @hotel
+      response = {
+        status: 200,
+        message: "Hotel updated Successfully",
+        data: @hotel
+      }
+      render json: response
     else
-      render json: @hotel.errors, status: :unprocessable_entity
+      response = {
+        status: 200,
+        message: "Failed to update hotel",
+        data: @hotel.errors
+      }
+      render json: response
     end
   end
 
   # DELETE /hotels/1
   def destroy
-    @hotel.destroy
+    @hotel.update(:is_active => "0")
+    response = {
+      status: 200,
+      message: "Hotel deleted successfully",
+      data: @hotel
+    }
+    # @hotel.destroy
+    render json: response
+  end
+
+
+  # GET /hotel_rooms/1
+  def hotel_rooms
+    @hotel = Hotel.find(params[:id])
+    @rooms = Room.all.where(:hotel_id => @hotel.id)
+    response = {
+      status: 200,
+      message: "Rooms in Hotel #{@hotel.hotel_name}",
+      data: @rooms
+    }
+    render json: response
+  end
+
+  # GET /hotel_sisters/1
+  def sister_hotels
+    @hotel = Hotel.find(params[:id])
+    @sister_hotels = Hotel.all.where(:parent_hotel_id => @hotel.parent_hotel_id)
+
+    response = {
+      status: 200,
+      message: "All sister hotels",
+      data: @sister_hotels
+    }
+
+    render json: @sister_hotels
   end
 
   private
