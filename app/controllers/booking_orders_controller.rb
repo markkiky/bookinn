@@ -8,6 +8,7 @@ class BookingOrdersController < ApplicationController
     @bookings = []
     @booking_orders.each do |booking_order|
       @booking = {
+        booking_no: booking_order.booking_no,
         booking_order_id: booking_order.id,
         booking_order_date: booking_order.booking_order_date,
         booking_order_status_id: booking_order.booking_order_status,
