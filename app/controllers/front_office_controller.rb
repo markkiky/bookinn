@@ -525,11 +525,12 @@ class FrontOfficeController < ApplicationController
     @customer_bookings_response = []
     puts "Params: "
     puts params
-    
+
     # verify customer booking is valid
     RoomAssignment.transaction do
       # loop through each assignment
       check_in_params["assignments"].each do |assignment|
+        # byebug
         if Room.room_available(assignment["room_id"])
           @room_assignment = RoomAssignment.new(
             :room_assignment_id => RoomAssignment.room_assignment_id,
@@ -597,6 +598,7 @@ class FrontOfficeController < ApplicationController
     render json: @response
   end
 
+  # GET /check_in
   def get_check_in
     # returns a list of all checkin customers and their rooms
     @room_assignments = RoomAssignment.all
@@ -610,7 +612,7 @@ class FrontOfficeController < ApplicationController
     render json: response
   end
 
-  # POST check_out
+  # POST /check_out
   def check_out
     # provide the booking_order and the customer checking out
     puts params
@@ -632,13 +634,24 @@ class FrontOfficeController < ApplicationController
           }
         else
           response = {
-            status: 200,
+            status: 400,
             message: "Check Out failed, Room and Customer not found",
           }
         end
       end
     end
 
+    render json: response
+  end
+
+  # GET /check_out
+  def get_check_out
+    @room_assignments = RoomAssignment.all
+    response = {
+      status: 200,
+      message: "All Checked Out Customers",
+      data: @room_assignments
+    }
     render json: response
   end
 
@@ -750,7 +763,7 @@ class FrontOfficeController < ApplicationController
               :total_applicants => booking[:total_applicants],
             )
             @booking_order_detail.save
-
+            # byebug
             # generate a bill detail
             @bill_detail = BillDetail.new(
               :bill_no => @bill_info.bill_no,
@@ -758,10 +771,10 @@ class FrontOfficeController < ApplicationController
               :room_type_id => @booking_order_detail.room_type_id,
               :booking_order_detail_id => @booking_order_detail.id,
               :bill_detail_description => booking[:description],
-              :amount => BillInfo.calculate_fee(RoomType.find_by(:id => @booking_order_detail.room_type_id).room_price.to_i, @booking_order_detail.total_applicants.to_i),
+              :amount => BillInfo.calculate_fee(RoomType.find_by(:id => @booking_order_detail.room_type_id).room_price.to_i, @booking_order_detail.total_applicants.to_i, (@booking_order_detail.stay_end_date.to_date - @booking_order_detail.stay_start_date.to_date).to_i),
             )
             @bill_detail.save
-
+            # byebug
             # compute bill amount
             @bill_info.update(
               :bill_total => @bill_info.bill_total.to_i + @bill_detail.amount.to_i,
@@ -918,7 +931,93 @@ class FrontOfficeController < ApplicationController
     render json: response
   end
 
+  def room_transfer
+    # byebug
+    @booking_order = BookingOrder.find(room_transfer_params["booking_order_id"])
+    @bill_info = BillInfo.find_by(:booking_order_id => @booking_order.id)
+
+    @response_message = nil
+    @response_bill = nil
+    # @customer = Customer.find_by(:id => room_transfer_params["customer_id"])
+    BillInfo.transaction do
+      room_transfer_params["booking_order_details"].each do |booking_order_detail|
+        @initial_booking_order_detail = BookingOrderDetail.find_by(:id => booking_order_detail["booking_order_detail_id"])
+
+        # booking order found
+        if @initial_booking_order_detail != nil
+          # check for upgrade downgrade or same
+          @initial_room_type = RoomType.find(@initial_booking_order_detail.room_type_id)
+          @new_room_type = RoomType.find(booking_order_detail["room_type_id"])
+          if @initial_room_type.room_type_id != @new_room_type.room_type_id
+            @response_message = "Room Type changed"
+            # bill will change
+            # mark previous bill as inactive
+            @initial_bill_detail = BillDetail.find_by(:booking_order_detail_id => @initial_booking_order_detail, :is_active => "1")
+            @initial_bill_detail.update(:is_active => "0")
+
+            # create the updated bill
+            @new_bill_detail = BillDetail.new(
+              bill_detail_id: BillDetail.bill_detail_id,
+              bill_no: @bill_info.bill_no,
+              bill_info_id: @bill_info.id,
+              room_type_id: @new_room_type.id,
+              bill_detail_description: "Room Transfer Bill",
+              booking_order_detail_id: @initial_booking_order_detail.id,
+              amount: BillInfo.calculate_fee(@new_room_type.room_price.to_i, (booking_order_detail["stay_end_date"].to_date - booking_order_detail["stay_start_date"].to_date).to_i, booking_order_detail["total_applicants"].to_i),
+            )
+            @new_bill_detail.save
+
+            @bill_info.update(
+              bill_total: BillInfo.calculate_fee_sum_details(@bill_info.id),
+              reducing_balance: BillInfo.updated_reducing_balance(@bill_info.id),
+            )
+
+            @initial_booking_order_detail.update(
+              room_type_id: @new_room_type.room_type_id,
+              stay_start_date: booking_order_detail["stay_start_date"] ? booking_order_detail["stay_start_date"] : @initial_booking_order_detail.stay_start_date,
+              stay_end_date: booking_order_detail['stay_end_date'] ? booking_order_detail["stay_end_date"] : @initial_booking_order_detail.stay_end_date,
+              total_applicants:  booking_order_detail["total_applicants"] ?  booking_order_detail["total_applicants"] : @initial_booking_order_detail.total_applicants
+            )
+            
+            @response_bill = @bill_info
+          else
+            # same room transfer check dates
+            @response_message = "Same Room Type Transfer"
+            @response_bill = "Bill not created"
+          end
+        else
+          # booking order detail not found
+          @response_message = "Booking Order detail not found"
+          @response_bill = "Bill not created"
+        end
+      end
+    end
+    @room_type = RoomType.find_by(:id => room_transfer_params["room_type_id"])
+    # byebug
+    response = {
+      status: 200,
+      message: @response_message,
+      data: @response_bill,
+      bill: @bill_info,
+      bill_details: BillDetail.where(:bill_info_id => @bill_info.id, :is_active => "1")
+    }
+    render json: response
+  end
+
   private
+
+  def room_transfer_params
+    params.permit(
+      :booking_order_id,
+      booking_order_details: [
+        :booking_order_detail_id,
+        :room_type_id,
+        :total_applicants,
+        :stay_start_date,
+        :stay_end_date,
+      ],
+    )
+  end
 
   def room_assignment_transfer_params
     params.permit(:id, :customer_id, :customer_names, :room_id, :start_date, :end_date)

@@ -35,12 +35,16 @@ class BookingOrdersController < ApplicationController
 
   # GET /booking_orders/1
   def show
+    @bill_infos = BillInfo.where(:booking_order_id => @booking_order.id)
     response = {
       status: 200,
       message: "booking and customer",
       data: {
         status: 200,
         booking: @booking_order,
+        booking_details: @booking_order.booking_order_details,
+        bill: @bill_infos,
+        bill_details: BillDetail.all.where(:bill_info_id => @bill_info_response),
         customers: BookingOrder.booking_customer(@booking_order.id),
       },
     }

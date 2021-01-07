@@ -1,5 +1,6 @@
 class BillInfo < ApplicationRecord
   has_many :bill_details
+
   # return a unique bill no for bookinn system only
   def self.bill_no
     @bill_infos = BillInfo.all
@@ -32,7 +33,7 @@ class BillInfo < ApplicationRecord
   def self.bill_details(bill_info_id)
     # @bill_info = BillInfo.find(bill_info_id)
 
-    @bill_details = BillDetail.all.where(bill_info_id: bill_info_id)
+    @bill_details = BillDetail.all.where(bill_info_id: bill_info_id, :is_active => "1")
 
     return @bill_details
 
@@ -56,9 +57,26 @@ class BillInfo < ApplicationRecord
     @bill_total = 0
 
     @bill_details = BillDetail.all.where(:bill_info_id => bill_info_id, :is_active => "1")
+
     @bill_details.each do |bill_detail|
       @bill_total = @bill_total + bill_detail.amount.to_i
     end
     return @bill_total
+  end
+
+  def self.updated_reducing_balance(bill_info_id)
+    # @bill_info = BillInfo.find(bill_info_id)
+    @reducing_balance = 0
+    @bill_total = BillInfo.calculate_fee_sum_details(bill_info_id)
+    # byebug
+    @total_paid = 0
+    @payment_transactions = PaymentTransaction.all.where(:bill_no => @bill_info.bill_no, :is_active => "1")
+    @payment_transactions.each do |payment|
+      # byebug
+      @total_paid = @total_paid + payment.payment_transaction_amount.to_i
+    end
+    @reducing_balance = @bill_total - @total_paid
+    # byebug
+    return @reducing_balance
   end
 end

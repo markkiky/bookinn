@@ -51,6 +51,7 @@ Rails.application.routes.draw do
   post "check_in", to: "front_office#check_in"
   get "check_in", to: "front_office#get_check_in"
   post 'check_out', to: "front_office#check_out"
+  get "check_out", to: "front_office#get_check_out"
 
   post "bookinn/mass_booking", to: "front_office#mass_booking"
 
@@ -58,6 +59,7 @@ Rails.application.routes.draw do
   post "bookinn/remove_customer", to: "front_office#remove_customer_from_booking"
 
   post "transfer/:id", to: "front_office#room_assignment_transfer"
+  post "transfer", to: "front_office#room_transfer"
 
   # status
   get 'status/:id', to: "status_clusters#status"

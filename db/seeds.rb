@@ -57,8 +57,8 @@ StatusCluster.create(status_cluster_id: "3", cluster_description: "Need Type sta
 StatusCluster.create(status_cluster_id: "4", cluster_description: "Ticket status")
 StatusCluster.create(status_cluster_id: "5", cluster_description: "Bills status")
 
-BookingOrder.create(booking_order_id: "1", booking_order_date: "21-01-2020", total_applicants: "1",  room_type_id: "1", stay_start_date: "01-11-2020", stay_end_date: "31-01-2021", booking_order_status: "2", booking_order_type_id: "1", created_by: "1", updated_by: "1")
-BookingOrder.create(booking_order_id: "2", booking_order_date: "26-11-2020", total_applicants: "10", room_type_id: "1", stay_start_date: "01-12-2020", stay_end_date: "05-01-2021", booking_order_status: "2", booking_order_type_id: "3", created_by: "1", updated_by: "1")
+# BookingOrder.create(booking_order_id: "1", booking_order_date: "21-01-2020", total_applicants: "1",  room_type_id: "1", stay_start_date: "01-11-2020", stay_end_date: "31-01-2021", booking_order_status: "2", booking_order_type_id: "1", created_by: "1", updated_by: "1")
+# BookingOrder.create(booking_order_id: "2", booking_order_date: "26-11-2020", total_applicants: "10", room_type_id: "1", stay_start_date: "01-12-2020", stay_end_date: "05-01-2021", booking_order_status: "2", booking_order_type_id: "3", created_by: "1", updated_by: "1")
 
 BookingOrderType.create(booking_order_type_id: "1", booking_order_type_description: "Self", booking_order_type_status: "2" )
 BookingOrderType.create(booking_order_type_id: "2", booking_order_type_description: "Others", booking_order_type_status: "2" )

@@ -86,8 +86,8 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
   create_table "booking_order_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "booking_order_id"
     t.string "room_type_id"
-    t.string "stay_start_date"
-    t.string "stay_end_date"
+    t.datetime "stay_start_date"
+    t.datetime "stay_end_date"
     t.string "total_applicants"
     t.string "amount"
     t.datetime "created_at", precision: 6, null: false
