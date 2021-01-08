@@ -105,45 +105,51 @@ class BillInfosController < ApplicationController
 
   # POST /search_bill
   def search_bill
-    @bill_info = BillInfo.find_by(:bill_no => search_bill_params['bill_no'])
-    @payment_transactions = PaymentTransaction.where(:bill_no => @bill_info.bill_no)
-    @total_paid = 0
-    @payment_transactions.each do |payment|
-      @total_paid = @total_paid + payment.payment_transaction_amount.to_i
+    @bill_info = BillInfo.find_by(:bill_no => search_bill_params["bill_no"])
+    if @bill_info.nil?
+      response = {
+        status: 400,
+        message: "Bill not Found",
+      # data: @bill_response,
+      }
+    else
+      @payment_transactions = PaymentTransaction.where(:bill_no => @bill_info.bill_no)
+      @total_paid = 0
+      @payment_transactions.each do |payment|
+        @total_paid = @total_paid + payment.payment_transaction_amount.to_i
+      end
+      @bill_info_response = {
+        id: @bill_info.id,
+        bill_no: @bill_info.bill_no,
+        bill_date: @bill_info.bill_date,
+        customer: Customer.find_by(:id => @bill_info.customer_id) ? Customer.find_by(:id => @bill_info.customer_id).names : "Customer not found",
+        customer_id: @bill_info.customer_id,
+        booking_no: BookingOrder.find_by(:id => @bill_info.booking_order_id) ? BookingOrder.find_by(:id => @bill_info.booking_order_id).booking_no : "Booking Order not found",
+        bill_total: @bill_info.bill_total,
+        total_paid: @total_paid,
+        reducing_balance: @bill_info.reducing_balance,
+        bill_status: Status.find_by(:id => @bill_info.bill_status) ? Status.find_by(:id => @bill_info.bill_status).status_description : "Status not found",
+        bill_status_id: @bill_info.bill_status,
+      }
+      @booking_order = BookingOrder.find_by(:id => @bill_info.booking_order_id)
+      @booking_order_detail = BookingOrderDetail.where(:booking_order_id => @booking_order.id)
+
+      @bill_response = {
+        bill: @bill_info_response,
+        bill_details: BillInfo.bill_details(@bill_info.id),
+        payments: @payment_transactions,
+        booking_order: @booking_order,
+        booking_order_detail: @booking_order_detail,
+      }
+      response = {
+        status: 200,
+        message: "Bill Found",
+        data: @bill_response,
+      }
     end
-    @bill_info_response = {
-      id: @bill_info.id,
-      bill_no: @bill_info.bill_no,
-      bill_date: @bill_info.bill_date,
-      customer: Customer.find_by(:id => @bill_info.customer_id) ? Customer.find_by(:id => @bill_info.customer_id).names : "Customer not found",
-      customer_id: @bill_info.customer_id,
-      booking_no: BookingOrder.find_by(:id => @bill_info.booking_order_id) ? BookingOrder.find_by(:id => @bill_info.booking_order_id).booking_no : "Booking Order not found",
-      bill_total: @bill_info.bill_total,
-      total_paid: @total_paid,
-      reducing_balance: @bill_info.reducing_balance,
-      bill_status: Status.find_by(:id => @bill_info.bill_status) ? Status.find_by(:id => @bill_info.bill_status).status_description : "Status not found",
-      bill_status_id: @bill_info.bill_status
-    }
-    @booking_order = BookingOrder.find_by(:id => @bill_info.booking_order_id)
-    @booking_order_detail = BookingOrderDetail.where(:booking_order_id => @booking_order.id)
-    
-    @bill_response = {
-      bill: @bill_info_response,
-      bill_details: BillInfo.bill_details(@bill_info.id),
-      payments: @payment_transactions,
-      booking_order: @booking_order,
-      booking_order_detail: @booking_order_detail
-    }
-    response = {
-      status: 200,
-      message: "Bill Found",
-      data: @bill_response
-    }
 
     render json: response
   end
-
-
 
   private
 

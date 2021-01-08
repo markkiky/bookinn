@@ -90,4 +90,9 @@ Rails.application.routes.draw do
 
   # bills 
   post "search_bill", to: "bill_infos#search_bill"
+
+  # Reports
+  get "report/mass", to: "reports#mass_booking"
+  get "report/walkin", to: "reports#walkin_booking"
+  get "report/booking", to: "reports#bookings_by_status"
 end
