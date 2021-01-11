@@ -7,7 +7,12 @@ class CreatePaymentTransactions < ActiveRecord::Migration[6.0]
       t.datetime :payment_transaction_date
       t.string :payment_transaction_type_id
       t.string :payment_transaction_amount
+      t.string :payment_transaction_ref
+      t.string :payment_transaction_phone
+      t.string :payment_transaction_paybill
+      t.string :names
       t.string :payment_mode_id
+      t.datetime :date_printed
 
       t.string :is_active, :default => "1"
       t.string :created_by

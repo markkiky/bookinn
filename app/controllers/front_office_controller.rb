@@ -343,7 +343,7 @@ class FrontOfficeController < ApplicationController
             booking_no: BookingOrder.booking_order_no,
             booking_order_id: BookingOrder.booking_order_id,
             booking_order_date: Date.parse(bookinn["booking_order_date"]) ? bookinn["booking_order_date"] : Date.today,
-            booking_order_type_id: bookinn["booking_order_type_id"],
+            booking_order_type_id: bookinn["booking_order_type_id"] ? bookinn['booking_order_type_id'] : "3",
             booking_order_status: "6",
             stay_start_date: bookinn["stay_start_date"],
             stay_end_date: bookinn["stay_end_date"],

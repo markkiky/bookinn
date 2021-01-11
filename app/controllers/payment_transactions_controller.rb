@@ -1,6 +1,7 @@
 class PaymentTransactionsController < ApplicationController
   before_action :set_payment_transaction, only: [:show, :update, :destroy]
   before_action :authorize_request
+  
   # GET /payment_transactions
   def index
     @payment_transactions = PaymentTransaction.all

@@ -90,6 +90,9 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
     t.datetime "stay_end_date"
     t.string "total_applicants"
     t.string "amount"
+    t.string "is_active", default: "1"
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -247,6 +250,9 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
     t.string "discount_id"
     t.string "amount"
     t.string "discount_rate"
+    t.string "is_active", default: "1"
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -305,6 +311,9 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
     t.string "customer_id"
     t.string "booking_order_id"
     t.string "laundry_status"
+    t.string "is_active", default: "1"
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -312,6 +321,9 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
   create_table "laundry_packages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "laundry_description"
     t.string "amount"
+    t.string "is_active", default: "1"
+    t.string "created_by"
+    t.string "updated_by"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -365,7 +377,12 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
     t.datetime "payment_transaction_date"
     t.string "payment_transaction_type_id"
     t.string "payment_transaction_amount"
+    t.string "payment_transaction_ref"
+    t.string "payment_transaction_phone"
+    t.string "payment_transaction_paybill"
+    t.string "names"
     t.string "payment_mode_id"
+    t.datetime "date_printed"
     t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"

@@ -156,4 +156,30 @@ class BookingOrder < ApplicationRecord
       return @bills
     end
   end
+
+  # determines a bookings start date
+  def self.stay_start_date(booking_order_id)
+    @booking_order = BookingOrder.find_by(id: booking_order_id)
+
+    @booking_order_details = BookingOrderDetail.all.where(:booking_order_id => @booking_order) if !@booking_order.nil?
+
+    @stay_start_dates = []
+    @booking_order_details.each do |booking_order_detail|
+     @stay_start_dates << booking_order_detail.stay_start_date
+    end
+    return @stay_start_dates.min
+  end
+
+  # determines a bookings end date
+  def self.stay_end_date(booking_order_id)
+    @booking_order = BookingOrder.find_by(id: booking_order_id)
+
+    @booking_order_details = BookingOrderDetail.all.where(:booking_order_id => @booking_order) if !@booking_order.nil?
+
+    @stay_end_dates = []
+    @booking_order_details.each do |booking_order_detail|
+     @stay_end_dates << booking_order_detail.stay_end_date
+    end
+    return @stay_end_dates.max
+  end
 end

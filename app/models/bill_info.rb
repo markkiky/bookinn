@@ -79,4 +79,22 @@ class BillInfo < ApplicationRecord
     # byebug
     return @reducing_balance
   end
+
+  def self.bill_response(bill_info_id)
+    @bill_info = BillInfo.find(bill_info_id)
+    @booking_order = BookingOrder.find(@bill_info.booking_order_id)
+    @bill_response = {
+      booking_order_id: @booking_order.id,
+      booking_no: @booking_order.booking_no,
+      bill_info_id: @bill_info.id,
+      bill_no: @bill_info.bill_no,
+      bill_date: @bill_info.bill_date,
+      customer: @bill_info.customer_id ? Customer.find(@bill_info.customer_id).names : "Customer not found",
+      bill_total: @bill_info.bill_total,
+      reducing_balance: @bill_info.reducing_balance,
+      bill_status: @bill_info.bill_status ? Status.find(@bill_info.bill_status).status_description : "Status not defined",
+    }
+
+    return @bill_response
+  end
 end

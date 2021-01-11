@@ -1,4 +1,6 @@
 class CallbackController < ApplicationController
+
+  # transactions from the frontend
   def mpesa_frontend_transaction
     response = nil
     puts mpesa_frontend_transaction_params
@@ -42,10 +44,14 @@ class CallbackController < ApplicationController
           payment_transaction_type_id: "",
           payment_transaction_amount: mpesa_frontend_transaction_params["amount"],
           payment_mode_id: PaymentMode.find_by(:payment_mode_description => mpesa_frontend_transaction_params["payment_mode"]).id,
+          payment_transaction_ref: mpesa_frontend_transaction_params["transaction_code"],
+          payment_transaction_phone: mpesa_frontend_transaction_params["account_from"],
+          payment_transaction_paybill: mpesa_frontend_transaction_params["PayBillNumber"],
+          names: mpesa_frontend_transaction_params["FullNames"],
         )
         @payment_transaction.save
       end
-      
+
       response = {
         status: 200,
         message: "Bill payed successfully",

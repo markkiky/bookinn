@@ -6,54 +6,34 @@ class ReportsController < ApplicationController
   def mass_booking
     @booking_orders = BookingOrder.all.where(booking_order_type_id: "4", is_active: "1")
 
-    @booking_orders_response = []
-
+   
+    @bills_response = []
     @booking_orders.each do |booking_order|
-      @bills = BillInfo.where(:booking_order_id => booking_order.id)
-      @bills_response = []
-      @bills.each do |bill|
-        @bill_details = BillDetail.where(bill_info_id: bill.id, is_active: "1")
-        @bill_details_response = []
-
-        @bill_details.each do |bill_detail|
-          @bill_detail = {
-            bill_detail_id: bill_detail.id,
-          }
-          @bill_details_response << @bill_detail
-        end
-        @bill = {
-          bill_no: bill.bill_no,
-          bill_detail: @bill_details_response,
-        }
-        @bills_response << @bill
-      end
-      @booking_order = {
-        booking_order_id: booking_order.id,
-        booking_no: booking_order.booking_no,
-        customer: booking_order.customer_id ? Customer.find_by(:id => booking_order.customer_id).names : "Customer not found",
-        bills: @bills_response,
-      # bill_total: BillInfo.where(:booking_order_id => booking_order.id).bill_total,
-      # reducing_balance: BillInfo.where(:booking_order_id => booking_order.id).reducing_balance,
-      }
-      @booking_orders_response << @booking_order
+      @bill = BillInfo.find_by(:booking_order_id => booking_order.id, :is_active => "1")
+      @bills_response << BillInfo.bill_response(@bill.id)
     end
-    # byebug
+    
     response = {
       status: 200,
-      message: "Mass Bookings Report",
-      data: @booking_orders_response,
+      message: "Mass Bookings Bills Report",
+      data: @bills_response,
     }
     render json: response
   end
 
   # Gives a report of all walking bookins on the system: Bookings made by normal customers
   def walkin_booking
-    @booking_order = BookingOrder.where.not(booking_order_type_id: "4").where(is_active: "1")
+    @booking_orders = BookingOrder.where.not(booking_order_type_id: "4").where(is_active: "1")
 
+    @bills_response = []
+    @booking_orders.each do |booking_order|
+      @bill = BillInfo.find_by(:booking_order_id => booking_order.id, :is_active => "1")
+      @bills_response << BillInfo.bill_response(@bill.id)
+    end
     response = {
       status: 200,
       message: "Walkin Bookings Report",
-      data: @booking_order,
+      data: @bills_response,
     }
 
     render json: response
@@ -63,28 +43,43 @@ class ReportsController < ApplicationController
   # GET /report/booking
   def bookings_by_status
     # check status is provided. If present return those that match else return all
+    @bills_response = []
     @booking_orders = nil
     if bookings_by_status_params["status"].present?
       if bookings_by_status_params["status"].empty?
         # status present but value is empty
         @response_message = "Empty status provided. Returning all Booking Orders"
+        
         @booking_orders = BookingOrder.all.where(:is_active => "1")
+        @booking_orders.each do |booking_order|
+          @bill = BillInfo.find_by(:booking_order_id => booking_order.id, :is_active => "1")
+          @bills_response << BillInfo.bill_response(@bill.id)
+        end
+        
       else
         # status present value is not empty
         @response_message = "Booking orders with status #{Status.find_by(:id => bookings_by_status_params["status"]).status_description} "
         @booking_orders = BookingOrder.all.where(:booking_order_status => bookings_by_status_params["status"], :is_active => "1")
+        @booking_orders.each do |booking_order|
+          @bill = BillInfo.find_by(:booking_order_id => booking_order.id, :is_active => "1")
+          @bills_response << BillInfo.bill_response(@bill.id)
+        end
       end
     else
       # status is not present, return all bookings
       @response_message = "Returning all Booking Orders"
 
       @booking_orders = BookingOrder.all.where(:is_active => "1")
+      @booking_orders.each do |booking_order|
+        @bill = BillInfo.find_by(:booking_order_id => booking_order.id, :is_active => "1")
+        @bills_response << BillInfo.bill_response(@bill.id)
+      end
     end
     bookings_by_status_params["status"]
     response = {
       status: 200,
       message: @response_message,
-      data: @booking_orders,
+      data: @bills_response,
     }
     render json: response
   end

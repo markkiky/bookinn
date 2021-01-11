@@ -49,13 +49,31 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  
   # config.middleware.use ActionDispatch::Cookies
   # config.middleware.use ActionDispatch::Flash
   # config.middleware.use Rack::MethodOverride
   # config.middleware.use ActionDispatch::Session::CookieStore, { :key => "_bookinn_session" }
-end
 
+  # Mailer SMTP
+  config.action_mailer.default_url_options = { :host => "https://nccg.revenuesure.co.ke", :port => "8443" }
+
+  config.action_mailer.delivery_method = :sendmail
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_options = {from: 'markkaris438@gmail.com'}
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.gmail.com',
+    port:                 587,
+    domain:               'gmail.com',
+    user_name:            'markkaris438@gmail.com',
+    password:             'kcebdhffueckqvav',
+    authentication:       'plain',
+    enable_starttls_auto: true  
+  }
+  ActionMailer::Base.raise_delivery_errors = true
+end
 
 Rails.application.configure do
   config.hosts.clear
