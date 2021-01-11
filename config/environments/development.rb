@@ -55,20 +55,20 @@ Rails.application.configure do
   # config.middleware.use ActionDispatch::Session::CookieStore, { :key => "_bookinn_session" }
 
   # Mailer SMTP
-  config.action_mailer.default_url_options = { :host => "https://nccg.revenuesure.co.ke", :port => "8443" }
+  config.action_mailer.default_url_options = { :host => ENV['DEFAULT_URL'] }
 
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_options = {from: 'markkaris438@gmail.com'}
+  config.action_mailer.default_options = {from: ENV['GMAIL_USERNAME']}
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address:              'smtp.gmail.com',
     port:                 587,
     domain:               'gmail.com',
-    user_name:            'markkaris438@gmail.com',
-    password:             'kcebdhffueckqvav',
+    user_name:            ENV['GMAIL_USERNAME'],
+    password:             ENV['GMAIL_PASSWORD'],
     authentication:       'plain',
     enable_starttls_auto: true  
   }

@@ -1,5 +1,5 @@
 class CustomerMailer < ApplicationMailer
-    default from: "markkaris438@gmail.com"
+    default from: ENV['GMAIL_USERNAME']
 
     def welcome_email
         @user = params[:customer]
