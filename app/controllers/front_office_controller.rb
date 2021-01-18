@@ -664,6 +664,34 @@ class FrontOfficeController < ApplicationController
         arrivals: "2",
         departures: "2",
         available_rooms: "2",
+        expected_accomodation_totals: [
+          200,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        actual_accomodation_totals: [
+          2000,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
       },
     }
     render json: @response
