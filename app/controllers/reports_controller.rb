@@ -39,6 +39,22 @@ class ReportsController < ApplicationController
     render json: response
   end
 
+  def all_bookings
+    @response_message = "Returning all Booking Orders"
+    @bills_response = []
+    @booking_orders = BookingOrder.all.where(:is_active => "1")
+    @booking_orders.each do |booking_order|
+      @bill = BillInfo.find_by(:booking_order_id => booking_order.id, :is_active => "1")
+      @bills_response << BillInfo.bill_response(@bill.id)
+    end
+    response = {
+      status: 200,
+      message: @response_message,
+      data: @bills_response,
+    }
+    render json: response
+  end
+
   # Gives a report of bookinns based on a particular status
   # GET /report/booking
   def bookings_by_status
