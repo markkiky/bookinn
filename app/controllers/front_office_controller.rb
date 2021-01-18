@@ -691,7 +691,9 @@ class FrontOfficeController < ApplicationController
           0,
           0,
           0
-        ]
+        ],
+        in_house_residents: 2
+
       },
     }
     render json: @response
