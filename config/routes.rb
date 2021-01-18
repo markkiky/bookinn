@@ -94,5 +94,7 @@ Rails.application.routes.draw do
   # Reports
   get "report/mass", to: "reports#mass_booking"
   get "report/walkin", to: "reports#walkin_booking"
+  
+  get "report/booking", to: "reports#all_bookings"
   get "report/booking/:status", to: "reports#bookings_by_status"
 end
