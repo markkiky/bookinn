@@ -1,5 +1,9 @@
 class BookingOrder < ApplicationRecord
   has_many :booking_order_details
+  belongs_to :customer
+  has_many :customer_bookings
+  has_many :customers, through: :customer_bookings
+  belongs_to :booking_order_type
   
   def self.booking_customer(booking_order_id)
     @customers = []
@@ -181,5 +185,41 @@ class BookingOrder < ApplicationRecord
      @stay_end_dates << booking_order_detail.stay_end_date
     end
     return @stay_end_dates.max
+  end
+
+  def self.expected_arrivals
+    @booking_orders = BookingOrder.all.where(is_active: "1")
+
+    booking_order_customers = []
+    @booking_orders.each do |booking_order|
+      
+      if BookingOrder.stay_start_date(booking_order.id) == Date.today
+        # customer arriving today. Get all the customers in the booking
+        # byebug
+        booking_order_customers << booking_order.customers.count
+      else
+        # customers not arriving today. Populate empty customers
+        booking_order_customers << 0
+      end
+    end
+    return booking_order_customers.reduce(:+)
+  end
+
+  def self.expected_departures
+    @booking_orders = BookingOrder.all.where(is_active: "1")
+
+    booking_order_customers = []
+    @booking_orders.each do |booking_order|
+      
+      if BookingOrder.stay_end_date(booking_order.id) == Date.today
+        # customer arriving today. Get all the customers in the booking
+        # byebug
+        booking_order_customers << booking_order.customers.count
+      else
+        # customers not arriving today. Populate empty customers
+        booking_order_customers << 0
+      end
+    end
+    return booking_order_customers.reduce(:+)
   end
 end

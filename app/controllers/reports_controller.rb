@@ -100,6 +100,24 @@ class ReportsController < ApplicationController
     render json: response
   end
 
+  def dashboard
+    @response = {
+      status: 200,
+      message: "Dashboard values",
+      data: {
+        occupied_rooms: Room.rooms_by_status(2).count,
+        arrivals: BookingOrder.expected_arrivals,
+        departures: BookingOrder.expected_departures,
+        available_rooms: Room.rooms_by_status(1).count,
+        in_house_residents: RoomAssignment.all.where(is_active: "1").count,
+        monthly_revenue: Report.monthly_revenue,
+      },
+    }
+    render json: @response
+    # byebug
+    
+  end
+
   private
 
   def bookings_by_status_params

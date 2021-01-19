@@ -92,4 +92,10 @@ class Room < ApplicationRecord
     # byebug
     # CustomerRoom.where()
   end
+
+  def self.rooms_by_status(status)
+    @rooms = Room.where(status: status)
+
+    return @rooms
+  end
 end

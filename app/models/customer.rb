@@ -1,6 +1,9 @@
 class Customer < ApplicationRecord
   require "csv"
   validates :email, uniqueness: true
+  has_many :customer_bookings
+  has_many :booking_orders, through: :customer_bookings, class_name: "CustomerBooking"
+  # belongs_to :booking_order
   # validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   # validates :id_no, uniqueness: true

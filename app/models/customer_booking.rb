@@ -1,5 +1,6 @@
 class CustomerBooking < ApplicationRecord
-
+    belongs_to :customer, class_name: "Customer"
+    belongs_to :booking_order, class_name: "BookingOrder"
     # create a function that creates the customer and booking join
     # checks for existing relationships first before duplicating
 

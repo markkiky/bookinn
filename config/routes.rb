@@ -65,7 +65,7 @@ Rails.application.routes.draw do
   get 'status/:id', to: "status_clusters#status"
 
   # Dashboard
-  get 'dashboard', to: "front_office#dashboard"
+  get 'dashboard', to: "reports#dashboard"
 
 
   # Generate Token

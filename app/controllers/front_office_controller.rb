@@ -655,49 +655,7 @@ class FrontOfficeController < ApplicationController
     render json: response
   end
 
-  def dashboard
-    @response = {
-      status: 200,
-      message: "Dashboard values",
-      data: {
-        occupied_rooms: "2",
-        arrivals: "2",
-        departures: "2",
-        available_rooms: "2",
-        expected_accomodation_totals: [
-          200,
-          2,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        actual_accomodation_totals: [
-          2000,
-          2,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        in_house_residents: 2
-
-      },
-    }
-    render json: @response
-  end
+  
 
   def upload_customers_csv
     # byebug
