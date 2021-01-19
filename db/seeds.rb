@@ -11,11 +11,14 @@ Customer.create(customer_no: Customer.customer_no, customer_id: Customer.custome
 CustomerType.create(customer_type_id: CustomerType.customer_type_id, customer_type_description: "Channel")
 CustomerType.create(customer_type_id: CustomerType.customer_type_id ,customer_type_description: "Adult")
 
+UnitOfMeasure.create(unit_id: UnitOfMeasure.unit_id, unit_description: "One per room")
+UnitOfMeasure.create(unit_id: UnitOfMeasure.unit_id, unit_description: "Two per room")
+BillItem.create(bill_item_id: BillItem.bill_item_id, bill_item_description: "Room Type Bill", bill_item_rate: "2000", bill_item_quantity: "1", unit_of_measure_id: "1")
 
-RoomType.create(room_type_id: "1", room_type_description: "Deluxe Room", room_type_total: "2", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "20000")
-RoomType.create(room_type_id: "2", room_type_description: "Standard Room", room_type_total: "2", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "5000")
-RoomType.create(room_type_id: "3", room_type_description: "Single Room", room_type_total: "10", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "10000")
-RoomType.create(room_type_id: "3", room_type_description: "Double Room", room_type_total: "5", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "15000")
+RoomType.create(room_type_id: "1", room_type_description: "Deluxe Room", room_type_total: "2", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "20000", bill_item_id: '1')
+RoomType.create(room_type_id: "2", room_type_description: "Standard Room", room_type_total: "2", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "5000", bill_item_id: '1')
+RoomType.create(room_type_id: "3", room_type_description: "Single Room", room_type_total: "10", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "10000", bill_item_id: '1')
+RoomType.create(room_type_id: "3", room_type_description: "Double Room", room_type_total: "5", created_by: "1", updated_by: "1", room_type_status: "1", room_price: "15000", bill_item_id: '1')
 
 Hotel.create(hotel_id: Hotel.hotel_id, hotel_name: "Hill Park", hotel_email: "hotel@email.com", hotel_contact_person: "Melvin", hotel_mobile: "0722654789", hotel_type_id: "2", parent_hotel_id: "2", hotel_status: "204")
 # Deluxe Rooms

@@ -2,6 +2,7 @@ class CreateRoomAmenities < ActiveRecord::Migration[6.0]
   def change
     create_table :room_amenities do |t|
       t.string :room_amenity_id
+      t.string :bill_item_id
       t.string :room_amenity_name
       t.string :room_amenity_description
       t.string :price

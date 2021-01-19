@@ -1,5 +1,6 @@
 class RoomAssignment < ApplicationRecord
-
+  belongs_to :customer
+  belongs_to :room
     def self.room_assignment_id
         @customers = RoomAssignment.all
         if @customers.count > 0

@@ -71,10 +71,10 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
 
   create_table "bill_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "bill_item_id"
+    t.string "unit_of_measure_id"
     t.string "bill_item_description"
     t.string "bill_item_rate"
-    t.string "bill_item_unit_of_measure_id"
-    t.string "bill_item_unit_of_measure_description"
+    t.string "bill_item_quantity"
     t.string "bill_item_status"
     t.string "is_active", default: "1"
     t.string "created_by"
@@ -259,6 +259,7 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
 
   create_table "hotel_amenities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "hotel_amenity_id"
+    t.string "bill_item_id"
     t.string "hotel_amenity_name"
     t.string "hotel_amenity_description"
     t.string "is_active", default: "1"
@@ -403,6 +404,7 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
 
   create_table "room_amenities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "room_amenity_id"
+    t.string "bill_item_id"
     t.string "room_amenity_name"
     t.string "room_amenity_description"
     t.string "price"
@@ -431,6 +433,7 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
 
   create_table "room_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "room_type_id"
+    t.string "bill_item_id"
     t.string "room_type_description"
     t.string "room_type_status"
     t.string "room_type_total"

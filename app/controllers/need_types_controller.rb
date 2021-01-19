@@ -46,6 +46,6 @@ class NeedTypesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def need_type_params
-      params.fetch(:need_type, {})
+      params.require(:need_type).permit(:need_type_id, :need_description, :need_type_status)
     end
 end

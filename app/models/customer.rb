@@ -3,6 +3,12 @@ class Customer < ApplicationRecord
   validates :email, uniqueness: true
   has_many :customer_bookings
   has_many :booking_orders, through: :customer_bookings, class_name: "CustomerBooking"
+  has_many :room_assignments
+  has_many :rooms, through: :room_assignments
+  has_many :customer_needs
+  has_many :need_types, through: :customer_needs
+  belongs_to :customer_type
+
   # belongs_to :booking_order
   # validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
