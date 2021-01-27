@@ -343,7 +343,7 @@ class FrontOfficeController < ApplicationController
             booking_no: BookingOrder.booking_order_no,
             booking_order_id: BookingOrder.booking_order_id,
             booking_order_date: Date.parse(bookinn["booking_order_date"]) ? bookinn["booking_order_date"] : Date.today,
-            booking_order_type_id: bookinn["booking_order_type_id"] ? bookinn['booking_order_type_id'] : "3",
+            booking_order_type_id: bookinn["booking_order_type_id"] ? bookinn["booking_order_type_id"] : "3",
             booking_order_status: "6",
             stay_start_date: bookinn["stay_start_date"],
             stay_end_date: bookinn["stay_end_date"],
@@ -459,28 +459,30 @@ class FrontOfficeController < ApplicationController
 
   # POST /bookinn/add_customer
   def add_customer_to_booking
-    @booking_order = BookingOrder.find_by(:id => add_customer_to_booking_params["booking_id"])
-    @customers = []
-    add_customer_to_booking_params["customers"].each do |customer|
-      # byebug
-      @customer = Customer.find_by(:email => customer["email"]) || Customer.find_by(:id_no => customer["id_no"])
-      if @customer == nil
-        # new customer
-        @customer = Customer.new(
-          customer
-        )
-        @customer.customer_no = Customer.customer_no
-        @customer.customer_id = Customer.customer_id
-        @customer.save
-      else
-        # update customer
-        @customer.update(
-          customer
-        )
-      end
+    Customer.transaction do
+      @booking_order = BookingOrder.find(add_customer_to_booking_params["booking_id"])
+      @customers = []
+      add_customer_to_booking_params["customers"].each do |customer|
+        # byebug
+        @customer = Customer.find_by(:email => customer["email"]) || Customer.find_by(:id_no => customer["id_no"])
+        if @customer == nil
+          # new customer
+          @customer = Customer.new(
+            customer
+          )
+          @customer.customer_no = Customer.customer_no
+          @customer.customer_id = Customer.customer_id
+          @customer.save
+        else
+          # update customer
+          @customer.update(
+            customer
+          )
+        end
 
-      @customer_booking = CustomerBooking.make(@customer.id, @booking_order.id)
-      @customers << @customer
+        @customer_booking = CustomerBooking.make(@customer.id, @booking_order.id)
+        @customers << @customer
+      end
     end
 
     response = {
@@ -650,12 +652,10 @@ class FrontOfficeController < ApplicationController
     response = {
       status: 200,
       message: "All Checked Out Customers",
-      data: @room_assignments
+      data: @room_assignments,
     }
     render json: response
   end
-
-  
 
   def upload_customers_csv
     # byebug
@@ -963,10 +963,10 @@ class FrontOfficeController < ApplicationController
             @initial_booking_order_detail.update(
               room_type_id: @new_room_type.room_type_id,
               stay_start_date: booking_order_detail["stay_start_date"] ? booking_order_detail["stay_start_date"] : @initial_booking_order_detail.stay_start_date,
-              stay_end_date: booking_order_detail['stay_end_date'] ? booking_order_detail["stay_end_date"] : @initial_booking_order_detail.stay_end_date,
-              total_applicants:  booking_order_detail["total_applicants"] ?  booking_order_detail["total_applicants"] : @initial_booking_order_detail.total_applicants
+              stay_end_date: booking_order_detail["stay_end_date"] ? booking_order_detail["stay_end_date"] : @initial_booking_order_detail.stay_end_date,
+              total_applicants: booking_order_detail["total_applicants"] ? booking_order_detail["total_applicants"] : @initial_booking_order_detail.total_applicants,
             )
-            
+
             @response_bill = @bill_info
           else
             # same room transfer check dates
@@ -987,7 +987,7 @@ class FrontOfficeController < ApplicationController
       message: @response_message,
       data: @response_bill,
       bill: @bill_info,
-      bill_details: BillDetail.where(:bill_info_id => @bill_info.id, :is_active => "1")
+      bill_details: BillDetail.where(:bill_info_id => @bill_info.id, :is_active => "1"),
     }
     render json: response
   end

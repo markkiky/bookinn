@@ -404,6 +404,7 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
 
   create_table "room_amenities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "room_amenity_id"
+    t.string "room_type_id"
     t.string "bill_item_id"
     t.string "room_amenity_name"
     t.string "room_amenity_description"
