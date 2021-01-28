@@ -11,6 +11,7 @@ class CreateBillDetails < ActiveRecord::Migration[6.0]
       
       t.string :bill_item_id
       t.string :bill_item_quantity
+      t.string :bill_item_quantity2
       t.string :bill_item_rate  
       t.string :bill_item_amount
       t.string :bill_item_discount

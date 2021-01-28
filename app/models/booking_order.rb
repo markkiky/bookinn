@@ -4,7 +4,7 @@ class BookingOrder < ApplicationRecord
   has_many :customer_bookings
   has_many :customers, through: :customer_bookings
   belongs_to :booking_order_type
-  
+
   def self.booking_customer(booking_order_id)
     @customers = []
     # byebug
@@ -116,9 +116,7 @@ class BookingOrder < ApplicationRecord
     @bill_info_ids = []
     # byebug
     @bill_infos.each do |booking|
-     
-        @bill_info_ids << booking.id
-      
+      @bill_info_ids << booking.id
     end
     return @bill_info_ids
   end
@@ -139,19 +137,19 @@ class BookingOrder < ApplicationRecord
             bill_no: bill_detail.bill_no,
             room_type: RoomType.find_by(id: bill_detail.room_type_id) ? RoomType.find_by(id: bill_detail.room_type_id).room_type_description : "Room Type is undefined",
             room_type_id: bill_detail.room_type_id,
-            amount: bill_detail.amount
+            amount: bill_detail.amount,
           }
         end
         @bill_info_response = {
           bill_info_id: @bill_info.id,
           bill_no: @bill_info.bill_no,
           bill_date: @bill_info.bill_date,
-          customer: Customer.find_by(id: @bill_info.customer_id)? Customer.find_by(id: @bill_info.customer_id).names : "Customer is not defined",
+          customer: Customer.find_by(id: @bill_info.customer_id) ? Customer.find_by(id: @bill_info.customer_id).names : "Customer is not defined",
           customer_id: @bill_info.customer_id,
           bill_total: @bill_info.bill_total,
           reducing_balance: @bill_info.reducing_balance,
-          bill_status: Status.find_by(id: @bill_info.bill_status)? Status.find_by(id: @bill_info.bill_status).status_description : "Status is not defined",
-          bill_details: @bill_detail_response
+          bill_status: Status.find_by(id: @bill_info.bill_status) ? Status.find_by(id: @bill_info.bill_status).status_description : "Status is not defined",
+          bill_details: @bill_detail_response,
         }
         @bills << @bill_info_response
       end
@@ -169,7 +167,7 @@ class BookingOrder < ApplicationRecord
 
     @stay_start_dates = []
     @booking_order_details.each do |booking_order_detail|
-     @stay_start_dates << booking_order_detail.stay_start_date
+      @stay_start_dates << booking_order_detail.stay_start_date
     end
     return @stay_start_dates.min
   end
@@ -182,7 +180,7 @@ class BookingOrder < ApplicationRecord
 
     @stay_end_dates = []
     @booking_order_details.each do |booking_order_detail|
-     @stay_end_dates << booking_order_detail.stay_end_date
+      @stay_end_dates << booking_order_detail.stay_end_date
     end
     return @stay_end_dates.max
   end
@@ -192,7 +190,6 @@ class BookingOrder < ApplicationRecord
 
     booking_order_customers = []
     @booking_orders.each do |booking_order|
-      
       if BookingOrder.stay_start_date(booking_order.id) == Date.today
         # customer arriving today. Get all the customers in the booking
         # byebug
@@ -210,7 +207,6 @@ class BookingOrder < ApplicationRecord
 
     booking_order_customers = []
     @booking_orders.each do |booking_order|
-      
       if BookingOrder.stay_end_date(booking_order.id) == Date.today
         # customer arriving today. Get all the customers in the booking
         # byebug
@@ -221,5 +217,18 @@ class BookingOrder < ApplicationRecord
       end
     end
     return booking_order_customers.reduce(:+)
+  end
+
+  def self.total_applicants(booking_order_id)
+    @booking_order = BookingOrder.find(booking_order_id)
+
+    @total_applicants = 0
+    @booking_order.booking_order_details.each do |booking_detail|
+      # byebug
+      if booking_detail.total_applicants != nil
+        @total_applicants = @total_applicants + booking_detail.total_applicants.to_i
+      end
+    end
+    return @total_applicants
   end
 end

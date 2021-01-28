@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  require "sidekiq/web"
+  require "sidekiq-status/web"
+  require "sidekiq/cron/web"
+  mount Sidekiq::Web, at: "/sidekiq"
   resources :laundries
   resources :laundry_packages
   resources :discounts
@@ -47,19 +51,22 @@ Rails.application.routes.draw do
   post "arrivals_departures", to: "front_office#arrivals_departures"
   post "needs_preferences", to: 'front_office#needs_preferences'
   get "needs_preferences", to: 'front_office#show_needs_preferences'
-  post 'bookinn/walkin', to: "front_office#walkin_bookinn"
+  # post 'bookinn/walkin', to: "front_office#walkin_bookinn"
+  post 'bookinn/walkin', to: "booking_orders#walkin_bookinn"
   post "check_in", to: "front_office#check_in"
   get "check_in", to: "front_office#get_check_in"
   post 'check_out', to: "front_office#check_out"
   get "check_out", to: "front_office#get_check_out"
 
-  post "bookinn/mass_booking", to: "front_office#mass_booking"
+  # post "bookinn/mass_booking", to: "front_office#mass_booking"
+  post "bookinn/mass_booking", to: "booking_orders#mass_booking"
 
   post "bookinn/add_customer", to: "front_office#add_customer_to_booking"
   post "bookinn/remove_customer", to: "front_office#remove_customer_from_booking"
 
   post "transfer/:id", to: "front_office#room_assignment_transfer"
-  post "transfer", to: "front_office#room_transfer"
+  # post "transfer", to: "front_office#room_transfer"
+  post "transfer", to: "booking_orders#booking_transfer"
 
   # status
   get 'status/:id', to: "status_clusters#status"

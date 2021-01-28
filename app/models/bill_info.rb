@@ -36,12 +36,37 @@ class BillInfo < ApplicationRecord
     @bill_details = BillDetail.all.where(bill_info_id: bill_info_id, :is_active => "1")
 
     return @bill_details
+  end
 
+  def self.update_bill_status(bill_info_id)
+    @bill_info = BillInfo.find(bill_info_id)
+    if @bill_info.reducing_balance.to_i > 0 && @bill_info.reducing_balance == @bill_info.bill_total
+      return "15"
+      # unpaid
+    elsif @bill_info.reducing_balance.to_i > 0 && @bill_info.reducing_balance != @bill_info.bill_total
+      return "16"
+      # partial
+    elsif @bill_info.reducing_balance.to_i == 0 && @bill_info.reducing_balance != @bill_info.bill_total
+      return "17"
+      # paid
+    elsif @bill_info.reducing_balance.to_i < 0 && @bill_info.reducing_balance != @bill_info.bill_total
+      return "18"
+      # overpaid
+    end
   end
 
   # Returns a fee for room price, nights spent and the total applicants
   def self.calculate_fee(room_price, no_of_nights, applicants)
-    @bill_total = room_price * no_of_nights * applicants 
+    if room_price <= 0
+      room_price = 1
+    elsif no_of_nights <= 0
+      no_of_nights = 1
+    elsif applicants <= 0
+      applicants = 1
+    else
+    end
+
+    @bill_total = room_price * no_of_nights * applicants
     return @bill_total
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_05_094755) do
+ActiveRecord::Schema.define(version: 2021_01_28_131718) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
     t.string "amount"
     t.string "bill_item_id"
     t.string "bill_item_quantity"
+    t.string "bill_item_quantity2"
     t.string "bill_item_rate"
     t.string "bill_item_amount"
     t.string "bill_item_discount"
@@ -151,6 +152,21 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "countries", id: :integer, limit: 3, unsigned: true, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name", limit: 100, null: false
+    t.string "iso3", limit: 3
+    t.string "iso2", limit: 2
+    t.string "phonecode"
+    t.string "capital"
+    t.string "currency"
+    t.timestamp "created_at"
+    t.timestamp "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.boolean "flag", default: true, null: false
+    t.string "wikiDataId", comment: "Rapid API GeoDB Cities"
+    t.string "is_active", limit: 40, default: "1", null: false
+    t.string "date", limit: 40
+  end
+
   create_table "currencies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "currency_id"
     t.string "currency_symbol"
@@ -253,6 +269,12 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
     t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "genders", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -409,6 +431,7 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
     t.string "room_amenity_name"
     t.string "room_amenity_description"
     t.string "price"
+    t.boolean "billable"
     t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"
@@ -422,8 +445,8 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
     t.string "customer_names"
     t.string "booking_order_id"
     t.string "room_id"
-    t.string "start_date"
-    t.string "end_date"
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.string "room_status"
     t.string "is_active", default: "1"
     t.string "created_by"
@@ -439,6 +462,7 @@ ActiveRecord::Schema.define(version: 2021_01_05_094755) do
     t.string "room_type_status"
     t.string "room_type_total"
     t.string "room_price"
+    t.string "bill_type"
     t.string "is_active", default: "1"
     t.string "created_by"
     t.string "updated_by"

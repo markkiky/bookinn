@@ -7,6 +7,7 @@ class CreateRoomAmenities < ActiveRecord::Migration[6.0]
       t.string :room_amenity_name
       t.string :room_amenity_description
       t.string :price
+      t.boolean :billable
 
       t.string :is_active, :default => "1"
       t.string :created_by

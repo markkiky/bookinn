@@ -108,7 +108,8 @@ class CustomersController < ApplicationController
   end
 
   def channel_customers
-    @customers = Customer.all.where(:is_channel => 1)
+    @customers = Customer.all.where(:channel_id => "1")
+    # byebug
     response = {
       status: 200,
       message: "Returning customers who are channels",

@@ -1,0 +1,5 @@
+# run this on every 10th of the month
+currency_converter:
+  cron: "0 0 10 1-12 *"
+  class: "MonthlyStatementWorker"
+  queue: default

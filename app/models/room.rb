@@ -75,13 +75,14 @@ class Room < ApplicationRecord
   end
 
   def self.room_occupancy(room_id)
-    @customer_bookings = CustomerBooking.where(:room_id => room_id, :is_active => 1)
+    # @customer_bookings = CustomerBooking.where(:room_id => room_id, :is_active => 1)
+    @room_assignments = RoomAssignment.where(:room_id => room_id)
     # byebug
     # Find the most recent booking for the room
     # @booking_order = BookingOrder.find_by(id:  @customer_bookings.last.booking_order_id)
     # byebug
-    if @customer_bookings.count > 0
-      @booking_order = BookingOrder.find_by(id: @customer_bookings.last.booking_order_id)
+    if @room_assignments.count > 0
+      @booking_order = BookingOrder.find_by(id: @room_assignments.last.booking_order_id)
       @dates = {
         stay_start_date: @booking_order.stay_start_date,
         stay_end_date: @booking_order.stay_end_date,

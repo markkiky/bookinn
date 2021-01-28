@@ -20,6 +20,12 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'premailer-rails', '1.11.0'
 gem "figaro"
 
+# Gems for background jobs
+gem 'sidekiq'
+gem 'sidekiq-status'
+gem 'sidekiq-cron'
+gem 'faker'
+gem 'redis', '~> 4.0'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

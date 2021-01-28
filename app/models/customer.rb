@@ -82,8 +82,32 @@ class Customer < ApplicationRecord
       CSV.foreach(file.path, headers: true) do |row|
         # byebug
         @row = row.to_hash
-        @customer = Customer.find_or_create_by(:email => @row["email"])
-        @customer.update(:names => @row["names"], :phone => @row["phone"], :id_no => @row["id_no"])
+        @customer = Customer.find_by(:email => @row["email"])
+        # byebug
+        # byebug
+        if @customer == nil
+          # create
+          @customer = Customer.new(
+            customer_id: Customer.customer_id,
+            customer_no: Customer.customer_no,
+            email: @row["email"],
+            names: @row["names"],
+            phone: @row["phone"],
+            id_no: @row["id_no"],
+            customer_type_id: "2",
+            # created_by: @current_user.id
+          )
+          @customer.save!
+        else
+          # update
+          @customer.update(
+            names: @row["names"],
+            phone: @row["phone"],
+            id_no: @row["id_no"],
+            # updated_by: current_user.id
+          )
+        end
+
         @customers << @customer
       end
     end
