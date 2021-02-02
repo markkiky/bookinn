@@ -106,6 +106,7 @@ class FrontOfficeController < ApplicationController
   def expected_arrivals
     if expected_arrival_params["start_date"].blank?
       # Start date is blank. Use todays date
+      # byebug
       @booking_orders = BookingOrder.where(:stay_start_date => Date.today)
       @booking_response = []
       @booking_orders.each do |order|
@@ -503,13 +504,15 @@ class FrontOfficeController < ApplicationController
           # @customer = Customer.find_by(:email => customer["email"]) || Customer.find_by(:id_no => customer["id_no"])
           @customer = Customer.find_or_initialize_by(email: customer["email"])
           # update or create customer with user params
+          @customer.customer_no = Customer.customer_no
+          @customer.customer_id = Customer.customer_id
           @customer.names = customer["names"]
           @customer.phone = customer["phone"]
           @customer.gender = customer["gender"]
           @customer.id_no = customer["id_no"]
           @customer.country_id = customer["country_id"]
           @customer.customer_type_id = customer["customer_type_id"]
-
+          @customer.created_by = @current_user.id
           @customer.save!
 
           @customer_booking = CustomerBooking.make(@customer.id, @booking_order.id)
@@ -653,25 +656,37 @@ class FrontOfficeController < ApplicationController
           @customer = Customer.find(assignment["customer_id"])
           @room = Room.find(assignment["room_id"])
 
+          if !Room.room_available(@room.id)
+            raise Exception.new "Room is not available"
+          end
+
           # check if customer is being assigned a room type they paid for
           @room_assigned = false
           @booking_order.booking_order_details.each do |booking_detail|
-            if @room.room_type_id != booking_detail["room_type_id"]
+            if @room.room_type_id != booking_detail["room_type_id"]  
               next
             else
               # perform room assignment here
               @room_assigned = true
-              @room_assignment = RoomAssignment.create!(
-                :room_assignment_id => RoomAssignment.room_assignment_id,
-                :customer_id => @customer.id,
-                :customer_names => @customer.names,
-                :booking_order_id => @booking_order.id,
-                :room_id => @room.id,
-                :start_date => booking_detail["stay_start_date"],
-                :end_date => booking_detail["stay_end_date"],
-                :room_status => "2", #room occupied status
-                :created_by => @current_user.id,
-              )
+              @room_assignment = RoomAssignment.find_by(:customer_id => assignment["customer_id"], :room_id => assignment["room_id"], :booking_order_id => assignment["booking_order_id"], :is_active => "1")
+              if @room_assignment == nil
+                # no room assignment before
+                # check for room availability
+                
+                @room_assignment = RoomAssignment.create!(
+                  :room_assignment_id => RoomAssignment.room_assignment_id,
+                  :customer_id => @customer.id,
+                  :customer_names => @customer.names,
+                  :booking_order_id => @booking_order.id,
+                  :room_id => @room.id,
+                  :start_date => booking_detail["stay_start_date"],
+                  :end_date => booking_detail["stay_end_date"],
+                  :room_status => "2", #room occupied status
+                  :created_by => @current_user.id,
+                )
+              else
+                raise Exception.new "Customer is already assigned to a room"
+              end
             end
           end
           if @room_assigned == false
@@ -682,7 +697,7 @@ class FrontOfficeController < ApplicationController
     rescue Exception => invalid
       @response = {
         status: 400,
-        message: "Error in client check in",
+        message: invalid,
         data: invalid,
       }
     rescue => exception
@@ -704,7 +719,7 @@ class FrontOfficeController < ApplicationController
   # GET /check_in
   def get_check_in
     # returns a list of all checkin customers and their rooms
-    @room_assignments = RoomAssignment.all
+    @room_assignments = RoomAssignment.all.where(is_active: "1")
 
     @assignments = []
     @room_assignments.each do |room_assignment|
@@ -713,9 +728,12 @@ class FrontOfficeController < ApplicationController
         booking_no: BookingOrder.find_by(id: room_assignment.booking_order_id).booking_no,
         created_at: room_assignment.created_at,
         customer_names: room_assignment.customer_names,
+        customer_id: room_assignment.customer_id,
         start_date: room_assignment.start_date,
         end_date: room_assignment.end_date,
         room_status: Status.find_by(id: room_assignment.room_status).status_description,
+        room_id: room_assignment.room_id,
+
       }
       @assignments << @room_assignment
     end
@@ -731,43 +749,79 @@ class FrontOfficeController < ApplicationController
   # POST /check_out
   def check_out
     # provide the booking_order and the customer checking out
-    puts params
-    response = nil
-    # byebug
-    RoomAssignment.transaction do
-      check_out_params["assignments"].each do |assignment|
-        @room_assignment = RoomAssignment.find_by(:customer_id => assignment["customer_id"], :room_id => assignment["room_id"], :booking_order_id => assignment["booking_order_id"])
-        # byebug
-        if @room_assignment != nil
-          @room = Room.find_by(:id => @room_assignment.customer_id)
+    begin
+      puts params
+      response = nil
+      # byebug
+      RoomAssignment.transaction do
+        check_out_params["assignments"].each do |assignment|
+          @room_assignment = RoomAssignment.find_by(:customer_id => assignment["customer_id"], :room_id => assignment["room_id"], :booking_order_id => assignment["booking_order_id"], :is_active => '1')
+          # byebug
+          if @room_assignment == nil
+            raise Exception.new "Unable to signout client"
+          end
+          @room = Room.find_by(:id => @room_assignment.room_id)
           @room.status = "4"
           @room.save
-          @room_assignment.room_status = "4"
-          @room_assignment.save
-          response = {
-            status: 200,
-            message: "Check Out successful",
-          }
-        else
-          response = {
-            status: 400,
-            message: "Check Out failed, Room and Customer not found",
-          }
+          # find other people sharing the room and check them out too
+          @room_assignments = RoomAssignment.where(room_id: assignment['room_id'], booking_order_id: assignment['booking_order_id'], is_active: '1')
+          @room_assignments.each do |room_assignment|
+            room_assignment.room_status = "4"
+            room_assignment.is_active = "0"
+            room_assignment.save!
+          end
+          
         end
+      rescue Exception => invalid
+        @response = {
+          status: 400,
+          message: "Error in client check out",
+          data: invalid,
+        }
+      rescue => exception
+        @response = {
+          status: 400,
+          message: "Error in client check out",
+          data: exception,
+        }
+      else
+        @response = {
+          status: 200,
+          message: "Check Out successful",
+        }
       end
     end
 
-    render json: response
+    render json: @response
   end
 
   # GET /check_out
   def get_check_out
-    @room_assignments = RoomAssignment.all
+    # returns a list of all checkin customers and their rooms
+    @room_assignments = RoomAssignment.all.where(is_active: "0")
+
+    @assignments = []
+    @room_assignments.each do |room_assignment|
+      @room_assignment = {
+        booking_order_id: room_assignment.booking_order_id,
+        booking_no: BookingOrder.find_by(id: room_assignment.booking_order_id).booking_no,
+        created_at: room_assignment.created_at,
+        customer_names: room_assignment.customer_names,
+        customer_id: room_assignment.customer_id,
+        start_date: room_assignment.start_date,
+        end_date: room_assignment.end_date,
+        room_status: Status.find_by(id: room_assignment.room_status).status_description,
+        room_id: room_assignment.room_id,
+
+      }
+      @assignments << @room_assignment
+    end
     response = {
       status: 200,
-      message: "All Checked Out Customers",
-      data: @room_assignments,
+      message: "Checked In customers",
+      data: @assignments,
     }
+
     render json: response
   end
 
@@ -802,6 +856,9 @@ class FrontOfficeController < ApplicationController
       @booking_order = BookingOrder.find(params["booking_id"])
       customers_csv = params["customer_csv"]
       @customers = Customer.import(customers_csv)
+      @customers.each do |customer|
+        CustomerBooking.make(customer.id, @booking_order.id)
+      end
     rescue ActiveRecord::RecordInvalid => invalid
       @response = {
         status: 400,
@@ -817,14 +874,14 @@ class FrontOfficeController < ApplicationController
     rescue => exception
       @response = {
         status: 400,
-        message: "Exception Encountered",
+        message: exception,
         data: exception,
       }
     else
       @response = {
         status: 200,
         message: "Customer Upload Successful",
-        data: @customers
+        data: @customers,
       }
     end
     render json: @response

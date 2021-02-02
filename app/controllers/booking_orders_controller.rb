@@ -36,7 +36,7 @@ class BookingOrdersController < ApplicationController
 
   # GET /booking_orders/1
   def show
-    @bill_infos = BillInfo.where(:booking_order_id => @booking_order.id)
+    @bill_info = BillInfo.find_by(booking_order_id: @booking_order.id)
     response = {
       status: 200,
       message: "booking and customer",
@@ -44,8 +44,8 @@ class BookingOrdersController < ApplicationController
         status: 200,
         booking: @booking_order,
         booking_details: @booking_order.booking_order_details,
-        bill: @bill_infos,
-        bill_details: BillDetail.all.where(:bill_info_id => @bill_info_response),
+        bill: @bill_info,
+        bill_details: @bill_info.bill_details,
         customers: BookingOrder.booking_customer(@booking_order.id),
       },
     }
@@ -167,10 +167,12 @@ class BookingOrdersController < ApplicationController
 
   def mass_booking
     begin
+      BookingOrder.transaction do
       @customer = Customer.find(mass_booking_params["customer_id"])
       @channel = Channel.find(@customer.channel_id)
       @booking_order = BookingOrder.create!(
         booking_order_id: BookingOrder.booking_order_id,
+        booking_order_date: Date.today,
         booking_no: BookingOrder.booking_order_no,
         customer_id: @customer.id,
         booking_order_type_id: "4",
@@ -207,6 +209,7 @@ class BookingOrdersController < ApplicationController
           stay_end_date: booking_detail["stay_end_date"],
           created_by: @current_user.id,
         )
+        # byebug
         @bill_detail = BillDetail.create!(
           bill_no: @bill_info.bill_no,
           bill_info_id: @bill_info.id,
@@ -227,10 +230,12 @@ class BookingOrdersController < ApplicationController
           updated_by: @current_user.id,
         )
       end
+    end
     rescue Exception => invalid
       @response = {
+        
         status: 400,
-        message: "Error in transfer",
+        message: "Error in mass booking",
         data: invalid,
       }
     rescue ActiveRecord::RecordInvalid => invalid
@@ -336,6 +341,106 @@ class BookingOrdersController < ApplicationController
       }
     end
 
+    render json: @response
+  end
+
+  # Expected Arrivals for today
+  def expected_arrivals
+    begin
+      @booking_orders = BookingOrder.all.where(is_active: "1")
+      @expected_booking_orders = []
+      @booking_orders.each do |booking_order|
+        # booking_order
+        if @start_date = BookingOrder.stay_start_date(booking_order.id)
+          # byebug
+          if @start_date.to_date == Date.today
+            @customer = Customer.find(booking_order.customer_id)
+            # byebug
+            # @customers =
+            @booking_order_response = {
+              booking_order_date: booking_order.booking_order_date,
+              customer_id: booking_order.customer_id,
+              customer_names: booking_order.customer.names,
+              booking_order_status: Status.find(booking_order.booking_order_status).status_description,
+              stay_start_date: BookingOrder.stay_start_date(booking_order.id),
+              stay_end_date: BookingOrder.stay_end_date(booking_order.id),
+              customers: booking_order.customers,
+
+            }
+            @expected_booking_orders << @booking_order_response
+          end
+        else
+        end
+      end
+    rescue ActiveRecord::RecordInvalid => invalid
+      @response = {
+        status: 400,
+        message: "Record Invalid",
+        data: invalid,
+      }
+    rescue ActiveRecord::RecordNotFound => invalid
+      @response = {
+        status: 400,
+        message: "Record not found",
+        data: invalid,
+      }
+    else
+      @response = {
+        status: 200,
+        message: "Expected Arrivals For Today",
+        data: @expected_booking_orders,
+      }
+    end
+    render json: @response
+  end
+
+  # Expected Departures for today
+  def expected_departures
+    begin
+      @booking_orders = BookingOrder.all.where(is_active: "1")
+      @expected_booking_orders = []
+      @booking_orders.each do |booking_order|
+        # booking_order
+        if @start_date = BookingOrder.stay_end_date(booking_order.id)
+          # byebug
+          if @start_date.to_date == Date.today
+            @customer = Customer.find(booking_order.customer_id)
+            # byebug
+            # @customers =
+            @booking_order_response = {
+              booking_order_date: booking_order.booking_order_date,
+              customer_id: booking_order.customer_id,
+              customer_names: booking_order.customer.names,
+              booking_order_status: Status.find(booking_order.booking_order_status).status_description,
+              stay_start_date: BookingOrder.stay_start_date(booking_order.id),
+              stay_end_date: BookingOrder.stay_end_date(booking_order.id),
+              customers: booking_order.customers,
+
+            }
+            @expected_booking_orders << @booking_order_response
+          end
+        else
+        end
+      end
+    rescue ActiveRecord::RecordInvalid => invalid
+      @response = {
+        status: 400,
+        message: "Record Invalid",
+        data: invalid,
+      }
+    rescue ActiveRecord::RecordNotFound => invalid
+      @response = {
+        status: 400,
+        message: "Record not found",
+        data: invalid,
+      }
+    else
+      @response = {
+        status: 200,
+        message: "Expected Departures For Today",
+        data: @expected_booking_orders,
+      }
+    end
     render json: @response
   end
 

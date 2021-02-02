@@ -6,7 +6,7 @@ class CustomerBooking < ApplicationRecord
 
     # creates a customer bookin
     def self.make(customer_id, booking_order_id)
-        @customer_booking = CustomerBooking.find_or_create_by(:customer_id => customer_id, :booking_order_id => booking_order_id)
+        @customer_booking = CustomerBooking.find_or_create_by(:customer_id => customer_id, :booking_order_id => booking_order_id, :is_active => "1")
 
         if @customer_booking != nil
             return true
@@ -17,7 +17,7 @@ class CustomerBooking < ApplicationRecord
 
     # removes a customer from a bookinn
     def self.remove(customer_id, booking_order_id)
-        @customer_booking = CustomerBooking.find_by(:customer_id => customer_id, :booking_order_id => booking_order_id)
+        @customer_booking = CustomerBooking.find_by(:customer_id => customer_id, :booking_order_id => booking_order_id, :is_active => "1")
 
         if @customer_booking != nil
             @customer_booking.update(:is_active => "0")

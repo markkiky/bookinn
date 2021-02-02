@@ -1,5 +1,6 @@
 class BillItem < ApplicationRecord
      # returns a unique booking_order_id for new booking
+     belongs_to :unit_of_measure
   def self.bill_item_id
     @customers = BillItem.all
     if @customers.count > 0

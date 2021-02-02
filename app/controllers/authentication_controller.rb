@@ -18,6 +18,7 @@ class AuthenticationController < ApplicationController
         role_id: @user.role_id,
         role: Role.find_by(:id => @user.role_id) ? Role.find_by(:id => @user.role_id).role_description : "Role is not defined",
         email: @user.email,
+        hotel_id: @user.hotel_id,
       }
       if @user&.authenticate(params[:password])
         token = JsonWebToken.encode(user_id: @user.id)

@@ -8,6 +8,7 @@ class CustomersController < ApplicationController
     @customers_response = []
     @customers.each do |customer|
       @customer = {
+        id: customer.id,
         customer_id: customer.id,
         customer_no: customer.customer_no,
         customer_type_description: CustomerType.find_by(:id => customer.customer_type_id) ? CustomerType.find_by(:id => customer.customer_type_id).customer_type_description : "Customer Type not defined",
@@ -18,6 +19,9 @@ class CustomersController < ApplicationController
         phone: customer.phone,
         id_no: customer.id_no,
         bookings: Customer.customer_bookings(customer.id),
+        customer_type_id: customer.customer_type_id,
+        channel_id: customer.channel_id,
+        channel_description: Channel.find_by(id: customer.channel_id) ?  Channel.find_by(id: customer.channel_id).channel_description : "Not a Channel"
       }
       @customers_response << @customer
     end
@@ -98,7 +102,7 @@ class CustomersController < ApplicationController
 
   # DELETE /customers/1
   def destroy
-    @customer.update(:is_active => 0)
+    @customer.update(:is_active => "0")
     response = {
       status: 200,
       message: "Customer deleted successfully",

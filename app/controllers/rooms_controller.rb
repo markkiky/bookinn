@@ -123,6 +123,15 @@ class RoomsController < ApplicationController
     render json: response
   end
 
+
+  # return rooms with status available 
+  # return available rooms of a particular type
+  def get_rooms_by_status_by_room_type
+
+
+  end
+
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

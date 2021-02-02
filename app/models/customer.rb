@@ -77,7 +77,7 @@ class Customer < ApplicationRecord
   end
 
   def self.import(file)
-    @customers = []
+    @customers_response = []
     Customer.transaction do
       CSV.foreach(file.path, headers: true) do |row|
         # byebug
@@ -108,9 +108,9 @@ class Customer < ApplicationRecord
           )
         end
 
-        @customers << @customer
+        @customers_response << @customer
       end
     end
-    return @customers
+    return @customers_response
   end
 end
