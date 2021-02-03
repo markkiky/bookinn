@@ -54,8 +54,8 @@ Rails.application.routes.draw do
   post "arrivals_departures", to: "front_office#arrivals_departures"
   post "needs_preferences", to: 'front_office#needs_preferences'
   get "needs_preferences", to: 'front_office#show_needs_preferences'
-  # post 'bookinn/walkin', to: "front_office#walkin_bookinn"
-  post 'bookinn/walkin', to: "booking_orders#walkin_bookinn"
+  post 'bookinn/walkin', to: "front_office#walkin_bookinn"
+  # post 'bookinn/walkin', to: "booking_orders#walkin_bookinn"
   post "check_in", to: "front_office#check_in"
   get "check_in", to: "front_office#get_check_in"
   post 'check_out', to: "front_office#check_out"

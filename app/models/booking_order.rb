@@ -195,10 +195,12 @@ class BookingOrder < ApplicationRecord
 
     booking_order_customers = []
     @booking_orders.each do |booking_order|
-      if BookingOrder.stay_start_date(booking_order.id) == Date.today
-        # customer arriving today. Get all the customers in the booking
-        # byebug
-        booking_order_customers << booking_order.customers.count
+      if BookingOrder.stay_start_date(booking_order.id)
+        if BookingOrder.stay_start_date(booking_order.id).to_date == Date.today
+          # customer arriving today. Get all the customers in the booking
+          # byebug
+          booking_order_customers << 1
+        end
       else
         # customers not arriving today. Populate empty customers
         booking_order_customers << 0
@@ -212,10 +214,12 @@ class BookingOrder < ApplicationRecord
 
     booking_order_customers = []
     @booking_orders.each do |booking_order|
-      if BookingOrder.stay_end_date(booking_order.id) == Date.today
-        # customer arriving today. Get all the customers in the booking
-        # byebug
-        booking_order_customers << booking_order.customers.count
+      if BookingOrder.stay_end_date(booking_order.id)
+        if BookingOrder.stay_end_date(booking_order.id).to_date == Date.today
+          # customer arriving today. Get all the customers in the booking
+          # byebug
+          booking_order_customers << 1
+        end
       else
         # customers not arriving today. Populate empty customers
         booking_order_customers << 0

@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: [:show, :update, :destroy]
-  before_action :authorize_request
+  # before_action :authorize_request
 
   # GET /rooms
   def index
@@ -12,6 +12,10 @@ class RoomsController < ApplicationController
       @room = {
         id: room.id,
         room_no: room.room_no,
+        room_type: room.room_type.room_type_description,
+        date_created: room.created_at,
+        last_occupied: room.updated_at,
+        created_by: "Mr Me",
         room_name: room.room_name,
         room_price: room.room_price,
         capacity: room.capacity,
