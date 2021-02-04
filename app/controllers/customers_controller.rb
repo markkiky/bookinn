@@ -21,7 +21,7 @@ class CustomersController < ApplicationController
         bookings: Customer.customer_bookings(customer.id),
         customer_type_id: customer.customer_type_id,
         channel_id: customer.channel_id,
-        channel_description: Channel.find_by(id: customer.channel_id) ?  Channel.find_by(id: customer.channel_id).channel_description : "Not a Channel"
+        channel_description: Channel.find_by(id: customer.channel_id) ? Channel.find_by(id: customer.channel_id).channel_description : "Not a Channel",
       }
       @customers_response << @customer
     end
@@ -62,7 +62,7 @@ class CustomersController < ApplicationController
     @customer.customer_no = Customer.customer_no
     @customer.customer_id = Customer.customer_id
     @customer.created_by = current_user
-    
+
     if @customer.save
       response = {
         status: 200,
@@ -106,7 +106,7 @@ class CustomersController < ApplicationController
     response = {
       status: 200,
       message: "Customer deleted successfully",
-      data: @customer
+      data: @customer,
     }
     render json: response
   end
@@ -117,9 +117,13 @@ class CustomersController < ApplicationController
     response = {
       status: 200,
       message: "Returning customers who are channels",
-      data: @customers
+      data: @customers,
     }
     render json: response, status: :ok
+  end
+
+  def search_customer_by_id
+    # receive params id_no
   end
 
   private

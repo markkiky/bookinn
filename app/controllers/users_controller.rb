@@ -61,7 +61,7 @@ class UsersController < ApplicationController
     response = {
       status: 200,
       message: "Deleted User",
-      data: @user
+      data: @user,
     }
     render json: response
   end
@@ -75,6 +75,6 @@ class UsersController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def user_params
-    params.require(:user).permit(:email, :password, :username, :role_id, :identification_no)
+    params.require(:user).permit(:hotel_id, :email, :password, :username, :role_id, :identification_no)
   end
 end

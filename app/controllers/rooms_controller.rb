@@ -62,7 +62,7 @@ class RoomsController < ApplicationController
   # POST /rooms
   def create
     @room = Room.new(room_params)
-    @room.hotel_id = @current_user['hotel_id'] ? @current_user['hotel_id'] : "1"
+    @room.hotel_id = @current_user["hotel_id"] ? @current_user["hotel_id"] : "1"
 
     response = {
       status: 200,
@@ -120,21 +120,17 @@ class RoomsController < ApplicationController
     response = {
       status: 200,
       message: "Room deleted successfully",
-      data: @rumu
+      data: @rumu,
     }
     # @room.destroy
 
     render json: response
   end
 
-
-  # return rooms with status available 
+  # return rooms with status available
   # return available rooms of a particular type
   def get_rooms_by_status_by_room_type
-
-
   end
-
 
   private
 
@@ -145,6 +141,6 @@ class RoomsController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def room_params
-    params.require(:room).permit(:room_id, :room_no, :room_name, :room_type_id, :room_price, :status, :is_active)
+    params.require(:room).permit(:hotel_id, :hotel_wing_id, :room_id, :room_no, :room_name, :room_type_id, :room_price, :status, :is_active)
   end
 end
