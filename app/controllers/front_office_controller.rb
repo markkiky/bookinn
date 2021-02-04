@@ -30,6 +30,9 @@ class FrontOfficeController < ApplicationController
             room_type_total: @room_type.room_type_total,
             stay_start_date: nil,
             stay_end_date: nil,
+            created_at: room.created_at,
+            updated_at: room.updated_at,
+            created_by: User.find_by(id: room.created_by) ? User.find_by(id: room.created_by).names : "Ms Mwikali",
           }
         else
           @dates = Room.room_occupancy(room.id)
@@ -46,6 +49,9 @@ class FrontOfficeController < ApplicationController
             room_type_total: @room_type.room_type_total,
             stay_start_date: @dates[:stay_start_date].to_date.to_s,
             stay_end_date: @dates[:stay_end_date].to_date.to_s,
+            created_at: room.created_at,
+            updated_at: room.updated_at,
+            created_by: User.find_by(id: room.created_by) ? User.find_by(id: room.created_by).names : "Ms Mwikali",
           }
         end
 
@@ -663,7 +669,7 @@ class FrontOfficeController < ApplicationController
           # check if customer is being assigned a room type they paid for
           @room_assigned = false
           @booking_order.booking_order_details.each do |booking_detail|
-            if @room.room_type_id != booking_detail["room_type_id"]  
+            if @room.room_type_id != booking_detail["room_type_id"]
               next
             else
               # perform room assignment here
@@ -672,7 +678,7 @@ class FrontOfficeController < ApplicationController
               if @room_assignment == nil
                 # no room assignment before
                 # check for room availability
-                
+
                 @room_assignment = RoomAssignment.create!(
                   :room_assignment_id => RoomAssignment.room_assignment_id,
                   :customer_id => @customer.id,
@@ -755,7 +761,7 @@ class FrontOfficeController < ApplicationController
       # byebug
       RoomAssignment.transaction do
         check_out_params["assignments"].each do |assignment|
-          @room_assignment = RoomAssignment.find_by(:customer_id => assignment["customer_id"], :room_id => assignment["room_id"], :booking_order_id => assignment["booking_order_id"], :is_active => '1')
+          @room_assignment = RoomAssignment.find_by(:customer_id => assignment["customer_id"], :room_id => assignment["room_id"], :booking_order_id => assignment["booking_order_id"], :is_active => "1")
           # byebug
           if @room_assignment == nil
             raise Exception.new "Unable to signout client"
@@ -764,13 +770,12 @@ class FrontOfficeController < ApplicationController
           @room.status = "4"
           @room.save
           # find other people sharing the room and check them out too
-          @room_assignments = RoomAssignment.where(room_id: assignment['room_id'], booking_order_id: assignment['booking_order_id'], is_active: '1')
+          @room_assignments = RoomAssignment.where(room_id: assignment["room_id"], booking_order_id: assignment["booking_order_id"], is_active: "1")
           @room_assignments.each do |room_assignment|
             room_assignment.room_status = "4"
             room_assignment.is_active = "0"
             room_assignment.save!
           end
-          
         end
       rescue Exception => invalid
         @response = {

@@ -5,7 +5,13 @@ class HotelWingsController < ApplicationController
   def index
     @hotel_wings = HotelWing.all
 
-    render json: @hotel_wings
+    @response = {
+      status: 200,
+      message: "All Hotel Wings",
+      data: @hotel_wings,
+    }
+
+    render json: @response
   end
 
   # GET /hotel_wings/1
@@ -39,13 +45,14 @@ class HotelWingsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_hotel_wing
-      @hotel_wing = HotelWing.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def hotel_wing_params
-      params.require(:hotel_wing).permit(:hotel_wing_id, :wing_description, :hotel_wing_status, :created_by, :updated_by)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_hotel_wing
+    @hotel_wing = HotelWing.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def hotel_wing_params
+    params.require(:hotel_wing).permit(:hotel_wing_id, :wing_description, :hotel_wing_status, :created_by, :updated_by)
+  end
 end

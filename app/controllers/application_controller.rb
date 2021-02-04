@@ -12,7 +12,7 @@ class ApplicationController < ActionController::API
       @current_user = User.find(@decoded[:user_id])
     rescue ActiveRecord::RecordNotFound => e
       render json: {
-               status: 404,
+               status: 401,
                message: "Access Token valid, But owner user does not exist",
                errors: e.message,
              },

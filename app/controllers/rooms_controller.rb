@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: [:show, :update, :destroy]
-  # before_action :authorize_request
+  before_action :authorize_request
 
   # GET /rooms
   def index
@@ -24,6 +24,9 @@ class RoomsController < ApplicationController
         room_type_description: @room_type.room_type_description,
         room_type_status: @room_type.room_type_status,
         room_type_total: @room_type.room_type_total,
+
+        hotel_name: Hotel.find(room.hotel_id).hotel_name,
+        hotel_wing: HotelWing.find(room.hotel_wing_id).wing_description,
       }
       @rumus << @room
     end
@@ -62,17 +65,22 @@ class RoomsController < ApplicationController
   # POST /rooms
   def create
     @room = Room.new(room_params)
-    @room.hotel_id = @current_user['hotel_id'] ? @current_user['hotel_id'] : "1"
+    # @room.hotel_id = @current_user["hotel_id"] ? @current_user["hotel_id"] : "1"
 
-    response = {
-      status: 200,
-      message: "Room created successfully",
-      data: @room,
-    }
-    if @room.save
-      render json: response, status: :created, location: @room
+    if @room.save!
+      @response = {
+        status: 200,
+        message: "Room created successfully",
+        data: @room,
+      }
+      render json: @response, status: :created, location: @room
     else
-      render json: @room.errors, status: :unprocessable_entity
+      @response = {
+        status: 400,
+        message: @room.errors,
+        data: [],
+      }
+      render json: @response
     end
   end
 
@@ -120,21 +128,17 @@ class RoomsController < ApplicationController
     response = {
       status: 200,
       message: "Room deleted successfully",
-      data: @rumu
+      data: @rumu,
     }
     # @room.destroy
 
     render json: response
   end
 
-
-  # return rooms with status available 
+  # return rooms with status available
   # return available rooms of a particular type
   def get_rooms_by_status_by_room_type
-
-
   end
-
 
   private
 
@@ -145,6 +149,6 @@ class RoomsController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def room_params
-    params.require(:room).permit(:room_id, :room_no, :room_name, :room_type_id, :room_price, :status, :is_active)
+    params.permit(:hotel_id, :hotel_wing_id, :room_id, :room_no, :room_name, :room_type_id, :room_price, :status, :is_active)
   end
 end

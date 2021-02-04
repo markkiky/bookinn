@@ -9,7 +9,7 @@ class RoomTypesController < ApplicationController
     response = {
       status: 200,
       message: "All Room Types",
-      data: @room_types
+      data: @room_types,
     }
 
     render json: response, status: :ok
@@ -20,7 +20,7 @@ class RoomTypesController < ApplicationController
     response = {
       status: 200,
       message: "A specific room type",
-      data: @room_type
+      data: @room_type,
     }
     render json: response, status: :ok
   end
@@ -32,7 +32,7 @@ class RoomTypesController < ApplicationController
     response = {
       status: 200,
       message: "Room Type created successfully",
-      data: @room_type
+      data: @room_type,
     }
 
     if @room_type.save
@@ -41,7 +41,7 @@ class RoomTypesController < ApplicationController
       response = {
         status: 400,
         message: "Failed to create room type",
-        data: @room_type.errors
+        data: @room_type.errors,
       }
       render json: response, status: :ok
     end
@@ -53,15 +53,14 @@ class RoomTypesController < ApplicationController
       response = {
         status: 200,
         message: "Room Type updated successfully",
-        data: @room_type
+        data: @room_type,
       }
       render json: response, status: :ok
     else
-
       response = {
         status: 400,
         message: "Failed to update Room Type",
-        data: @room_type.errors
+        data: @room_type.errors,
       }
       render json: response, status: :ok
     end
@@ -73,19 +72,20 @@ class RoomTypesController < ApplicationController
     response = {
       status: 200,
       message: "Room Type deleted successfully",
-      data: @room_type
+      data: @room_type,
     }
     render json: response, status: :ok
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_room_type
-      @room_type = RoomType.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def room_type_params
-      params.require(:room_type).permit(:room_type_id, :room_type_description, :room_type_status, :room_type_total, :room_price, :is_active, :created_by, :updated_by)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_room_type
+    @room_type = RoomType.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def room_type_params
+    params.require(:room_type).permit(:bill_item_id, :room_type_id, :room_type_description, :room_type_status, :room_type_total, :room_price, :is_active, :created_by, :updated_by)
+  end
 end

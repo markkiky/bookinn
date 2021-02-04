@@ -457,6 +457,7 @@ ActiveRecord::Schema.define(version: 2021_01_28_131718) do
 
   create_table "rooms", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "hotel_id"
+    t.string "hotel_wing_id"
     t.string "room_id"
     t.string "room_no"
     t.string "room_name"

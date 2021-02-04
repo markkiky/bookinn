@@ -31,7 +31,7 @@ class AuthenticationController < ApplicationController
                },
                status: :ok
       else
-        render json: { status: 200, error: "Failed to authenticate user" }, status: :unauthorized
+        render json: { status: 400, error: "Failed to authenticate user" }, status: :unauthorized
       end
     end
   end

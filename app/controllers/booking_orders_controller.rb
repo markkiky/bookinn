@@ -168,72 +168,72 @@ class BookingOrdersController < ApplicationController
   def mass_booking
     begin
       BookingOrder.transaction do
-      @customer = Customer.find(mass_booking_params["customer_id"])
-      @channel = Channel.find(@customer.channel_id)
-      @booking_order = BookingOrder.create!(
-        booking_order_id: BookingOrder.booking_order_id,
-        booking_order_date: Date.today,
-        booking_no: BookingOrder.booking_order_no,
-        customer_id: @customer.id,
-        booking_order_type_id: "4",
-        created_by: @current_user.id,
-      )
+        @customer = Customer.find(mass_booking_params["customer_id"])
+        @channel = Channel.find(@customer.channel_id)
+        @booking_order = BookingOrder.create!(
+          booking_order_id: BookingOrder.booking_order_id,
+          booking_order_date: Date.today,
+          booking_no: BookingOrder.booking_order_no,
+          customer_id: @customer.id,
+          booking_order_type_id: "4",
+          created_by: @current_user.id,
+        )
 
-      @channel_transaction = ChannelTransaction.create(
-        :channel_transaction_id => ChannelTransaction.channel_transaction_id,
-        :channel_transaction_date => Time.now,
-        :channel_transaction_type => "",
-        :channel_transaction_amount => "",
-        :created_by => @current_user.id,
-      )
-      @bill_info = BillInfo.create!(
-        bill_no: BillInfo.bill_no,
-        booking_order_id: @booking_order.id,
-        bill_info_description: "Mass Bookinn",
-        customer_id: @customer.customer_id,
-        bill_date: Time.now,
-        bill_total: "0",
-        reducing_balance: "0",
-        created_by: @current_user.id,
-        bill_status: "15", #bill unpaid status
-        created_by: @current_user.id,
-      )
-
-      mass_booking_params["bookings"].each do |booking_detail|
-        @room_type = RoomType.find(booking_detail["room_type_id"])
-        @booking_order_detail = BookingOrderDetail.create!(
+        @channel_transaction = ChannelTransaction.create(
+          :channel_transaction_id => ChannelTransaction.channel_transaction_id,
+          :channel_transaction_date => Time.now,
+          :channel_transaction_type => "",
+          :channel_transaction_amount => "",
+          :created_by => @current_user.id,
+        )
+        @bill_info = BillInfo.create!(
+          bill_no: BillInfo.bill_no,
           booking_order_id: @booking_order.id,
-          room_type_id: @room_type.id,
-          total_applicants: booking_detail["total_applicants"],
-          stay_start_date: booking_detail["stay_start_date"],
-          stay_end_date: booking_detail["stay_end_date"],
+          bill_info_description: "Mass Bookinn",
+          customer_id: @customer.customer_id,
+          bill_date: Time.now,
+          bill_total: "0",
+          reducing_balance: "0",
+          created_by: @current_user.id,
+          bill_status: "15", #bill unpaid status
           created_by: @current_user.id,
         )
         # byebug
-        @bill_detail = BillDetail.create!(
-          bill_no: @bill_info.bill_no,
-          bill_info_id: @bill_info.id,
-          room_type_id: @room_type.id,
-          booking_order_detail_id: @booking_order_detail.id,
-          bill_detail_description: "Room Transfer Bill: #{@room_type.room_type_description}",
-          bill_item_id: @room_type.bill_item.id,
-          bill_item_quantity: (@booking_order_detail.stay_end_date.to_date - @booking_order_detail.stay_start_date.to_date).to_i, # no of days
-          bill_item_quantity2: @booking_order_detail.total_applicants,
-          bill_item_rate: @room_type.bill_item.bill_item_rate,
-          amount: BillInfo.calculate_fee(@room_type.bill_item.bill_item_rate.to_i, @booking_order_detail.total_applicants.to_i, (@booking_order_detail.stay_end_date.to_date - @booking_order_detail.stay_start_date.to_date).to_i),
-          created_by: @current_user.id,
-        )
-        # update bill_info to retain any paid amount
-        @bill_info.update!(
-          bill_total: BillInfo.calculate_fee_sum_details(@bill_info.id),
-          reducing_balance: BillInfo.updated_reducing_balance(@bill_info.id),
-          updated_by: @current_user.id,
-        )
+        mass_booking_params["bookings"].each do |booking_detail|
+          @room_type = RoomType.find(booking_detail["room_type_id"])
+          @booking_order_detail = BookingOrderDetail.create!(
+            booking_order_id: @booking_order.id,
+            room_type_id: @room_type.id,
+            total_applicants: booking_detail["total_applicants"],
+            stay_start_date: booking_detail["stay_start_date"],
+            stay_end_date: booking_detail["stay_end_date"],
+            created_by: @current_user.id,
+          )
+
+          @bill_detail = BillDetail.create!(
+            bill_no: @bill_info.bill_no,
+            bill_info_id: @bill_info.id,
+            room_type_id: @room_type.id,
+            booking_order_detail_id: @booking_order_detail.id,
+            bill_detail_description: "Room Transfer Bill: #{@room_type.room_type_description}",
+            bill_item_id: @room_type.bill_item.id,
+            bill_item_quantity: (@booking_order_detail.stay_end_date.to_date - @booking_order_detail.stay_start_date.to_date).to_i, # no of days
+            bill_item_quantity2: @booking_order_detail.total_applicants,
+            bill_item_rate: @room_type.bill_item.bill_item_rate,
+            amount: BillInfo.calculate_fee(@room_type.bill_item.bill_item_rate.to_i, @booking_order_detail.total_applicants.to_i, (@booking_order_detail.stay_end_date.to_date - @booking_order_detail.stay_start_date.to_date).to_i),
+            created_by: @current_user.id,
+          )
+          # update bill_info to retain any paid amount
+          @bill_info.update!(
+            bill_total: BillInfo.calculate_fee_sum_details(@bill_info.id),
+            reducing_balance: BillInfo.updated_reducing_balance(@bill_info.id),
+            updated_by: @current_user.id,
+          )
+        end
       end
-    end
     rescue Exception => invalid
       @response = {
-        
+
         status: 400,
         message: "Error in mass booking",
         data: invalid,
@@ -476,6 +476,7 @@ class BookingOrdersController < ApplicationController
     params.permit(
       :customer_id,
       :bill_info_description,
+      :booking_order_type_id,
       bookings: [
         :room_type_id,
         :stay_start_date,
