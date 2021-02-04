@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: [:show, :update, :destroy]
-  # before_action :authorize_request
+  before_action :authorize_request
 
   # GET /rooms
   def index
@@ -61,19 +61,26 @@ class RoomsController < ApplicationController
 
   # POST /rooms
   def create
-    @room = Room.new(room_params)
-    @room.hotel_id = @current_user["hotel_id"] ? @current_user["hotel_id"] : "1"
-
-    response = {
-      status: 200,
-      message: "Room created successfully",
-      data: @room,
-    }
-    if @room.save
-      render json: response, status: :created, location: @room
+    begin
+      @room = Room.new(room_params)
+      # @room.hotel_id = @current_user["hotel_id"] ? @current_user["hotel_id"] : "1"
+      @room.status = "1"
+      @room.created_by = @current_user.id
+      @room.save!
+    rescue => exception
+      @response = {
+        status: 400,
+        message: exception,
+        data: @room.errors,
+      }
     else
-      render json: @room.errors, status: :unprocessable_entity
+      @response = {
+        status: 200,
+        message: "Room created successfully",
+        data: @room,
+      }
     end
+    render json: @response
   end
 
   # PATCH/PUT /rooms/1

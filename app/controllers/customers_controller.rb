@@ -145,6 +145,32 @@ class CustomersController < ApplicationController
     render json: @response
   end
 
+  def search_customer_in_room
+    begin
+      @room = Room.find(params["room_id"])
+      @room_assignments = RoomAssignment.all.where(room_id: @room.id, is_active: true)
+      @customers = []
+      @room_assignments.each do |room_assignment|
+        @customer = Customer.find(room_assignment.customer_id)
+        @customers << @customer
+      end
+    rescue => exception
+      @customers = []
+      @response = {
+        status: 200,
+        message: "Customers not found",
+        data: @customers,
+      }
+    else
+      @response = {
+        status: 200,
+        message: "Customers found",
+        data: @customers,
+      }
+    end
+    render json: @response
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

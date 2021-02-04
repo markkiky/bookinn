@@ -88,6 +88,7 @@ Rails.application.routes.draw do
   get "channel_customers", to: "customers#channel_customers"
 
   get "customer/id_no/:id_no", to: "customers#search_customer_by_id"
+  get "customer/room_id/:room_id", to: "customers#search_customer_in_room"
 
   # Payment Callbacks
   post "receive_mpesa_transactions", to: "callback#receive_mpesa_transactions"
