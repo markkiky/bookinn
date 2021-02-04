@@ -72,7 +72,7 @@ class CustomersController < ApplicationController
       render json: response, status: :created, location: @customer
     else
       response = {
-        status: 200,
+        status: 400,
         message: "Failed to create Customer",
         data: @customer.errors,
       }
@@ -124,6 +124,25 @@ class CustomersController < ApplicationController
 
   def search_customer_by_id
     # receive params id_no
+    begin
+      @customer = Customer.find_by(id_no: params["id_no"])
+    rescue => exception
+    else
+      if @customer
+        @response = {
+          status: 200,
+          message: "returning customer",
+          data: @customer,
+        }
+      else
+        @response = {
+          status: 400,
+          message: "customer not found",
+          data: {},
+        }
+      end
+    end
+    render json: @response
   end
 
   private

@@ -44,21 +44,21 @@ Rails.application.routes.draw do
   resources :gender
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
-  # Front Office 
+  # Front Office
   # get "room/available", to: 'rooms#available', as: :available_rooms
-  post "room/status", to: 'front_office#room_availability'
+  post "room/status", to: "front_office#room_availability"
   # post "arrivals", to: "front_office#expected_arrivals", as: :expected_arrivals
   post "arrivals", to: "booking_orders#expected_arrivals", as: :expected_arrivals
   # post "departures", to: "front_office#expected_departures", as: :expected_departures
   post "departures", to: "booking_orders#expected_departures", as: :expected_departures
   post "arrivals_departures", to: "front_office#arrivals_departures"
-  post "needs_preferences", to: 'front_office#needs_preferences'
-  get "needs_preferences", to: 'front_office#show_needs_preferences'
-  post 'bookinn/walkin', to: "front_office#walkin_bookinn"
+  post "needs_preferences", to: "front_office#needs_preferences"
+  get "needs_preferences", to: "front_office#show_needs_preferences"
+  post "bookinn/walkin", to: "front_office#walkin_bookinn"
   # post 'bookinn/walkin', to: "booking_orders#walkin_bookinn"
   post "check_in", to: "front_office#check_in"
   get "check_in", to: "front_office#get_check_in"
-  post 'check_out', to: "front_office#check_out"
+  post "check_out", to: "front_office#check_out"
   get "check_out", to: "front_office#get_check_out"
 
   # post "bookinn/mass_booking", to: "front_office#mass_booking"
@@ -72,39 +72,39 @@ Rails.application.routes.draw do
   post "transfer", to: "booking_orders#booking_transfer"
 
   # status
-  get 'status/:id', to: "status_clusters#status"
+  get "status/:id", to: "status_clusters#status"
 
   # Dashboard
-  get 'dashboard', to: "reports#dashboard"
-
+  get "dashboard", to: "reports#dashboard"
 
   # Generate Token
-  post 'auth/login', to: 'authentication#login'
+  post "auth/login", to: "authentication#login"
   # reset password routes
-  post 'password/forgot', to: 'authentication#forgot'
-  post 'password/reset', to: 'authentication#reset'
+  post "password/forgot", to: "authentication#forgot"
+  post "password/reset", to: "authentication#reset"
 
   # Upload Customers CSV
-  post 'upload/customer/csv', to: "front_office#upload_customers_csv"
-  get 'channel_customers', to: "customers#channel_customers"
+  post "upload/customer/csv", to: "front_office#upload_customers_csv"
+  get "channel_customers", to: "customers#channel_customers"
+
+  get "customer/id_no/:id_no", to: "customers#search_customer_by_id"
 
   # Payment Callbacks
   post "receive_mpesa_transactions", to: "callback#receive_mpesa_transactions"
   post "mpesa_response", to: "callback#mpesa_frontend_transaction"
   post "receive_card_transactions", to: "callback#receive_card_transactions"
 
-
   # hotels
   get "hotel_rooms/:id", to: "hotels#hotel_rooms"
   get "hotel_sisters/:id", to: "hotels#sister_hotels"
 
-  # bills 
+  # bills
   post "search_bill", to: "bill_infos#search_bill"
 
   # Reports
   get "report/mass", to: "reports#mass_booking"
   get "report/walkin", to: "reports#walkin_booking"
-  
+
   get "report/booking", to: "reports#all_bookings"
   get "report/booking/:status", to: "reports#bookings_by_status"
 end
