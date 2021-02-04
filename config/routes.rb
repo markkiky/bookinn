@@ -47,6 +47,7 @@ Rails.application.routes.draw do
   # Front Office
   # get "room/available", to: 'rooms#available', as: :available_rooms
   post "room/status", to: "front_office#room_availability"
+  get "available_rooms/room_type/:id", to: "rooms#get_available_room_by_room_type"
   # post "arrivals", to: "front_office#expected_arrivals", as: :expected_arrivals
   post "arrivals", to: "booking_orders#expected_arrivals", as: :expected_arrivals
   # post "departures", to: "front_office#expected_departures", as: :expected_departures

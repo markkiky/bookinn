@@ -136,7 +136,33 @@ class RoomsController < ApplicationController
 
   # return rooms with status available
   # return available rooms of a particular type
-  def get_rooms_by_status_by_room_type
+  # GET /available_rooms/room_type/:id
+  def get_available_room_by_room_type
+    begin
+      @room_type = RoomType.find(params[:id])
+      @rooms = Room.all.where(room_type_id: @room_type.id)
+      available_rooms = []
+      @rooms.each do |room|
+        if room["status"] == "1"
+          available_rooms << room
+        else
+          puts "Room not available"
+        end
+      end
+    rescue => exception
+      @response = {
+        status: 400,
+        message: "Rooms Not Found",
+        data: [],
+      }
+    else
+      @response = {
+        status: 200,
+        message: "Rooms Found",
+        data: available_rooms,
+      }
+    end
+    render json: @response
   end
 
   private
