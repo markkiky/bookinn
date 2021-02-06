@@ -2,6 +2,7 @@ class FrontOfficeController < ApplicationController
   before_action :authorize_request
 
   # POST room/status
+  # body [[status: 1]]
   def room_availability
     # puts params[:status]
 
@@ -100,6 +101,45 @@ class FrontOfficeController < ApplicationController
     end
 
     render json: response
+  end
+
+  def room_availability
+    begin
+      @rooms = Room.where(:status => room_status_params["status"])
+      @rooms_response = []
+      @rooms.each do |room|
+        @room_type = room.room_type
+        @room = {
+          id: room.id,
+          room_no: room.room_no,
+          room_name: room.room_name,
+          room_status: room.status,
+          room_status_description: Status.find_by(id: room.status).status_description,
+          room_type_id: @room_type.id,
+          room_type_description: @room_type.room_type_description,
+          room_type_status: @room_type.room_type_status,
+          room_type_total: @room_type.room_type_total,
+          stay_start_date: nil,
+          stay_end_date: nil,
+          created_at: room.created_at,
+          updated_at: room.updated_at,
+        }
+        @rooms_response << @room
+      end
+    rescue => exception
+      @response = {
+        status: 400,
+        message: "Error in rooms",
+        data: exception,
+      }
+    else
+      @response = {
+        status: 200,
+        message: "#{Status.find_by(:id => room_status_params["status"]).status_description} rooms",
+        data: @rooms_response,
+      }
+    end
+    render json: @response
   end
 
   # POST /arrivals
@@ -663,7 +703,7 @@ class FrontOfficeController < ApplicationController
           # check if customer is being assigned a room type they paid for
           @room_assigned = false
           @booking_order.booking_order_details.each do |booking_detail|
-            if @room.room_type_id != booking_detail["room_type_id"]  
+            if @room.room_type_id != booking_detail["room_type_id"]
               next
             else
               # perform room assignment here
@@ -672,7 +712,7 @@ class FrontOfficeController < ApplicationController
               if @room_assignment == nil
                 # no room assignment before
                 # check for room availability
-                
+
                 @room_assignment = RoomAssignment.create!(
                   :room_assignment_id => RoomAssignment.room_assignment_id,
                   :customer_id => @customer.id,
@@ -733,6 +773,10 @@ class FrontOfficeController < ApplicationController
         end_date: room_assignment.end_date,
         room_status: Status.find_by(id: room_assignment.room_status).status_description,
         room_id: room_assignment.room_id,
+        room_type_description: Room.find(room_assignment.room_id).room_type.room_type_description,
+        phone: Customer.find(room_assignment.customer_id).phone,
+        room_no: Room.find(room_assignment.room_id).room_no,
+        email: Customer.find(room_assignment.customer_id).email,
 
       }
       @assignments << @room_assignment
@@ -755,7 +799,7 @@ class FrontOfficeController < ApplicationController
       # byebug
       RoomAssignment.transaction do
         check_out_params["assignments"].each do |assignment|
-          @room_assignment = RoomAssignment.find_by(:customer_id => assignment["customer_id"], :room_id => assignment["room_id"], :booking_order_id => assignment["booking_order_id"], :is_active => '1')
+          @room_assignment = RoomAssignment.find_by(:customer_id => assignment["customer_id"], :room_id => assignment["room_id"], :booking_order_id => assignment["booking_order_id"], :is_active => "1")
           # byebug
           if @room_assignment == nil
             raise Exception.new "Unable to signout client"
@@ -764,13 +808,12 @@ class FrontOfficeController < ApplicationController
           @room.status = "4"
           @room.save
           # find other people sharing the room and check them out too
-          @room_assignments = RoomAssignment.where(room_id: assignment['room_id'], booking_order_id: assignment['booking_order_id'], is_active: '1')
+          @room_assignments = RoomAssignment.where(room_id: assignment["room_id"], booking_order_id: assignment["booking_order_id"], is_active: "1")
           @room_assignments.each do |room_assignment|
             room_assignment.room_status = "4"
             room_assignment.is_active = "0"
             room_assignment.save!
           end
-          
         end
       rescue Exception => invalid
         @response = {

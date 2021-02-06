@@ -2,7 +2,7 @@ class CreateBookingOrders < ActiveRecord::Migration[6.0]
   def change
     create_table :booking_orders do |t|
       t.string :booking_order_id
-      t.string :booking_order_date
+      t.datetime :booking_order_date
       t.string :customer_id
       t.string :booking_no
       t.string :total_applicants

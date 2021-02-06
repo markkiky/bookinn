@@ -114,4 +114,42 @@ class Customer < ApplicationRecord
     end
     return @customers_response
   end
+
+  def self.create_or_update(customer_params)
+    @customer = Customer.find_by(id_no: customer_params["id_no"])
+
+    @names = "#{customer_params["first_name"]} #{customer_params["other_name"]} #{customer_params["last_name"]}"
+
+    if @customer == nil
+      # customer not found. create new
+      @child = customer_params["child"]
+
+      @customer = Customer.create!(
+        customer_id: Customer.customer_id,
+        customer_no: Customer.customer_no,
+        id_no: customer_params["id_no"],
+        customer_type_id: @child ? "3" : "2",
+        names: @names,
+        gender: customer_params["gender"],
+        country_id: customer_params["country_id"],
+        email: customer_params["email"],
+        phone: customer_params["phone"],
+        address: customer_params["postal_address"],
+        postal_code: customer_params["postal_code"],
+      )
+    else
+      # customer found update the customer
+      @customer = @customer.update(
+        customer_type_id: @child ? "3" : "2",
+        names: @names,
+        gender: customer_params["gender"],
+        country_id: customer_params["country_id"],
+        email: customer_params["email"],
+        phone: customer_params["phone"],
+        address: customer_params["postal_address"],
+        postal_code: customer_params["postal_code"],
+      )
+    end
+    return @customer
+  end
 end

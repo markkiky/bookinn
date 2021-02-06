@@ -10,6 +10,7 @@ Customer.create(customer_no: Customer.customer_no, customer_id: Customer.custome
 Customer.create(customer_no: Customer.customer_no, customer_id: Customer.customer_id, customer_type_id: "2", country_id: "113", names: "Mark Kariuki", email: "markkaris438@gmail.com", phone: "254714420943", address: "626 Muranga", postal_code: "10200", customer_status: "25", customer_status_date: "30-01-2020", last_visit: "20-12-2020", last_invoice: "20-12-2020", last_receipt: "20-12-2020", created_by: "1", updated_by: "1")
 CustomerType.create(customer_type_id: CustomerType.customer_type_id, customer_type_description: "Channel")
 CustomerType.create(customer_type_id: CustomerType.customer_type_id, customer_type_description: "Adult")
+CustomerType.create(customer_type_id: CustomerType.customer_type_id, customer_type_description: "Child")
 
 UnitOfMeasure.create(unit_id: UnitOfMeasure.unit_id, unit_description: "One per room")
 UnitOfMeasure.create(unit_id: UnitOfMeasure.unit_id, unit_description: "Two per room")
@@ -36,7 +37,6 @@ StatusCluster.create(status_cluster_id: "4", cluster_description: "Ticket status
 StatusCluster.create(status_cluster_id: "5", cluster_description: "Bills status")
 StatusCluster.create(status_cluster_id: "6", cluster_description: "Bill Items status")
 StatusCluster.create(status_cluster_id: "7", cluster_description: "Customer status")
-
 
 Status.create(status_id: "1", status_cluster_id: "1", status_description: "available")
 Status.create(status_id: "2", status_cluster_id: "1", status_description: "occupied")
@@ -67,9 +67,6 @@ Status.create(status_id: "21", status_cluster_id: "6", status_description: "inac
 
 Status.create(status_id: "20", status_cluster_id: "7", status_description: "active")
 Status.create(status_id: "21", status_cluster_id: "8", status_description: "inactive")
-
-
-
 
 # BookingOrder.create(booking_order_id: "1", booking_order_date: "21-01-2020", total_applicants: "1",  room_type_id: "1", stay_start_date: "01-11-2020", stay_end_date: "31-01-2021", booking_order_status: "2", booking_order_type_id: "1", created_by: "1", updated_by: "1")
 # BookingOrder.create(booking_order_id: "2", booking_order_date: "26-11-2020", total_applicants: "10", room_type_id: "1", stay_start_date: "01-12-2020", stay_end_date: "05-01-2021", booking_order_status: "2", booking_order_type_id: "3", created_by: "1", updated_by: "1")

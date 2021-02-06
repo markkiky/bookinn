@@ -109,4 +109,7 @@ Rails.application.routes.draw do
 
   get "report/booking", to: "reports#all_bookings"
   get "report/booking/:status", to: "reports#bookings_by_status"
+
+  # new routes for new UI
+  post "single_direct_check_in", to: "rooms#single_direct_check_in"
 end
